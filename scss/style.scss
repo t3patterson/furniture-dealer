@@ -8,6 +8,7 @@ $beige: rgba(214,197,187,1);
 $sand: rgba(115,101,94,1);
 $tan: rgba(140,116,104,1);
 $dark-brown: rgba(49,43,40,1);
+$white: rgba(255,255,255,1);
 
 /**
  * BOX-SIZING
@@ -132,12 +133,28 @@ nav {
 }
 
 section.splash {
+    position: relative;
+    padding: 0;
+    .callout{
+        position: absolute;
+        top:5%;
+        right:5%;
+        z-index: 10;
+        .callout-btn{
+            color: $white;
+            border: 1px solid $beige;
+        }
+    }
     .img-carousel{
         padding: 0;
         text-align: center;
         img{
-            max-height: 50rem;
+            max-height: 30rem;
         }
+    }
+
+    .carousel-inner{
+        max-height: 43rem;
     }
 }
 
@@ -149,6 +166,7 @@ section.selection{
 }
 
 section.store{
+    background: $beige;
     h2{
     text-align: center;
     }
@@ -157,6 +175,19 @@ section.store{
         text-align: center;
         border-left: 1px solid $tan;
     }
+
+}
+
+footer{
+    padding: 0;
+    
+    h2,
+    .social-lnk{
+        text-align: center;
+    }
+    
+   
+
 
 }
 
