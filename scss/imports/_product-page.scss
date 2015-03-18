@@ -1,12 +1,13 @@
-.product-display{
+// Change to bootstrap styling
+.product-display {
     text-align: center;
-
-    .img-listing-container{
-        > *{
-            background:$beige;
+    .img-listing-container {
+        > * {
+            background: $beige;
         }
-        p{
+        p {
             padding: 0%;
         }
     }
 }
+

@@ -1,108 +1,87 @@
 nav {
-
-   .dealer{
-    padding: .5% 1.0%;
-   } 
-    .menu{
-    background: white;
-    text-align: right;
-    padding: 3% 1.5% 1.5% 0;
-
-        a{
+    .dealer {
+        padding: .5% 1.0%;
+    }
+    .menu {
+        background: white;
+        text-align: right;
+        padding: 3% 1.5% 1.5% 0;
+        a {
             background: white;
             border: 1px solid $brown;
             color: $brown;
-
         }
     }
-
 }
-
 section.splash {
     position: relative;
     padding: 0;
-    .callout{
+    .browse-listings-btn {
+        display: block;
         position: absolute;
-        top:5%;
-        right:5%;
+        top: 5%;
+        right: 5%;
         z-index: 10;
-        .callout-btn{
-            color: $white;
-            border: 1px solid $beige;
-        }
-    }
-    .img-carousel{
-        padding: 0;
-        text-align: center;
-        img{
-            max-height: 30rem;
-        }
-    }
-
-    .carousel-inner{
-        max-height: 43rem;
+        color: $white;
+        border: 1px solid $beige;
     }
 }
+.img-carousel {
+    padding: 0;
+    text-align: center;
+    img {
+        max-height: 30rem;
+    }
+}
+.splash-slides-container {
+    max-height: 43rem;
+}
 
-section.selection{
+section.selection {
     padding-bottom: 0;
     text-align: center;
-    .our-style{
+    .our-style {
         padding: 3%;
     }
 }
-
-section.store{
+section.store {
     padding-bottom: 1rem;
     background: $beige;
-    h2{
-    text-align: center;
+    h2 {
+        text-align: center;
     }
-
-    .consign-click{
+    .consign-click {
         text-align: center;
         border-left: 1px solid $tan;
     }
-
 }
-
-footer{
+footer {
     padding: 0;
-    
-    .social-lnk{
+    .social-lnk {
         text-align: center;
         color: $sand;
     }
-    
-    .address-div{
+    .address-div {
         background: $sand;
         color: $white;
         text-shadow: 1px 1px 1px #000;
         border-left: 1px solid $tan;
-        .location{
-          font-size: 18px  
+        .location {
+            font-size: 18px
         }
     }
-   
-
-
 }
-
-
-@media screen and (min-width: 768px){
-    .carousel-control{
-        .fa-chevron-left,
-        .fa-chevron-right{
+@media screen and (min-width: 768px) {
+    .carousel-control {
+        .fa-chevron-left, .fa-chevron-right {
             position: absolute;
             top: 50%;
             z-index: 5;
             display: inline-block;
         }
-
-        .fa-chevron-left{
+        .fa-chevron-left {
             right: 50%;
             margin-right: -10px;
         }
     }
-
 }

@@ -90,6 +90,10 @@ body {
     color: $dark-brown;
 }
 
+h1,h2,h3,h4,h5,h6{
+    white-space: normal
+}
+
 .carousel-control{
         .fa-chevron-left,
         .fa-chevron-right{
@@ -106,5 +110,8 @@ body {
     }
 
 
+
 @import "./imports/_homepage.scss";
 @import "./imports/_product-page.scss";
+@import "./imports/_single-listing.scss";
+

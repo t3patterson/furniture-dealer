@@ -1,0 +1,49 @@
+.slider-size-single-listing {
+    height: 250px;
+    .carousel {
+        width:100%; 
+        margin:0 auto; /* center your carousel if other than 100% */ 
+        }
+}
+
+section.key-listing-info{
+    color: $brown;
+        h2{
+        color: $dark-brown;
+        }
+
+        .description{
+            color: $sand;
+        }
+
+        .add-to-cart{
+            a{
+            font-weight: 200;
+            }
+        }
+
+
+
+}
+
+
+@media screen and (min-width: 575px) {
+    .slider-size-single-listing {
+        height: 325px;
+        .single-listing-carousel {
+        width:100%; 
+        margin:0 auto; /* center your carousel if other than 100% */ 
+        }
+    }
+        
+}
+
+@media screen and (min-width: 768px) {
+    .slider-size-single-listing {
+        height: 400px;
+         .single-listing-carousel {
+        width:100%; 
+        margin:0 auto; /* center your carousel if other than 100% */ 
+        }
+    }
+}
