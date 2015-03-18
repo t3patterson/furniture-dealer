@@ -26,16 +26,25 @@ function app(){
         // {url: "./bower_components/jsnox/jsnox.js"},
 
         // other stuff
+        // -------------
+        // bootstrap carousel
+        {url: "./bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"},
         {url: "./bower_components/pace/pace.min.js"},
-        {url: "./js/TemplateView.js"}
+        {url: "./js/TemplateView.js"},
+        //jquery-plugins
+
+        //my app
+        {url: "./js/Client.js"}
     ).then(function(){
         // if turning on JSnoX, uncommment the following line
         // window.d = jsnox(React);
         // if turning on React, uncomment the following line
         // React.initializeTouchEvents(true);
-
         document.querySelector("html").style.opacity = 1;
+
+
         // start app?
+        var beginApp = new PageRouter()
     })
 
 }
