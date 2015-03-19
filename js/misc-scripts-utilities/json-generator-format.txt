@@ -1,0 +1,12 @@
+[
+  '{{repeat(100)}}', //iterates and creates x-number of json objects
+  {
+    MR_id: 'MR{{integer(10000, 99999)}}',
+    index: '{{index()}}',
+    item: '{{surname()}} {{random("Chair", "Dining Table", "Sofa", "Bed Frame", "Coffee Table", "Credenza", "Lounge Chair",         "Nightstand", "Office chair", "Side chair", "Dresser")}}',
+    price: '{{integer(500,8000)}}',
+    about: '{{lorem(15, "words")}}',
+    category: '{{random("chair", "diningTable", "sofa", "bedFrame", "coffeeTable", "credenza", "loungeChair", "nightstand", "officeChair", "sideChair", "dresser")}}',
+    image: '{{random("badilkjairdesk", "baughman","eameslounge","girardchair","gonzochair","gonzocredenza","ionchairorangered","knolltable","rowlandchairs","saarinen")}}.jpg'
+  }
+ ]

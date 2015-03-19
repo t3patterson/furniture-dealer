@@ -42,8 +42,9 @@ function app(){
         // React.initializeTouchEvents(true);
         document.querySelector("html").style.opacity = 1;
 
-
         // start app?
+        Parse.initialize('8cefZxGY6FiSAhEw5YCwN9mBjgoiUgGcdJnTZgdy','RWjs5EKsDkBlZ1L05crkUetjonIG1DGNiaM664OY');
+
         var beginApp = new PageRouter()
     })
 
