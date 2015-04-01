@@ -38,10 +38,10 @@ function app(){
         //my app
         {url: "./js/Client.js"}
         
-        //DATA SCRIPTS 
-        ,{url: "./data/INPUT-totalSet.js"}
-        ,{url: "./data/INPUT-jpegData(12501-14410).js"}
-        ,{url: "./data/EXECUTE-generateData2.js"}
+        // //DATA SCRIPTS 
+        // ,{url: "./data/INPUT-totalSet.js"}
+        // ,{url: "./data/INPUT-jpegData(12501-14410).js"}
+        // ,{url: "./data/EXECUTE-generateData2.js"}
     ).then(function(){
         // if turning on JSnoX, uncommment the following line
         // window.d = jsnox(React);
