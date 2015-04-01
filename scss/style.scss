@@ -1,6 +1,25 @@
-@import "../bower_components/normalize-scss/_normalize.scss";
-@import "../bower_components/typeplate-starter-kit/css/_typeplate.scss";
+@import "../bower_components/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+@import "../bower_components/font-awesome-sass/assets/stylesheets/font-awesome.scss";
 @import "./mixins.scss";
+
+// layout-color-scheme
+$beige: rgba(176,168,165,1);
+$beige-translucent: rgba(176,168,165,.45);
+$tan: rgba(255,216,5,1);
+$tan-translucent: rgba(255,216,5,.25);
+$sand: rgba(0,88,165,1);
+$brown: rgba(220,4,21,1);
+$dark-brown: rgba(33,33,33,1);
+$blue: rgba(98,114,128,1);
+$mist: rgba(92,79,128,1);
+$white: rgba(255,255,255,1);
+$white-translucent: rgba(255,255,255,.25);
+$black: rgba(33,33,33,1);
+$grey: rgba(225,230,225,1);
+$has-error: #c7254e;
+$red: rgba(135,0,0,1);
+$green: rgba(129,217,102,1);
+
 
 /**
  * BOX-SIZING
@@ -77,4 +96,44 @@ img {max-width:100%;}
 
 body {
     transition: opacity .25s ease;
+    margin: 0;
+    padding: 0;
+    color: $dark-brown;
+    padding-top: 70px;
 }
+
+h1,h2,h3,h4,h5,h6{
+    white-space: normal
+}
+
+.wrapper{
+    padding-top: 1rem;
+
+    
+}
+
+.carousel-control{
+        .fa-chevron-left,
+        .fa-chevron-right{
+            position: absolute;
+            top: 50%;
+            z-index: 5;
+            display: inline-block;
+        }
+
+        .fa-chevron-left{
+            right: 50%;
+            margin-right: -10px;
+        }
+    }
+
+
+@import "./imports/_navigation&footer"; 
+@import "./imports/_landing-page.scss";
+@import "./imports/_product-page.scss";
+@import "./imports/_single-listing.scss";
+@import "./imports/_shopping-cart.scss";
+@import "./imports/_finalize-order.scss";
+@import "./imports/_administrators&employees.scss";
+@import "./imports/_thank-customer.scss";
+@import "./imports/_nav-breadcrumb.scss";

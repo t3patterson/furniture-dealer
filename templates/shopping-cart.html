@@ -1,0 +1,88 @@
+<main class="shopping-cart">
+    <div class="container-fluid">
+        <!-- Major Area 1  -->
+        <div class="row">
+            <div class="col-xs-12 user-order ">
+                <p class="keep-browsing">
+                    <a href="#" class="btn btn-info btn-sm back-2-products"><i class="fa fa-sign-in"></i>&nbspKeep-Browsing</a>
+                    &nbsp&nbsp
+                    <a class='btn btn-primary btn-sm btn-success finalize-order-btn' href=''>
+                            <i class="fa fa-sign-in">&nbspGo to Checkout</i>
+                        </a>
+                    <br>
+                </p>
+                <div class="panel panel-success">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Your Order</div>
+                    <!-- Table -->
+                    <table class="table order-summary">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th class="tbl-hd-img">Img</th>
+                                <th class="tbl-hd-mr">MR #</th>
+                                <th class="tbl-hd-price">Total Price</th>
+                                <th class="tbl-hd-remove">Remove Item</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <% if(data){ _.forEach(data.models,function(model){
+                            if(!model.get('imageCount')){  
+                                var imgLink='./images/no_image.jpg'
+                                }else{
+                                    var imgLink = model.get('database_img_1');
+                                }
+                        %>
+                            
+                             <tr data-MRid="<%=model.get('MR_id')%>">
+                                <th scope="row"><%=model.get('item')%></th>
+                                <td class="tcell-img"><img src="<%=imgLink%>" alt=""> </td>
+                                <td class="tcell-mr"><%=model.get('MR_id')%></td>
+                                <td class="tcell-price"><%=model.get('priceDollar')%></td>
+                                <td class="tcell-remove-item"><i class="fa fa-times fa-2x"></i></td>
+
+                            </tr>
+                        <%}) }%>
+                        </tbody>
+                    </table>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <!-- Major Area 1::  -->
+        <div class="row">
+            <div class="col-xs-12 user-order ">
+                <div class="panel panel-warning">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Shipping Options</div>
+                    <!-- Table -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>MR I.D. #</th>
+                                <th>Status</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row"></th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <p class="go-checkout">
+                        <a class='btn btn-primary btn-lg btn-success finalize-order-btn' href=''>
+                            <i class="fa fa-sign-in">&nbspGo to Checkout</i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

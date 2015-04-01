@@ -8,7 +8,9 @@ function startServer() {
         path = require('path'),
         app = express(),
         request = require('request'),
-        _ = require('lodash');
+        _ = require('lodash'),
+        braintree = require('braintree')
+
 
     function querify(queryParamsObject){
         return '?'+_.map(queryParamsObject || {}, function(val, key){
@@ -38,6 +40,9 @@ function startServer() {
     // all environments
     app.set('port', process.argv[3] || process.env.PORT || 3000);
     app.use(express.static(path.join(__dirname, '')));
+
+
+
 
     http.createServer(app).listen(app.get('port'), function() {
         console.log('Express server listening on port ' + app.get('port'));

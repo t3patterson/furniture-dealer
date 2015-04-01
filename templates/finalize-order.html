@@ -1,0 +1,195 @@
+<main class="finalize-order container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-md-4 shipping-info inactive">
+            <span class='block-number'>1</span>
+            <h3>Shipping Information</h3>
+            <p class="big-card"><i class="fa fa-home"></i></p>
+            <form>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">First Name</label>
+                    <input type="text" class="form-control" placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Lastname</label>
+                    <input type="text" class="form-control" id="shipping-LastName" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Address Line 1</label>
+                    <input type="text" class="form-control" id="shipping-AddressLine1" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Address Line 2</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">City</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">State</label>
+                    <select class="form-control">
+                        <option>TX</option>
+                        <option>NY</option>
+                        <option>CA</option>
+                        <option>OR</option>
+                        <option>FL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">ZIP</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Phone</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 ">
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                        </div>
+                        <div class="col-xs-4 ">
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                        </div>
+                    </div>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Use Same Address for Billing
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default btn-lg">Next</button>
+            </form>
+        </div>
+        <div class="col-xs-12 col-md-4 billing">
+            <span class='block-number'>2</span>
+            <h3>Billing</h3>
+            <p class="big-card"><i class="fa fa-credit-card"></i></p>
+            <div class="form-group">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="xs-col-12">
+                            <label for="exampleInputEmail1">Credit Card</label>
+                            <select class="form-control">
+                                <option>Visa</option>
+                                <option>Mastercard </option>
+                                <option>American Express</option>
+                                <option>Discover</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" placeholder="-" maxlength="4">
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" placeholder="-" maxlength="4">
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" placeholder="-" maxlength="4">
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" placeholder="-" maxlength="4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">First Name</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Last Name</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Address Line 1</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Address Line 2</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">City</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">State</label>
+                <select class="form-control">
+                    <option>TX</option>
+                    <option>NY</option>
+                    <option>CA</option>
+                    <option>OR</option>
+                    <option>FL</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">ZIP</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-4 order-summary inactive">
+            <span class='block-number'>3</span>
+            <h3>Order Summary</h3>
+            <p class="big-card"><i class="fa fa-thumbs-o-up"></i></p>
+            <br>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="row">2 Items</th>
+                        <th>$3321</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% _.forEach(data,function(){%>
+                        <tr>
+                            <th scope="row">
+                                <%=data.get( 'item')%>
+                            </th>
+                            <td><img src="./images/listings-sample/<%=data.get('image')%>" alt=""> </td>
+                            <td>
+                                <%=data.get( 'MR_id')%>
+                            </td>
+                            <td>
+                                <%=data.get( 'price')%>
+                            </td>
+                        </tr>
+                        <%})%>
+                            <tr>
+                                <td class="item-summary">Kerr Sofa</td>
+                                <td>$4,100</td>
+                            </tr>
+                            <tr>
+                                <td class="item-summary">Sanchez Coffee Table</td>
+                                <td>$200</td>
+                            </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row">Tax</th>
+                        <th>$440</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">Shipping</th>
+                        <th>$590</th>
+                    </tr>
+                    <tr class="grand-total">
+                        <th>Total</th>
+                        <th>$5,300</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <button type="button" class="btn btn-success btn-lg confirm-purchase"><i class="fa fa-check-square"></i>&nbsp Place Your Order</button>
+            
+            <form data-status="inactive" style="display:none; margin-top: 16px;" id="checkout" method="post" action="/checkout">
+                <div id="dropin"></div>
+                <input type="submit" value="Pay $10">
+            </form>
+        </div>
+    </div>
+</main>

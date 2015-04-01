@@ -1,0 +1,133 @@
+<!-- image slider -->
+<!-- 1) iterate over change item class (and use 'if' logic for second item) -->
+<!-- 2) apply similar logic to  -->
+
+<main class="the-listing">
+    <div class="container-fluid">
+        <div class="row">
+            <section class="col-xs-12 col-sm-6 col-md-5 single-listing-carousel">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                    <%console.log(data)%>
+                                    <% var imgCount = data.get('imageCount')||0 ;%><!-- 
+                                    <%console.log(data)%> -->
+                                    <% if (!(imgCount===0)){
+                                        console.log('img count not 0')
+                                        for(var i = 1; i <= imgCount; i++){%>
+                                    <li data-target="#carousel-example-generic" data-slide-to="<%=Math.min(i,imgCount-2)%>"></li>
+                                    <%}}%>
+                                </ol>
+                                <!-- Test to see if image exists -->
+                                <% var firstImage;
+                                 (!data.get('imageCount'))? firstImage ='./images/no_image.jpg': firstImage = data.get('database_img_1')%>
+
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner" role="listbox">
+                                    <div class="item active">
+                                        <div style="background:url(<%=firstImage%>) center center; background-size:cover;" class="slider-size-single-listing">
+                                            <div class="carousel-caption">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <% if (data.get('imageCount')){
+                                    for (var i = 1; i <= data.get('imageCount'); i++){%>
+                                    <div class="item">
+                                        <div style="background:url(<%=data.get('database_img_'+(i))%>) center center; background-size:cover;" class="slider-size-single-listing">
+                                            <div class="carousel-caption">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%}}%>
+                                    
+                                </div>
+                                <!-- Controls -->
+                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                    <i class="fa fa-chevron-left"></i>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                    <i class="fa fa-chevron-right"></i>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="col-xs-12 col-sm-6 col-md-7 key-listing-info">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-12 label">
+                            <h2 class='item'><%=data.get('item')%></h2>
+                        </div>
+                        <div class="col-xs-12 label">
+                            <h5 class='mr-id'>MR-<%=data.get('MR_id')%></h5>
+                        </div>
+                        <div class="col-xs-12">
+                            <h3 class='price'><%=data.get('priceDollar')%></h3>
+                        </div>
+                        <div class="col-xs-12">
+                            <h4 class="description">Description</h4>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur placeat accusantium tenetur, necessitatibus quisquam atque.
+                                <%=data.get( 'about')%>
+                            </p>
+                        </div>
+                        <div class="col-xs-12">
+                            <h4 class="manufacturer">Original Manufacturer</h4>
+                            <p>
+                                Lorem ipsum.
+                                <%=data.get( 'about')%>
+                            </p>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <h4 class="dimensions">Dimensions</h4>
+                            <p>
+                                Lorem ipsum dolor sit.
+                                <%=data.get( 'about')%>
+                            </p>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <h4 class="condition">Condition</h4>
+                            <p>
+                                Lorem ipsum dolor sit amet.
+                                <%=data.get( 'about')%>
+                            </p>
+                        </div>
+                        <div class="col-xs-12 cart-status">
+                            <p>
+                                <a href="#" class="btn btn-success add-item-btn"><i class="fa fa-plus"></i>&nbspADD TO CART</a>
+                                
+                                <br>
+                                <br>
+                                <span class="text-center cart-status-notification"></span>
+                                <br>
+                                <br>
+                                <a href="#" class="btn btn-default btn-sm remove-item-btn">
+                                    <i class="fa fa-times"></i>&nbspRemove
+                                </a>
+                            </p>
+                            <hr>
+                            <p>
+                                <a class='btn btn-default btn-lg keep-shopping' href=''>
+                                    Keep Shopping
+                                </a>
+                                <br><br>
+                                <a class='btn btn-primary btn-lg cart-link' href=''>
+                                    <i class="fa fa-shopping-cart">&nbspGo to My Cart</i>
+                                </a>
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>

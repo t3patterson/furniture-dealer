@@ -1,0 +1,82 @@
+.finalize-order{
+	
+	// General Page Styles
+	.inactive{
+		background: $grey;
+		opacity: .5;
+	}
+
+	.block-number{
+		display: block;
+		font-size: 21px;
+		width: 45px;
+		line-height: 45px;
+		background: $black;
+		text-align: center;
+		color: $white;
+		margin: 0 auto;
+	}
+	h3 {
+		text-align: center;
+	}
+
+	.big-card{
+		font-size: 114px;
+		text-align: center;
+	}
+
+	//Shoping-cart
+
+	.user-order{
+		.keep-browsing{
+			text-align: right;
+		}
+		.panel-heading{
+			font-size: 24px
+		}
+
+		table{
+
+			thead{
+				font-size: 18px;
+			}
+			
+			tbody th {
+				padding-left: 18px
+			}
+
+			
+		}
+	}
+	
+	//shipping
+	.shipping-info{
+
+
+	}
+	
+
+	//billing
+	.billing{
+
+	}
+	
+	//Final order summary
+	.order-summary{
+		tr>*:last-child{
+			text-align: right;
+		}
+		th{
+			font-size: 16px;
+		}
+		td.item-summary{
+			padding-left: 15px;
+		}
+		.grand-total > *{
+			border-top: 1px solid $black;
+			font-size: 21px
+		}
+	}
+
+}
+

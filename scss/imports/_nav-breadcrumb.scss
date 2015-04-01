@@ -1,0 +1,18 @@
+.my-breadcrumb {
+    ol.breadcrumb {
+        background: $sand;
+        li {
+            a {
+                color: $white;
+                text-shadow: 1px 1px 1px #000;
+            }
+            &.active {
+                color: $white;
+                text-shadow: 1px 1px 1px #000;
+                span {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

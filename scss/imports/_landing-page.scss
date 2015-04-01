@@ -1,0 +1,184 @@
+/**
+Landing-Page
+**/
+
+
+
+
+/**
+Gallery
+**/
+
+.gallery {
+    background: $tan;
+    min-height: 600px;
+    min-height: 100vh;
+    background-size: cover;
+    position:relative;
+
+    h1{
+        color: $black;
+    }
+
+    > div {
+        color: white;
+        min-width: 75%;
+        text-align: center;
+
+        img {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 2.5em;
+        }
+
+        a.btn {
+            background-color: transparent;
+            border: $black 2px solid;
+            color: $black;
+            transition: border .2s;
+
+            &:hover{
+                border: $black 4px solid;
+            }
+        }
+
+    }
+}
+
+/**
+UTILITY CLASSES
+**/
+.absolute-center {
+    position: absolute;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
+.centered {
+    text-align: center;
+}
+
+/**
+CATEGORIES
+**/
+.selection-by-style {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    text-align: center;
+    .row {
+        > * {
+            text-align: center;
+            padding-top: 100px;
+            background-size: auto 100px;
+            background-position: top center;
+            background-repeat: no-repeat;
+
+            &:nth-child(1){
+                background-image: url(../images/by-style/art-deco.svg)
+            }
+            &:nth-child(2){
+                background-image: url(../images/by-style/mid-century.svg)
+            }
+            &:nth-child(3){
+                background-image: url(../images/by-style/contemporary.svg)
+            }
+            &:nth-child(4){
+                background-image: url(../images/by-style/scandinavia.svg)
+            }
+        }
+    }
+
+     .shop-button-div{
+        margin-top: 1rem;
+        a.shop-styles-btn {
+            text-align: center;
+            background-color: transparent;
+            border: $black 2px solid;
+            color: $black;
+            transition: border .2s;
+
+                &:hover{
+                    border: $black 4px solid;
+                }
+            }
+    }
+}
+
+
+/**
+ * SELECTION BY FURNITURW CATEGORY
+ */
+
+section.selection-by-cat {
+    background: $dark-brown;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    text-align: center;
+    color:$white;
+    text-shadow: 1px 1px 1px #000;
+
+    .cat-link  {
+        color: $white;
+        a &:visited{color: $white;}
+    }
+        
+    .our-style {
+        padding: 3%;
+        text-align: center;
+
+        &:hover{background:$sand; }
+        img {
+            color: $white;
+        }   
+    }
+    
+    .shop-button-div{
+        margin-top: 1rem;
+        a.shop-categories-btn {
+            text-align: center;
+            background-color: transparent;
+            border: $white 2px solid;
+            color: $white;
+            transition: border .2s;
+
+
+                &:hover{
+                    border: $white 4px solid;
+                }
+            }
+    }
+}
+
+
+
+
+
+/** CONSIGNMENT **/
+
+.consignment {
+    background-color: $beige;
+    padding-top: 4em;
+    padding-bottom: 4em;
+    
+    h2{
+        margin-bottom: 24px;
+        text-shadow: 1px 1px 1px $white;
+    }
+
+    h2, & > div {
+        text-align: center;
+        color: $dark-brown;
+    }
+
+  
+    a.consignment-form-btn {
+            background-color: transparent;
+            border: $black 2px solid;
+            color: $black;
+            transition: border .2s;
+
+            &:hover{
+                border: $black 4px solid;
+            }
+        }
+}

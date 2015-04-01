@@ -1,0 +1,31 @@
+<main class="container-fluid my-breadcrumb">
+    <section class="container-fluid product-display">
+        <div class="row">
+
+
+        <% data.forEach(function(parseObject){ %>
+            <% if(!parseObject.get('database_img_1') || !(parseObject.get('database_img_1').match(/.jpg/)) ){
+                    console.log('no image')
+                    var imgLink = "./images/no_image.jpg"
+                    } else { 
+                        console.log('yes image')
+                        var imgLink = parseObject.get('database_img_1') } %>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 img-listing-container" data-MR-ID="<%=parseObject.get('MR_id')%>">
+                <a href="#" class='single-listing-link'>
+                
+                <div class="thumbnail" >
+                    <div class="div-overlay"></div>
+                    <img src="<%=imgLink%>" alt="gallery-img" class="thumbnail-img" onError="this.onerror=null;this.src='./images/no_image.jpg';">
+                    <div class="caption">
+                        <h5><%=parseObject.get('item')%></h5>
+                        <p><%=parseObject.get('priceDollar')%></p>
+                    </div>
+                
+                </div>
+                </a>
+            </div>
+        <%})%>
+        </div>
+    </section>
+</main>

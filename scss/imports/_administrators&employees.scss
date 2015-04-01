@@ -1,0 +1,57 @@
+.enter-new-item,
+.administrators-users{
+
+	padding: 2rem 2.5%;
+	
+	// General Page Styles
+	.inactive{
+		background: $grey;
+		opacity: .5;
+	}
+
+	.block-number{
+		display: block;
+		font-size: 21px;
+		width: 45px;
+		line-height: 45px;
+		background: $black;
+		text-align: center;
+		color: $white;
+		margin: 0 auto;
+	}
+	h1,
+	h3 {
+		text-align: center;
+	}
+
+	.MR-ID-display {
+		padding-left: 36px;
+		color: $green;
+	}
+
+	.big-card{
+		font-size: 114px;
+		text-align: center;
+	}
+	
+	.upload-image-group{
+		padding: 6px 12px 0px 12px;
+	}
+
+	//for enter-new-item
+	.has-error{
+	label {
+			color: $has-error;
+		}
+	 .upload-image-group
+		{
+		border: 1px solid $has-error;
+		}
+		
+	}
+
+	.response-msg {
+		display: none;
+		color: red;
+	}
+}
