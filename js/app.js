@@ -38,10 +38,15 @@ function app(){
         //my app
         {url: "./js/Client.js"}
         
-        // //DATA SCRIPTS 
-        // ,{url: "./data/INPUT-totalSet.js"}
-        // ,{url: "./data/INPUT-jpegData(12501-14410).js"}
-        // ,{url: "./data/EXECUTE-generateData2.js"}
+        // //DATA SCRIPTS
+        ,{url: "./data/INPUT-totalSet.js"}
+        ,{url: "./data/INPUT-jpegData.js"}
+        ,{url: "./data/INPUT-productInfo.js"}
+        ,{url: "./data/EXECUTE-GenerateParseData.js"}
+        ,{url: "./data/scripts-organizeCategories/categoryMap2.js"}
+        ,{url: "./data/scripts-organizeCategories/allCategories.js"}
+
+
     ).then(function(){
         // if turning on JSnoX, uncommment the following line
         // window.d = jsnox(React);
@@ -52,7 +57,11 @@ function app(){
         // start app?
         Parse.initialize('8cefZxGY6FiSAhEw5YCwN9mBjgoiUgGcdJnTZgdy','RWjs5EKsDkBlZ1L05crkUetjonIG1DGNiaM664OY');
 
-        var beginApp = new PageRouter()
+        // 
+        //----------------
+        // Start App
+        //---------------
+        var beginApp = new PageRouter();
     })
 
 }

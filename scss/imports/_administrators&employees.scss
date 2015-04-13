@@ -55,3 +55,26 @@
 		color: red;
 	}
 }
+
+.enter-new-item{
+	.form-group{
+		padding-left: 5%;
+	}
+	
+	.categories{
+		.form-control{
+			width: 50%;
+		}
+
+		.subcategory-group-1 {
+			margin-top: 6px;
+			padding-left: 5%;
+		}
+
+		.subcategory-group-2{
+			margin-top: 6px;
+			padding-left: 10%;
+		}
+	}
+	
+}

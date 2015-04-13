@@ -1,5 +1,6 @@
 .my-breadcrumb {
     ol.breadcrumb {
+        margin: 0px;
         background: $sand;
         li {
             a {
@@ -16,3 +17,20 @@
         }
     }
 }
+
+.multi-description{
+    background: $beige;
+    margin: 0;
+    padding: 12px 15px;
+    text-align: center; 
+    text-shadow: 1px 1px 1px $white;
+    &.inactive{
+        display: none
+    }
+
+    &.active{
+        display:block
+    }
+
+}
+

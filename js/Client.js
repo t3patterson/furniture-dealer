@@ -24,7 +24,6 @@
             }
         var newnum = commaSeparated.join('')
         return newnum
-
     }
 
 
@@ -36,19 +35,20 @@
 
     Parse.PageRouter = Parse.Router.extend({
         initialize: function() {
+            // -------------------------
+            // Code for saving data to Parse **
+            // ---------------------------
+            // 
+            // var dataToParse = dataArrayToUpload;
+            // console.log(dataToParse)
+            // dataToParse.forEach(function(item, index){
+            //         var itemToUpload = new Parse.FurnitureItem(item);
+            //         _.delay(function(){itemToUpload.save()},80);
+            // })  
+
+           
             var self = this
             console.log('routing initialized');
-
-            // -------------------------
-            // Code for saving dummy data to Parse **
-            // ---------------------------
-            // var dataSet2 = dataArrayToUpload.slice(0,1001)
-
-            // dataSet2.forEach(function(item, index){
-            //         var itemToUpload = new Parse.FurnitureItem(item);
-            //         itemToUpload.save()
-            // })
-
 
             //Collections 
             this.shoppingCart = new Parse.FurnitureGroup();
@@ -69,11 +69,16 @@
                 collection: this.shoppingCart
             })
             this.thankCustomerView = new Parse.ThanksView();
-            this.newItemFormView = new Parse.EnterNewItemForm;
+            this.newItemFormView = new Parse.EnterNewItemFormView();
             this.adminLoginView = new Parse.AdminLoginView();
             // this.userLoginView = new Parse.UserLoginView();
             this.adminDashboardView = new Parse.AdminDashboardView();
             this.breadCrumbView = new Parse.BreadCrumbView();
+            
+            //Temporary-app-helper 
+            this.reorganizeImagesView = new Parse.ReorganizeImagesView();
+
+
             //-------------------
             //Application Event Listeners/Handlers
             //-------------------
@@ -94,19 +99,19 @@
         addToCartHandler: function() {
             var self = this
                 //Get the MR-ID on Session Storage
-            var MRidOnSS = sessionStorage.getItem('MR-item-ID');
+            var MRidOnSS = parseInt(sessionStorage.getItem('MR-item-ID'));
             console.log(MRidOnSS)
-            sessionStorage.clear()
 
             //Filter the model from the browsedItems array
             console.log(this.shoppingCart)
 
 
             if (!this.productsListView.collection) {
-                console.log('not defined');
+                console.log('collection not defined');
                 var pQuery = new Parse.Query(Parse.FurnitureItem);
                 pQuery.equalTo('MR_id', MRidOnSS)
                 pQuery.find().then(function(result) {
+                    console.log(result)
                     self.shoppingCart.add(result);
                     self.cartView.collection = self.shoppingCart;
                     self.singleListingView.cart = self.shoppingCart;
@@ -126,6 +131,8 @@
                     this.singleListingView.cart = this.shoppingCart;
                 }
             }
+
+                sessionStorage.clear()
 
 
 
@@ -150,28 +157,41 @@
 
         routes: {
             'employee/*/enter-new-item': 'loadEnterNewItemForm',
-            'employee/login': 'loadUserLogin',
+            'employee/*/edit-existing-item/:mrId': 'loadEditExistingItemForm',
 
+            'employee/login': 'loadUserLogin',
             'admin/dashboard': 'loadAdminDashboard',
             'admin/login': 'loadAdminLogin',
-
             'finalize-order': 'loadFinalizeOrder',
             'consignment-form': 'loadConsignment',
             'thankyou': 'loadThankCustomer',
             'shopping-cart': 'loadShoppingCart',
-            'products/*/category/:type': 'loadCategoryListings',
+            'products/*/categories/:type': 'loadCategoryListings',
             'products/*/listing/:mrId': 'loadSingleListing',
-            'products/*/style/:style': 'loadStyleListings',
+            'products/*/style/:styleName': 'loadStyleListings',
             'products': 'loadProductsPg',
             'about-us': 'loadAboutPg',
+
+            //add-items
+            'fix-images':'loadReorganizeImgs',
+            
             '*path': 'loadHome'
         },
 
+        loadReorganizeImgs: function(){
+            this.reorganizeImagesView.collection = {
+                imageArray: [],
+                imageTnArray: []
+            }
+
+            this.reorganizeImagesView.render();
+        },
+
         loadHome: function() {
-            this.clearBreadCrumb();
             this.navView.render();
             window.scrollTo(0,0)
             this.homeView.render();
+            this.clearBreadCrumb();
             this.footerView.render()
             console.log(this.homeView)
         },
@@ -219,7 +239,6 @@
             var self = this
             console.log('product-page loaded')
             this.checkNav()
-            this.insertBreadCrumb();
             //new ParseQuery with FurnitureItem-model
             var pQuery = new Parse.Query(Parse.FurnitureItem);
             pQuery.descending('MR_id');
@@ -233,6 +252,7 @@
                 self.productsListView.collection = parseReturn
                 window.scrollTo(0,0)
                 self.productsListView.render();
+                self.insertBreadCrumb();
                 self.checkFooter();
             })
         },
@@ -246,36 +266,88 @@
          * 3) Query returns matched results as collection
          * 4) Render the collection
          */
-        loadCategoryListings: function(categoryType) {
+        loadCategoryListings: function(catType) {
             var self = this
             console.log('category Page loaded');
             this.checkNav();
-            this.insertBreadCrumb();
 
+            var categoryLabelMap = {
+                "rugs": "Rugs",
+                "tables": "Tables",
+                "desks": "Desks",
+                "lighting": "Lighting",
+                "case-goods": "Case Goods",
+                "seating": "Seating"
+
+            }
 
             var pQuery = new Parse.Query(Parse.FurnitureItem);
             
 
-            pQuery.equalTo("category", categoryType);
+            pQuery.equalTo("categoryTreeByName", categoryLabelMap[catType]);
             pQuery.limit(20)
 
             pQuery.find().then(function(matched) {
+                console.log(matched)
                 self.productsListView.collection = matched
                 self.checkFooter();
                 window.scrollTo(0,0);
                 self.productsListView.render(); //pass a collection;
+                self.insertBreadCrumb();
+
             })
 
         },
 
+        loadStyleListings: function(styleName){
+            var self = this;
+
+            this.checkNav();
+
+            var styleLabelMap = {
+                "mid-century": "Mid Century",
+                "art-deco": "Art Deco",
+                "scandinavian" : "Scandinavian",
+                "traditional": "Traditional"
+            }
+
+            var styleCollection = new Parse.FurnitureGroup()
+            var pQuery = new Parse.Query(Parse.FurnitureItem);
+            pQuery.equalTo('inventoryStatus','1');
+
+            if (styleName === "mid-century"){
+                pQuery.limit(400);
+                var regexTest = false;
+                } else {
+                    pQuery.limit(60);
+                    
+                    pQuery.equalTo("categoryTreeByName",styleLabelMap[styleName])
+                    var regexTest = true;
+                }
+
+            pQuery.find().then(function(data){
+                data.forEach(function(listing){
+                    console.log(listing)
+                    if(listing.get('item') && (regexTest || listing.get('item').match(/mid century/gi))){
+                        if(styleCollection.length<=20) styleCollection.add(listing)
+                    }
+                    window.scrollTo(0,0);
+
+                    self.productsListView.collection = styleCollection
+                    self.productsListView.render()
+                    self.insertBreadCrumb();
+
+                })
+            })
+           
+        },
 
 
         loadSingleListing: function(mrId) {
             var self = this
+            mrId = parseInt(mrId)
             console.log('single-listing routed');
             this.checkNav();
-            this.insertBreadCrumb();
-
             //test to see if the collection exists
             if (!this.productsListView.collection) {
                 //if collection doesn't exist...
@@ -295,6 +367,7 @@
                     self.singleListingView.trigger('rendered')
                     console.log("'rendered' triggered")
                         //put the model on browsedItems array
+                    self.insertBreadCrumb();
 
                     //render footer
                     self.checkFooter();
@@ -302,20 +375,23 @@
                 })
             } else {
                 console.log('collection found in productsListView')
-                var listingsGroup = this.productsListView.collection
+                var listingsGroup = this.productsListView.collection;
                 var clickedModel = listingsGroup.filter(function(model) {
                         return model.get('MR_id') === mrId
                     })
                     //Handle the data
                     //Render on Page
+                console.log(clickedModel[0])
                 this.singleListingView.model = clickedModel[0]
                 window.scrollTo(0,0)
                 this.singleListingView.render();
                 
-                this.singleListingView.trigger('rendered')
-                console.log("'rendered' triggered")
-                console.log(this.shoppingCart)
+                this.singleListingView.trigger('rendered');
+                console.log("'rendered' triggered");
+                this.insertBreadCrumb();
                 this.checkFooter();
+
+
             }
         },
 
@@ -372,7 +448,13 @@
         },
 
         loadEnterNewItemForm: function() {
-            this.newItemFormView.collection = ["chair", "diningTable", "sofa", "bedFrame", "coffeeTable", "credenza", "loungeChair", "nightstand", "officeChair", "sideChair", "dresser"]
+
+            console.log
+            var data = {
+                categoryLabels: MRCategoryLabels,
+                categoryMap: MRCategoryMap
+            }
+            this.newItemFormView.collection = data
             this.checkNav();
             this.clearBreadCrumb();
             this.clearFooter();
@@ -381,6 +463,13 @@
 
         },
 
+        loadEditExistingItemForm: function() {
+
+          
+        },
+
+
+
         loadAdminLogin: function() {
             console.log('admin login rendered')
             this.checkNav();
@@ -388,6 +477,7 @@
             this.clearFooter();
             window.scrollTo(0,0)
             this.adminLoginView.render();
+
 
         },
 
@@ -426,9 +516,9 @@
         el: '.wrapper',
         events: {
             "click a.products-link": "triggerProductPageHash",
+            "click a.style-link":"triggerStylePageHash",
             "click a.cat-link": "triggerCatPageHash",
             "click .consignment-form-btn": "triggerConsignmentFormHash"
-
         },
 
 
@@ -446,9 +536,15 @@
             
             var categoryName = $(evt.target).closest('a').attr('data-category');
             
-            window.location.hash = "/products/category/" + categoryName;
+            window.location.hash = "/products/categories/" + categoryName;
         },
 
+        triggerStylePageHash: function(evt){
+            evt.preventDefault();
+            var styleName = $(evt.target).closest('a').attr('data-byStyle');
+            console.log(styleName);
+            window.location.hash = "/products/style/"+styleName;
+        },
 
         triggerConsignmentFormHash: function(evt) {
             evt.preventDefault();
@@ -749,12 +845,80 @@
         el: '.wrapper'
     })
 
-    Parse.EnterNewItemForm = Parse.TemplateView.extend({
+    Parse.EnterNewItemFormView = Parse.TemplateView.extend({
         view: 'enter-new-item',
         el: '.wrapper',
         events: {
             'click .generate-MR': 'queryDBForNewMR_id',
             'submit .new-item-form': 'submitItemToDB',
+            'blur .top-level-category': 'handleTopLevelSelection',
+            'blur .sub-category-1': 'handleSubCategory_1_Selection',
+        },
+
+        subCategory1: "",
+
+        handleTopLevelSelection: function(evt){
+            console.log(evt)
+            var self = this;
+            $('.sub-category-1').prop('disabled',false)//
+            $('option.sub-category1-value').remove()
+            $('.disabled-subcat1-option').prop('selected', true);
+
+            var firstLevelCategory = $('.top-level-category').val()
+
+            var subCategories = this.collection.categoryMap[firstLevelCategory];
+
+            if(!subCategories){
+                console.log('noSubCategories')
+                $('.disabled-subcat1-option').text("--No subcategories for this option--")
+                $('.sub-category-1').prop('disabled',true);
+
+            } else {subCategories.forEach(function(subCategoryNum){
+                $('.disabled-subcat1-option').text("--Select Sub-Category--")
+
+                var subCategoryHTMLOptionEl = $('<option>');
+                    subCategoryHTMLOptionEl
+                        .val(subCategoryNum)
+                        .addClass('sub-category1-value')
+                        .text(self.collection.categoryLabels[subCategoryNum]+" - ("+subCategoryNum+")")
+                    $('select.sub-category-1').append(subCategoryHTMLOptionEl)
+
+                })
+            }
+        },
+
+        handleSubCategory_1_Selection:function(evt){
+            var self = this;
+            console.log('<select> sub-cat-1 blurred')
+            $('select.sub-category-2').prop('disabled',false)//
+            $('option.sub-category2-value').remove()
+            $('option.disabled-subcat2-option').prop('selected', true)
+
+            var selectedSubCategory = $('select.sub-category-1').val();
+
+            var subCategories = this.collection.categoryMap[selectedSubCategory];
+
+            if(!subCategories){
+                console.log('noSubCategories-2')
+                $('.disabled-subcat2-option').text("--No subcategories for this option--");
+                $('.sub-category-2').prop('disabled',true);
+            
+            } else {
+                subCategories.forEach(function(subCategoryNum){
+                
+                $('.disabled-subcat2-option').text("--Select Sub-Category--")
+
+                    var subCategoryHTMLOptionEl = $('<option>');
+
+                    subCategoryHTMLOptionEl
+                        .val(subCategoryNum)
+                        .addClass('sub-category2-value')
+                        .text(self.collection.categoryLabels[subCategoryNum]+" - ("+subCategoryNum+")")
+
+                    $('select.sub-category-2').append(subCategoryHTMLOptionEl);
+                    
+                })
+            }
         },
 
         queryDBForNewMR_id: function(evt) {
@@ -768,8 +932,8 @@
                 queryAllMRs.limit(5)
                 queryAllMRs.find().then(function(results) {
                     console.log(results)
-                    var rawIDNum = results[0].get('MR_id').substr(2);
-                    var newItemMR_id = "MR" + (parseInt(rawIDNum) + 1);
+                    var highestID = results[0].get('MR_id');
+                    var newItemMR_id = highestID + 1;
                     document.querySelector('.MR-ID-display').innerHTML = newItemMR_id
                 })
             }
@@ -778,31 +942,48 @@
         submitItemToDB: function(evt) {
             evt.preventDefault()
 
-            // var $newMrId = $('.MR-ID-display').text(),
-            // $newItemName = $('.new-item-name').val("alpha desk"),
-            // $newItemPrice = parseInt($('.new-item-price').val('3821')),
-            // $newItemCategory = $('.new-item-category').val('diningTable'),
-            // $newItemDesc = $('.new-item-desc').val('cool table man')
-
-            //if form is valid, then create a new FurnitureItem Model
-            if (this._validateFormUI()) {
                 var $newMrId = $('.MR-ID-display'),
                     $newItemName = $('.new-item-name'),
                     $newItemPrice = ($('.new-item-price')),
-                    $newItemCategory = $('.new-item-category'),
                     $newItemDesc = $('.new-item-desc'),
+                    $newItemCondition = $('.new-item-condition'),
+                    $newItemDesigner = $('.new-item-designer'),
+                    $newItemDimensions = $('.new-item-dimensions'),
+                    $newItemManufacturer = $('.new-item-manufacturer'),
+                    $topLevelCategory = $('.top-level-category'),
+                    $subCategory_1 = $('.sub-category-1'),
+                    $subCategory_2 = $('.sub-category-2'),
                     $newImgFile = $('.selected-img-file')
 
                 //
-                var newFurnitureItemModel = new Parse.FurnitureItem({
-                    MR_id: $newMrId.text(),
-                    item: $newItemName.val(),
-                    description: $newItemDesc.val(),
-                    category: $newItemCategory.val(),
-                    price: parseInt($newItemPrice.val())
+                
+                var categoryTreeByNumber= []
+                if($topLevelCategory.find('option:selected').val()) { categoryTreeByNumber.push($topLevelCategory.find('option:selected').val()) }
+                if($subCategory_1.find('option:selected').val()) {categoryTreeByNumber.push($subCategory_1.find('option:selected').val())}
+                if($subCategory_2.find('option:selected').val()) {categoryTreeByNumber.push($subCategory_2.find('option:selected').val())}
+
+
+                console.log(categoryTreeByNumber)
+                var treeByName = categoryTreeByNumber.map(function(categoryNum){
+                    return MRCategoryLabels[categoryNum]
                 })
 
-                //Update
+                var newFurnitureItemModel = new Parse.FurnitureItem({
+                    MR_id: parseInt($newMrId.text()),
+                    item: $newItemName.val(),
+                    price: parseInt($newItemPrice.val()),
+                    priceDollar: "$"+numberCommaSeparated( parseInt($newItemPrice.val()) ),
+                    condition: $newItemCondition.val(),
+                    description: $newItemDesc.val(),
+                    designer: $newItemDesigner.val(),
+                    dimensions: $newItemDimensions.val(),
+                    manufacturer: $newItemManufacturer.val(),
+                    categoryTreeByNumber: categoryTreeByNumber || "",
+                    categoriesByNumber: [categoryTreeByNumber[categoryTreeByNumber.length-1]] || "",
+                    categoryTreeByName: treeByName || "",
+                    categoriesByName: [treeByName[treeByName.length-1]]|| "",
+                    inventoryStatus: "1"
+                })
 
                 //Create a Parse.File and put the file from the DOM onto it
                 var uploadedFiles = $newImgFile[0].files
@@ -824,20 +1005,25 @@
                     }
                 }
 
-                //load function that iterates over files and saves them to parse server
+                //create load function that iterates over img-files and saves them to parse server
                 var loadFiles = function(filesGroup, itemModel) {
+                    console.log('loading files....')
                     var totalFiles = filesGroup.length;
+                    
                     filesGroup.forEach(function(imgFile, filesIndex) {
                         var parseImgFile = new Parse.File(imgFile[0], imgFile[1]);
                         console.log(parseImgFile)
+                    
                         parseImgFile.save()
                             .then(function(parseFile) {
                                 console.log(parseFile)
-                                var imgNameInDB = ("database_img_" + (filesIndex + 1))
+                                var imgNameInDB = ("database_img_FILE_" + (filesIndex + 1))
                                 itemModel.set(imgNameInDB, parseFile);
+                                
                                 if (filesIndex + 1 === filesGroup.length) {
                                     console.log(itemModel)
                                     itemModel.set("imageCount", filesGroup.length)
+                                
                                     itemModel.save().then(function(result) {
                                         console.log(result)
                                     }).fail(function(error) {
@@ -851,20 +1037,39 @@
 
                 loadFiles(filesGroupArray, newFurnitureItemModel)
 
-                //Clear out the form
 
-                $newMrId.text("")
-                $newItemName.val("")
-                $newItemDesc.val("")
-                $newItemCategory.val("")
-                $newItemPrice.val("")
+
+
+                //Clear out the form inputs
+
+                $newMrId.text("");
+                $newItemName.val("");
+                $newItemDesc.val("");
+                $newItemPrice.val("");
+                $newItemCondition.val("");
+                $newItemDesigner.val("");
+                $newItemDimensions.val("");
+                $newItemManufacturer.val("")
+
+
+                //For Categories: Clear out the <option> in <select> top-level category and sub-category
+                console.log($('option.sub-category1-value'));
+                $('option.sub-category1-value').remove();
+                $('option.sub-category2-value').remove();
+                //For Categories: Select first 'disabled' default options
+                $topLevelCategory.find('.disabled-top-level-option').text('--Select Category--').prop('selected',true);
+                $subCategory_1.find('.disabled-subcat1-option').text('--Must Select Top-Level Category--').prop('selected',true).prop('disabled',true);
+                $subCategory_2.find('.disabled-subcat2-option').text('--Must Select Sub-Category--').prop('selected',true).prop('disabled',true);
+
+                //For ImageFiles: Clear the files stored in <input type="file" multiple>
                 resetField($newImgFile)
 
+                //remove styles
                 $('.form-group').each(function() {
                     $(this).removeClass('has-success has-error')
 
                 })
-            }
+            // }
         },
 
         _validateFormUI: function() {
@@ -873,7 +1078,6 @@
             var $newMrId = $('.MR-ID-display')
             var $newItemName = $('.new-item-name');
             var $newItemPrice = $('.new-item-price');
-            var $newItemCategory = $('.new-item-category');
             var $newItemDesc = $('.new-item-desc');
             var $newImgFile = $('.selected-img-file');
 
@@ -910,15 +1114,15 @@
 
 
             //Check to see if new item category has value
-            if (!$newItemCategory.val()) {
-                $newItemCategory.closest('.form-group').addClass('has-error')
-                testFields.push(false)
+            // if (!$newItemCategory.val()) {
+            //     $newItemCategory.closest('.form-group').addClass('has-error')
+            //     testFields.push(false)
 
-            } else {
-                $newItemCategory.closest('.form-group').addClass('has-success').removeClass('has-error')
-                testFields.push(true)
+            // } else {
+            //     $newItemCategory.closest('.form-group').addClass('has-success').removeClass('has-error')
+            //     testFields.push(true)
 
-            }
+            // }
 
             //check to see if new item cagegory has value
             if (!$newItemDesc.val()) {
@@ -948,6 +1152,130 @@
             return validFormTest
         }
     })
+
+
+
+    Parse.ReorganizeImagesView = Parse.TemplateView.extend({
+        view: 'fix-images',
+        el: '.wrapper',
+
+        events:{
+            'click .get-mr-imgs': 'getImagesFromDB',
+            'click .upload-imgs': 'saveImagesToDB',
+            'click .select-image': 'handleSelected'
+        },
+
+        imgTotal: 0,
+        imgCounter: 0,
+        currentMR: null,
+
+
+        getImagesFromDB:function(evt){
+            var self = this
+            evt.preventDefault();
+
+            var mrValue = parseInt($('.mr-input').val());
+            this.currentMR = mrValue;
+
+            var pQuery = new Parse.Query(Parse.FurnitureItem)
+
+            pQuery.equalTo('MR_id', mrValue)
+
+            pQuery.find().then(function(data){
+                console.log(data)
+                var data = self.revisedModel = data[0]
+                
+                var imageArray = []
+                var imageTnArray = []
+                for (var key in data.attributes){
+                    if(key.match(/database_img_LINK_[0-9]/)) {
+                        imageArray.push(data.attributes[key])
+                    }
+                    if(key.match(/database_img_LINK_t_[0-9]/)) {
+                        imageTnArray.push(data.attributes[key])
+                    }
+                }
+
+
+                self.collection = {
+                    imageTnArray: imageTnArray,
+                    imageArray: imageArray
+                }
+
+                console.log(self)
+
+
+                self.imgTotal = imageArray.length
+                
+                self.render()
+                $('h3').html('MR-'+mrValue).attr('data-id',mrValue)
+                })
+            console.log('get clicked');
+        },
+
+        handleSelected: function(evt){
+            console.log(evt.target)
+            var imageSourceTN = $(evt.target).attr('src');
+            var imageSourceREG = $(evt.target).attr('data-imgSrc')
+            $(evt.target).parent().remove();
+
+            this.imgCounter++
+
+            $('.img-input-'+this.imgCounter).find('img').attr('src',imageSourceTN)
+            $('.img-input-'+this.imgCounter).find('p').text(imageSourceREG)
+            
+            console.log(this.imgCounter + " | " + this.imgTotal)
+
+            if(this.imgCounter===this.imgTotal){
+                console.log('image counter = image total')
+                $('a.upload-imgs').removeAttr('disabled')
+            }
+        },
+
+        saveImagesToDB: function(evt){
+            evt.preventDefault();
+            console.log('saved clicked');
+
+            console.log(this.imgCounter)
+            console.log(this.revisedModel)
+            
+            var i
+            
+            var uploadImages = {}
+            var uploadThumbnails = {}
+            
+            for (i = 0; i < this.imgCounter; i++){
+                var imgString = $('.img-input-'+(i+1)).find('p').text()
+                console.log(imgString)
+
+                var thumbnailImgString = imgString.slice(0,imgString.indexOf('.jpg')) + '_t.jpg';
+                console.log(thumbnailImgString) 
+
+                uploadImages['database_img_LINK_'+(i+1)] = imgString
+                uploadThumbnails['database_img_LINK_t_'+(i+1)] = thumbnailImgString
+               
+            }
+
+            console.log(uploadImages);
+            console.log(uploadThumbnails);
+
+            console.log(this.revisedModel)
+
+            this.revisedModel.set(uploadImages)
+            this.revisedModel.set(uploadThumbnails)
+
+            //Clear fields
+            $('.listing-id').text('MR')
+            $('.info-container').html('')
+            $('.upload-imgs').attr('disabled',true)
+            this.imgCounter = 0;
+            this.imgTotal = 0;
+            this.currentMR++
+            $('input.mr-input').val(this.currentMR)
+
+        }
+    })
+
 
     //*****************
     // Models & Collections

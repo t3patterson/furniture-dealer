@@ -14,17 +14,16 @@
                                 <ol class="carousel-indicators">
                                     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                                     <%console.log(data)%>
-                                    <% var imgCount = data.get('imageCount')||0 ;%><!-- 
-                                    <%console.log(data)%> -->
+                                    <% var imgCount = data.get('imageCount')||0 ;%>
                                     <% if (!(imgCount===0)){
                                         console.log('img count not 0')
-                                        for(var i = 1; i <= imgCount; i++){%>
+                                        for(var i = 1; i < imgCount; i++){%>
                                     <li data-target="#carousel-example-generic" data-slide-to="<%=Math.min(i,imgCount-2)%>"></li>
                                     <%}}%>
                                 </ol>
                                 <!-- Test to see if image exists -->
                                 <% var firstImage;
-                                 (!data.get('imageCount'))? firstImage ='./images/no_image.jpg': firstImage = data.get('database_img_1')%>
+                                 (!data.get('imageCount'))? firstImage ='./images/no_image.jpg': firstImage = data.get('database_img_LINK_1') || data.get('database_img_FILE_1')._url; %>
 
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner" role="listbox">
@@ -36,9 +35,9 @@
                                     </div>
                                     
                                     <% if (data.get('imageCount')){
-                                    for (var i = 1; i <= data.get('imageCount'); i++){%>
+                                    for (var i = 2; i <= data.get('imageCount'); i++){%>
                                     <div class="item">
-                                        <div style="background:url(<%=data.get('database_img_'+(i))%>) center center; background-size:cover;" class="slider-size-single-listing">
+                                        <div style="background:url(<%= data.get('database_img_LINK_'+i) || data.get('database_img_FILE_'+i)._url%>) center center; background-size:cover;" class="slider-size-single-listing">
                                             <div class="carousel-caption">
                                             </div>
                                         </div>
@@ -63,46 +62,59 @@
             <section class="col-xs-12 col-sm-6 col-md-7 key-listing-info">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xs-12 label">
+                        <div class="col-xs-12 label-product">
                             <h2 class='item'><%=data.get('item')%></h2>
                         </div>
-                        <div class="col-xs-12 label">
+                        <div class="col-xs-12 label-product">
                             <h5 class='mr-id'>MR-<%=data.get('MR_id')%></h5>
                         </div>
-                        <div class="col-xs-12">
-                            <h3 class='price'><%=data.get('priceDollar')%></h3>
+                        <div class="col-xs-12 label-price">
+                            <h4 class='price'><%=data.get('priceDollar')%></h4>
                         </div>
-                        <div class="col-xs-12">
+                        <div class="col-xs-12 product-info topper">
                             <h4 class="description">Description</h4>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur placeat accusantium tenetur, necessitatibus quisquam atque.
-                                <%=data.get( 'about')%>
+                                <%=data.get('description')||'none provided'%>
+                                <br>
+                                &nbsp;
                             </p>
                         </div>
-                        <div class="col-xs-12">
-                            <h4 class="manufacturer">Original Manufacturer</h4>
-                            <p>
-                                Lorem ipsum.
-                                <%=data.get( 'about')%>
-                            </p>
-                        </div>
-                        <div class="col-xs-12 ">
+                        <div class="col-xs-12 product-info">
                             <h4 class="dimensions">Dimensions</h4>
                             <p>
-                                Lorem ipsum dolor sit.
-                                <%=data.get( 'about')%>
+                                <%=data.get('dimensions')||'---'%>
+                                <br>
+                                &nbsp;
                             </p>
                         </div>
-                        <div class="col-xs-12 ">
+                        <div class="col-xs-12 product-info">
+                            <h4 class="dimensions">Information About the Designer</h4>
+                            <p>
+                                <%=data.get('designer')||'---'%>
+                                <br>
+                                &nbsp;
+                            </p>
+                        </div>
+                        <div class="col-xs-12 product-info">
+                            <h4 class="manufacturer">Original Manufacturer</h4>
+                            <p>
+                                <%=data.get('manufacturer')||'---'%>
+                                <br>
+                                &nbsp;
+                            </p>
+                        </div>
+                        <div class="col-xs-12 product-info bottom">
                             <h4 class="condition">Condition</h4>
                             <p>
-                                Lorem ipsum dolor sit amet.
-                                <%=data.get( 'about')%>
+                                <%=data.get('condition')||'---'%>
+                                <br>
+                                &nbsp;
                             </p>
                         </div>
                         <div class="col-xs-12 cart-status">
                             <p>
-                                <a href="#" class="btn btn-success add-item-btn"><i class="fa fa-plus"></i>&nbspADD TO CART</a>
+                                <br>
+                                <a href="#" class="btn btn-success add-item-btn"><i class="fa fa-plus"></i>&nbsp;ADD TO CART</a>
                                 
                                 <br>
                                 <br>
@@ -115,14 +127,13 @@
                             </p>
                             <hr>
                             <p>
+                                <a class='btn btn-primary btn-lg cart-link' href=''>
+                                        <i class="fa fa-shopping-cart">&nbsp;Go to My Cart</i>
+                                </a>
+                                <br><br>
                                 <a class='btn btn-default btn-lg keep-shopping' href=''>
                                     Keep Shopping
                                 </a>
-                                <br><br>
-                                <a class='btn btn-primary btn-lg cart-link' href=''>
-                                    <i class="fa fa-shopping-cart">&nbspGo to My Cart</i>
-                                </a>
-
                             </p>
                         </div>
                     </div>

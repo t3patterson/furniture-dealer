@@ -1,0 +1,87 @@
+<main class="container-fluid enter-new-item">
+    <div class='flash-overlay'></div>
+    <div class="row">
+        <div class="col-xs-12 col-md-offset-3 col-md-6 finalize-order">
+            <span class='block-number'><i class="fa fa-plus"></i></span>
+            <h3>Enter-New-Item</h3>
+            <p class="big-card"><i class="fa fa-tag"></i></p>
+            <form class="new-item-form">
+                <h4>Product Information</h4>
+                <div class="form-group">
+                    <label class="control-label" for="MR_id">Metro Retro ID for this Item:</label>
+                    <p class="form-control MR-ID-display"></p>
+                    <button class="btn btn-primary btn-sm generate-MR">
+                        Generate New MR-ID
+                    </button>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" for="itenName">Item Name</label>
+                    <input type="text" class="form-control new-item-name" placeholder="Enter Name">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="itemPrice">Item Price</label>
+                    <input type="text" class="form-control new-item-price" id="shipping-AddressLine1" placeholder="Numbers only">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ItemDescription">Item Description</label>
+                    <textarea class="form-control new-item-desc" rows="2" maxlength="200"></textarea>
+                </div>
+                 <div class="form-group">
+                    <label class="control-label" for="exampleInputEmail1">Condition</label>
+                    <input type="text" class="form-control new-item-condition" id="shipping-AddressLine1" placeholder="Optional">
+                </div>
+                 <div class="form-group">
+                    <label class="control-label" for="exampleInputEmail1">Dimensions</label>
+                    <input type="text" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="Describe dimensions">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="exampleInputEmail1">Designer</label>
+                    <input type="text" class="form-control new-item-designer" id="shipping-AddressLine1" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="exampleInputEmail1">Original Manufacturer</label>
+                    <input type="text" class="form-control new-item-manufacturer" id="shipping-AddressLine1" placeholder="Optional">
+                </div>
+                <hr>
+                <h4>Category Information</h4>
+                <div class="form-group categories">
+                    <label class="control-label " for="exampleInputEmail1">Furniture Top-Level Category</label>
+                    <select class="form-control top-level-category">
+                        <option value="" class="disabled-top-level-option" disabled selected>--Select Category--</option>
+                        <%_.forEach(data.categoryMap[ 'top-level'],function(categoryNum){%>
+                            <option value="<%=categoryNum%>" class='first-level-value'>
+                                <%=data.categoryLabels[categoryNum]%> - (
+                                    <%=categoryNum%>)
+                            </option>
+                            <%})%>
+                    </select>
+                    <div class="subcategory-group-1">
+                        <label class="control-label sub-category-1-label" for="exampleInputEmail1">1st Sub-Category</label>
+                        <select class="form-control sub-category-1" data-topLevel="" disabled>
+                            <option value="" class="disabled-subcat1-option" disabled selected>--Must Select Top-Level Category--</option>
+                            <!-- Insert subcategories here -->
+                        </select>
+                    </div>
+                    <div class="subcategory-group-2">
+                        <label class="control-label sub-category-2-label" for="second-subcategory">2nd Sub-Category</label>
+                        <select class="form-control sub-category-2" data-topLevel="" disabled>
+                            <option value="" class="disabled-subcat2-option" disabled selected>--Must Select Sub-Category--</option>
+                            <!-- Insert subcategories here -->
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                <h4>Add Images</h4>
+                <div class="form-group">
+                    <label for="uploadImage">Upload <em>FULL-SIZED</em> Image files</label>
+                    <div class="upload-image-group">
+                        <input type="file" class="selected-img-file" multiple>
+                        <p class="help-block">file should be in either <code>.jpg</code> or <code>.png</code> format</p>
+                    </div>
+                </div>
+                <p>
+                    <button class='btn btn-primary btn-success btn-large'>Submit New Item to Database</button>&nbsp&nbsp <span class="response-msg"></span>
+                </p>
+        </div>
+</main>

@@ -1,9 +1,50 @@
-<section class="breadcrumb-nav">
+<%
+    //capitalize the first letter for the <h1> tag
+    
+    function capitalize(str){
+         var firstLetterCapitalized = str.charAt(0).toUpperCase();
+         return firstLetterCapitalized + str.substr(1);
+    }
+
+    //test to see if the route is a single-listing
+    
+    function testForSingleListing(currentRoute){
+        var str = currentRoute[currentRoute.length-1]
+        if( !isNaN( parseInt(str) ) ){
+           return true
+            }   else{
+            return false
+            }
+    }
+
+%>
+
+<section class="my-breadcrumb">
+	<%var currentRoute = window.location.hash.substr(2).split('/');
+		%>
         <ol class="breadcrumb">
             <li><a href="#">Home</a>
-            </li>   
-            <li><a href="#">All Products</a>
             </li>
-            <li class="active"><span>Mid-Century</span></li>
+			
+            <%currentRoute.forEach(function(route, index){
+                if( route !== 'listing' &&  
+                    route !== 'style' &&
+                    index !== currentRoute.length-1 ){     
+                %>
+                    
+                <li><a href="#/<%=route%>"><%=capitalize(route)%></a>
+                  
+                <%} else if ( route!=='listing' && 
+                              index === currentRoute.length - 1&& 
+                              testForSingleListing(currentRoute) === false) 
+                { %>            
+                
+                <li class="active"><span><%=capitalize(route)%></span></li>
+
+                <%}%>
+
+            <%})%>
         </ol>
 </section>
+
+<h1 class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'><%=capitalize(currentRoute[currentRoute.length-1])%> Listings</h1>

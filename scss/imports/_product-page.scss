@@ -2,7 +2,7 @@
     text-align: center;
     .img-listing-container {
         margin-bottom: 2rem;
-        height: 430px;
+        height: 400px;
         position: relative;
         overflow: hidden;
         > * {
@@ -12,18 +12,48 @@
             padding: 0%;
         }
         .thumbnail {
-            height: 430px;
+            height: 400px;
             position: relative;
             z-index: 1;
             background: $white;
-            overflow: scroll;
+            border: 2px solid $black;
+            transition: border .2s;
 
+            &:hover{
+                border: 6px solid $brown;
+            }
 
-            caption{
+            .caption{
                 padding: 0;
-
+                margin-top: 1rem;
+                border-top: 2px solid $black;
+                h5{
+                    padding-left: 1rem;
+                    text-align: left;
+                    color: $sand;
+                    height: 30px;
+                    overflow: scroll;
+                }
+                p{
+                    text-align: right;
+                    padding-right: 2rem;
+                }
             }
             
+            .div-overlay {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                top: 0;
+                left: 0;
+                z-index: 2;
+                background: rgba(0, 0, 100, 0);
+                &:active {
+                    background: $brown-translucent;
+                    
+                }
+              
+            }   
 
             & a>img.thumbnail-img,
             &>img.thumbnail-img{
@@ -36,19 +66,6 @@
             text-decoration: none;
             }
 
-        .div-overlay {
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 2;
-            background: rgba(0, 0, 100, 0);
-            transition: background .2s;
-            &:hover {
-                background: rgba(0, 0, 100, .2);
-                
-            }
-        }
+
     }
 }

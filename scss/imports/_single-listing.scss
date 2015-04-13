@@ -1,12 +1,27 @@
 .single-listing-carousel{
     margin-bottom: 1rem;
- 
-    .slider-size-single-listing {
-        height: 250px;
-    .carousel {
-        width:100%; 
-        margin:0 auto; /* center your carousel if other than 100% */ 
+
+    ol.carousel-indicators{
+        li{ border: 1px solid $brown;
+            &.active{
+                border:4px solid $brown;
+            }
         }
+    }
+    
+    a.carousel-control{
+        font-size: 30px;
+        color: $brown;
+        text-shadow: 1px 1px 1px 1px rgba(255,255,255,.8);
+        
+        .fa-chevron-left{
+            right: 65%;
+        }
+    }
+
+    .carousel-control.right,
+    .carousel-control.left{
+        background-image: none;
     }
 }
 
@@ -14,19 +29,59 @@
     padding: 2rem 0;
 
     .key-listing-info{
-            .item,
-            .mr-id,
-            .price
-            {
-                margin-bottom:3px;
-                text-align: center;
+            div.label-product{
+                border-left: 3px solid $sand;
+                border-right: 3px solid $sand;
+                &:first-child {
+                    padding-top: 6px;
+                    border-top: 3px solid $sand;}
+                &:nth-child(2) {
+                    padding-bottom:6px; 
+                    border-bottom: 3px solid $sand;
+                }
             }
 
-            h2,h3,h4,h5{
-                margin-top: 0px;}
+
+            .item { 
+                font-size: 30px; 
+                font-weight: 200;
+            }
+
+            .price{
+                margin-bottom:3px;
+                text-align: center;
+                background: $black;
+                padding: 6px 0px;
+                color: $white;
+                border: 1px solid $sand;
+
+            }
+
+            .mr-id {
+                color: rgba(100,100,100,1);
+                text-align: right;
+            }
+
+            h2,h3,h4,h5{margin-top: 0px;}
 
             h1,h2,h3,h4,h5{
                 color: $black;
+            }
+            
+            .product-info {
+                padding-top: 5px;
+                border-left: 2px solid $tan;
+                border-right: 2px solid $tan;
+                border-top: 1px solid $tan;
+                border-bottom: 1px solid $tan;
+
+                &.topper{
+                    border-top: 2px solid $tan;
+                }
+
+                &.bottom{
+                    border-bottom: 2px solid $tan;
+                }   
             }
 
             .cart-status{
@@ -61,7 +116,7 @@
 
 @media screen and (min-width: 575px) {
     .slider-size-single-listing {
-        height: 325px;
+        height: 375px;
         .single-listing-carousel {
         width:100%; 
         margin:0 auto; /* center your carousel if other than 100% */ 
@@ -72,7 +127,7 @@
 
 @media screen and (min-width: 768px) {
     .slider-size-single-listing {
-        height: 400px;
+        height: 430px;
          .single-listing-carousel {
         width:100%; 
         margin:0 auto; /* center your carousel if other than 100% */ 
