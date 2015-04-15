@@ -1,7 +1,7 @@
 <!-- image slider -->
 <!-- 1) iterate over change item class (and use 'if' logic for second item) -->
 <!-- 2) apply similar logic to  -->
-
+<%console.log(data)%>
 <main class="the-listing">
     <div class="container-fluid">
         <div class="row">
@@ -13,7 +13,6 @@
                                 <!-- Indicators -->
                                 <ol class="carousel-indicators">
                                     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                    <%console.log(data)%>
                                     <% var imgCount = data.get('imageCount')||0 ;%>
                                     <% if (!(imgCount===0)){
                                         console.log('img count not 0')

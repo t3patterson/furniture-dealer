@@ -27,11 +27,11 @@
                     <label class="control-label" for="ItemDescription">Item Description</label>
                     <textarea class="form-control new-item-desc" rows="2" maxlength="200"></textarea>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label" for="exampleInputEmail1">Condition</label>
                     <input type="text" class="form-control new-item-condition" id="shipping-AddressLine1" placeholder="Optional">
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label" for="exampleInputEmail1">Dimensions</label>
                     <input type="text" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="Describe dimensions">
                 </div>
@@ -83,5 +83,35 @@
                 <p>
                     <button class='btn btn-primary btn-success btn-large'>Submit New Item to Database</button>&nbsp&nbsp <span class="response-msg"></span>
                 </p>
+                <hr>
+                
+                <h4>Other Details</h4>
+                <div class="form-group">
+                    <label class="control-label" for="MR_id">Third Party Vendor</label>
+                    <div class='other-details'>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" value="first-dibs"> 1stDibs
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" value="ebay"> Ebay
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" value="one-kings-lane"> One King's Lane
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="MR_id">Consignment</label>
+                    <div class='other-options'>
+                        <label class="radio-inline">
+                          <input type="radio" name="inlineRadioOptions" value="true"> Yes
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="inlineRadioOptions" value="false" checked   > No
+                        </label>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
 </main>

@@ -1,4 +1,6 @@
+.search-existing-item,
 .enter-new-item,
+.edit-existing-item,
 .administrators-users{
 
 	padding: 2rem 2.5%;
@@ -77,4 +79,27 @@
 		}
 	}
 	
+}
+
+
+.search-existing-item{
+	h4{
+	text-align: center
+	}
+}
+.edit-existing-item{
+	img.principal-img{
+		display: block;
+		max-height: 400px;
+		margin: 0 auto;
+		width: 50%;
+	}
+	p.mr-listing, input, textarea {
+		color: blue;
+	}
+
+	.img-upload-edit{
+		padding-top: 1.5rem;
+	}
+
 }

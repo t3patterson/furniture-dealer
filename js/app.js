@@ -39,9 +39,9 @@ function app(){
         {url: "./js/Client.js"}
         
         // //DATA SCRIPTS
-        ,{url: "./data/INPUT-totalSet.js"}
-        ,{url: "./data/INPUT-jpegData.js"}
-        ,{url: "./data/INPUT-productInfo.js"}
+        // ,{url: "./data/INPUT-totalSet.js"}
+        // ,{url: "./data/INPUT-jpegData.js"}
+        // ,{url: "./data/INPUT-productInfo.js"}
         ,{url: "./data/EXECUTE-GenerateParseData.js"}
         ,{url: "./data/scripts-organizeCategories/categoryMap2.js"}
         ,{url: "./data/scripts-organizeCategories/allCategories.js"}

@@ -1,0 +1,215 @@
+[
+    {
+        "<style>": ".wrapper {"
+    },
+    {
+        "<style>": "    padding: 1% 10%;"
+    },
+    {
+        "<style>": "}"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "a.btn {"
+    },
+    {
+        "<style>": "    display: block;"
+    },
+    {
+        "<style>": "    margin: 0 auto;"
+    },
+    {
+        "<style>": "    width: 200px;"
+    },
+    {
+        "<style>": "    text-align: center;"
+    },
+    {
+        "<style>": "}"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": ".image-display {"
+    },
+    {
+        "<style>": "    border: 1px solid black;"
+    },
+    {
+        "<style>": "}"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "p {"
+    },
+    {
+        "<style>": "    color: blue;"
+    },
+    {
+        "<style>": "    max-width: 650px;"
+    },
+    {
+        "<style>": "}"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": ".thumbnail {"
+    },
+    {
+        "<style>": "    width: 60px;"
+    },
+    {
+        "<style>": "    height: 40px;"
+    },
+    {
+        "<style>": "}"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "img{"
+    },
+    {
+        "<style>": "    width: 100%;"
+    },
+    {
+        "<style>": "    height: 100%;"
+    },
+    {
+        "<style>": "}"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "</style>"
+    },
+    {
+        "<style>": "<label class="
+    },
+    {
+        "<style>": "<input type="
+    },
+    {
+        "<style>": "<p></p>"
+    },
+    {
+        "<style>": "<a href="
+    },
+    {
+        "<style>": "<hr>"
+    },
+    {
+        "<style>": "<h3 class='listing-id' data-id="
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "<div class='info-container'>"
+    },
+    {
+        "<style>": "    <div class="
+    },
+    {
+        "<style>": "        <div class="
+    },
+    {
+        "<style>": "        \t<%console.log(data)%>"
+    },
+    {
+        "<style>": "            <% data.imageArray.forEach(function(imageURL"
+    },
+    {
+        "<style>": "                <div class="
+    },
+    {
+        "<style>": "                    <img src="
+    },
+    {
+        "<style>": "                </div>"
+    },
+    {
+        "<style>": "        </div>"
+    },
+    {
+        "<style>": "        <div class="
+    },
+    {
+        "<style>": "            <%} else { %>"
+    },
+    {
+        "<style>": "                <div class="
+    },
+    {
+        "<style>": "                    <img src="
+    },
+    {
+        "<style>": "                </div>"
+    },
+    {
+        "<style>": "                <% } })%>"
+    },
+    {
+        "<style>": "        </div>"
+    },
+    {
+        "<style>": "    </div>"
+    },
+    {
+        "<style>": "    <hr>"
+    },
+    {
+        "<style>": "    <%data.imageArray.forEach(function(imageURL"
+    },
+    {
+        "<style>": "        <div class="
+    },
+    {
+        "<style>": "            <label class="
+    },
+    {
+        "<style>": "                <%=i+1%>: Link</label>"
+    },
+    {
+        "<style>": "            <div></div>"
+    },
+    {
+        "<style>": "            <img src="
+    },
+    {
+        "<style>": "            <p class="
+    },
+    {
+        "<style>": "        </div>"
+    },
+    {
+        "<style>": "        <%})%>"
+    },
+    {
+        "<style>": "</div>"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "<hr>"
+    },
+    {
+        "<style>": ""
+    },
+    {
+        "<style>": "<a class="
+    },
+    {
+        "<style>": ""
+    }
+]

@@ -1,87 +1,136 @@
-<main class="container-fluid enter-new-item">
-    <div class='flash-overlay'></div>
+<main class="container-fluid edit-existing-item">
     <div class="row">
-        <div class="col-xs-12 col-md-offset-3 col-md-6 finalize-order">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
             <span class='block-number'><i class="fa fa-plus"></i></span>
-            <h3>Enter-New-Item</h3>
-            <p class="big-card"><i class="fa fa-tag"></i></p>
-            <form class="new-item-form">
+            <h3>Edit-Existing-Item</h3>
+            <p class="big-card"><i class="fa fa-pencil-square-o"></i></p>
+            <form class="edit-item-form">
                 <h4>Product Information</h4>
                 <div class="form-group">
                     <label class="control-label" for="MR_id">Metro Retro ID for this Item:</label>
-                    <p class="form-control MR-ID-display"></p>
-                    <button class="btn btn-primary btn-sm generate-MR">
-                        Generate New MR-ID
-                    </button>
+                    <p type="text" class="form-control mr-listing">
+                        <%=data.get( 'MR_id')%>
+                    </p>
                 </div>
                 <hr>
+                <div class="principal-img">
+                    <% if(data.attributes && data.get('database_img_LINK_1')){
+                        var imgSrc = data.get('database_img_LINK_1');
+                        console.log(imgSrc)
+                        } else if (data.attributes && data.get('database_img_FILE_1')){
+                            console.log(imgSrc)
+                            var imgSrc = data.get('database_img_FILE_1')._url;
+                        } else { 
+                            var imgSrc = "./images/no_image.jpg" 
+                        }
+                    %>
+
+                    <img src="<%=imgSrc%>" alt="item image" >
+
+
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="itenName">Item Name</label>
-                    <input type="text" class="form-control new-item-name" placeholder="Enter Name">
+                    <input type="text" class="form-control new-item-name" placeholder="undefined" value="<%=data.get('item')%>">
+
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="itemPrice">Item Price</label>
-                    <input type="text" class="form-control new-item-price" id="shipping-AddressLine1" placeholder="Numbers only">
+                    <input type="text" class="form-control new-item-price" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('price')%>">
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="ItemDescription">Item Description</label>
-                    <textarea class="form-control new-item-desc" rows="2" maxlength="200"></textarea>
+                    <textarea class="form-control new-item-desc" rows="4" maxlength="400"><%=data.get('description')%>
+                    </textarea>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label" for="exampleInputEmail1">Condition</label>
-                    <input type="text" class="form-control new-item-condition" id="shipping-AddressLine1" placeholder="Optional">
+                    <input type="text" class="form-control new-item-condition" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('condition')%>">
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label" for="exampleInputEmail1">Dimensions</label>
-                    <input type="text" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="Describe dimensions">
+                    <input type="text" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('manufacturer')%>">
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="exampleInputEmail1">Designer</label>
-                    <input type="text" class="form-control new-item-designer" id="shipping-AddressLine1" placeholder="Optional">
+                    <input type="text" class="form-control new-item-designer" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('designer')%>">
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="exampleInputEmail1">Original Manufacturer</label>
-                    <input type="text" class="form-control new-item-manufacturer" id="shipping-AddressLine1" placeholder="Optional">
+                    <input type="text" class="form-control new-item-manufacturer" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('manufacturer')%>">
                 </div>
                 <hr>
                 <h4>Category Information</h4>
-                <div class="form-group categories">
-                    <label class="control-label " for="exampleInputEmail1">Furniture Top-Level Category</label>
-                    <select class="form-control top-level-category">
-                        <option value="" class="disabled-top-level-option" disabled selected>--Select Category--</option>
-                        <%_.forEach(data.categoryMap[ 'top-level'],function(categoryNum){%>
-                            <option value="<%=categoryNum%>" class='first-level-value'>
-                                <%=data.categoryLabels[categoryNum]%> - (
-                                    <%=categoryNum%>)
-                            </option>
-                            <%})%>
-                    </select>
-                    <div class="subcategory-group-1">
-                        <label class="control-label sub-category-1-label" for="exampleInputEmail1">1st Sub-Category</label>
-                        <select class="form-control sub-category-1" data-topLevel="" disabled>
-                            <option value="" class="disabled-subcat1-option" disabled selected>--Must Select Top-Level Category--</option>
-                            <!-- Insert subcategories here -->
-                        </select>
-                    </div>
-                    <div class="subcategory-group-2">
-                        <label class="control-label sub-category-2-label" for="second-subcategory">2nd Sub-Category</label>
-                        <select class="form-control sub-category-2" data-topLevel="" disabled>
-                            <option value="" class="disabled-subcat2-option" disabled selected>--Must Select Sub-Category--</option>
-                            <!-- Insert subcategories here -->
-                        </select>
-                    </div>
-                </div>
                 <hr>
-                <h4>Add Images</h4>
-                <div class="form-group">
-                    <label for="uploadImage">Upload <em>FULL-SIZED</em> Image files</label>
-                    <div class="upload-image-group">
-                        <input type="file" class="selected-img-file" multiple>
-                        <p class="help-block">file should be in either <code>.jpg</code> or <code>.png</code> format</p>
+                <h4>Organize <em>regular-sized</em> images</h4>
+                <div class="container-fluid">
+                
+                <%console.log(data)
+                for( var i = 1; i <= 8; i++ ){
+                    imgSrc=""
+
+                    if(data.attributes && data.get('database_img_LINK_'+i)) {
+                        console.log('imgLink');
+                        var imgSrc = data.get('database_img_LINK_'+i)
+                        console.log(imgSrc);
+
+                        } else if (data.get('database_img_FILE_'+i)){
+                            console.log('imgFILE');
+                            var imgSrc = data.get('database_img_FILE_'+i)._url;
+                        
+                        } else { 
+                            console.log("no img or file")
+                            var placeholder = "no image file" 
+
+                        }
+                    %>
+                    <div class="row img-upload-edit">
+                        <div class="col-xs-4">
+                            <strong>Current Image-<%=i%></strong>
+                            
+                        </div>
+                        <div class="col-xs-2">
+                            <img src="<%= imgSrc || "" %>" alt="no-img" class="thumbnail sample-img-<%=i%>">
+                        </div>
+                        
+                        <div class="col-xs-4">
+                            <input type="file" class="selected-img-file" data-index="<%=i%>">
+                        </div>
                     </div>
-                </div>
-                <p>
-                    <button class='btn btn-primary btn-success btn-large'>Submit New Item to Database</button>&nbsp&nbsp <span class="response-msg"></span>
-                </p>
+                <%}%>
+
+
+
+                    <div class="form-group img-input">
+                    </div>
+                    <hr>
+                    <h4>Other Details</h4>
+                    <div class="form-group">
+                        <label class="control-label" for="MR_id">Third Party Vendor</label>
+                        <div class='other-details'>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" value="first-dibs"> 1stDibs
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" value="ebay"> Ebay
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" value="one-kings-lane"> One King's Lane
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="MR_id">Consignment</label>
+                        <div class='other-options'>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" value="true"> Yes
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" value="false" checked> No
+                            </label>
+                        </div>
+                    </div>
+            </form>
+            </div>
         </div>
 </main>

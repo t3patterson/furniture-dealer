@@ -19,11 +19,11 @@
 }
 
 .multi-description{
-    background: $beige;
+    background: $black;
+    color: $white;
     margin: 0;
     padding: 12px 15px;
     text-align: center; 
-    text-shadow: 1px 1px 1px $white;
     &.inactive{
         display: none
     }
