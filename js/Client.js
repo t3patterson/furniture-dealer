@@ -48,7 +48,6 @@
                         }
                     }
                 }
-
             return categoryTree.reverse()
         }
 
@@ -59,22 +58,185 @@
         el.unwrap();
     }
 
+    //Database Management
+    function parseDeleteLoop(iterations, queryType, queryField, queryValue) {
+        function setQueryParameter(query, queryType){
+            switch(queryType){
+                case 'greaterThan':
+                    query.greaterThan(queryField,queryValue);
+                    break;
+                
+                case 'greaterThanOrEqualTo':
+                    query.greaterThanOrEqualTo(queryField,queryValue);
+                    break;
+                
+                case 'lessThan':
+                    query.lessThan(queryField,queryValue);
+                
+                case 'lessThanOrEqualTo':
+                    query.lessThanOrEqualTo(queryField,queryValue);
+                    break;
+
+                default:
+                    throw "USER ERROR: Enter a queryType: 'greaterThan', 'greatherThanOrEqualTo', 'lessThan', 'lessThanOrEqualTo'";
+            }
+        }
+
+        if (iterations){
+            _.delay(function(){
+               var query = new Parse.Query(Parse.FurnitureItem); 
+               setQueryParameter(query,queryType)
+                
+                query.find().then(function(dataFromParse){
+                    console.log(dataFromParse)
+                     dataFromParse.forEach(function(model){
+                         _.delay(function(){
+                        model.destroy()
+                        }, 50) 
+                    })  
+                })
+                iterations--
+                parseDeleteLoop(iterations,queryType, queryField,queryValue)
+            },6000) 
+        }
+    }
+
+    function uploadInventoryToParse(dataArrayToParse){
+        var iterations = dataArrayToParse.length
+        var modelAttributes = dataArrayToParse.pop();
+        var itemToUpload = new Parse.FurnitureItem(modelAttributes);
+        
+        itemToUpload.save().then(function(){
+            if(iterations){
+                _.delay(function(){
+                    uploadInventoryToParse(dataArrayToParse)  
+                },50)
+            }
+        })
+    }
+
+    function createSandbox(){
+        var pQuery = new Parse.Query(Parse.FurnitureItem);
+            
+            pQuery.find().then(function(data){
+                console.log(data);
+
+                data.forEach(function(model){
+                    var attributes = {}
+                    var key
+                    for (key in model.attributes){
+                        attributes[key] = model.attributes[key]
+                    }
+
+                    var sandboxModel = new Parse.FurnitureItemSandbox(attributes)
+                    sandboxModel.save();
+
+                })
+            })
+    }
+
+    function createKeyWordArrayForMRs(floorMR,upperMR, excludedWordsList){
+        if ( (upperMR-floorMR) / 100  < 1 ){
+            var totalQueries = 1
+        } else{
+            var totalQueries = Math.ceil((upperMR - floorMR) / 100)
+        }
+
+        console.log(totalQueries)
+        _queryEditAndSave( floorMR, upperMR, totalQueries, excludedWordsList)  
+    }
+
+    function _queryEditAndSave(floorMR, upperMR, iterations, excludedWordsList){
+        var doItOnce = function(upperMR, excludedWordsList){
+            console.log(upperMR)
+            var pQuery = new Parse.Query(Parse.FurnitureItem);
+            pQuery.greaterThan("MR_id",Math.max(upperMR-100,floorMR))
+            pQuery.lessThanOrEqualTo("MR_id",upperMR)
+            
+            pQuery.find().then(function(data){
+                console.log(data)
+                data.forEach(function(model){
+                    _.delay(function(){
+                        if(model.get('item')){ 
+                            var splitDescriptionArray = model.get('item').split(" ")
+                            var filteredDescriptionArray = splitDescriptionArray.filter(function(word){
+                            console.log(word)
+                            return excludedWordsList.indexOf(word)=== -1 
+                             }).map(function(word){
+                            return word.toLowerCase()
+                        })
+                    }
+
+                        model.set("searchKeywords",filteredDescriptionArray)
+                        model.save()
+                    }, 50)
+                })
+            })
+        }
+
+        doItOnce(upperMR, excludedWordsList);
+        upperMR = upperMR - 100
+        iterations--
+        console.log(iterations)
+        if(iterations){ _.delay(function(){_queryEditAndSave( floorMR, upperMR, iterations, excludedWordsList)},10000)}
+    }
+    
+    //Future-App Functions
+    function searchInventoryByItemName(inputValue, excludedWords){
+        
+        var $promise = $.Deferred()
+
+        var pQuery = new Parse.Query(Parse.FurnitureItem)
+
+        var inputArray = inputValue.split(" ")
+        
+        var queryValue = inputArray.filter(function(word){
+                    return excludedWords.indexOf(word)=== -1 
+                }).map(function(word){
+                    return word.toLowerCase()
+                })
+
+        pQuery.containsAll("searchKeywords",queryValue)
+        
+        pQuery.find().then(function(searchResults){
+            if(searchResults.length === 0){searchResults = ('shit, you got nothing')}
+            console.log($promise)
+            console.log(searchResults)
+            $promise.resolve(searchResults)
+        })
+
+        return $promise
+
+    }
+    
+
+    var noNoWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
+
+
     Parse.PageRouter = Parse.Router.extend({
         initialize: function() {
+            console.log('routing initialized');
+
+
             // -------------------------
-            // Code for saving data to Parse **
+            // Code for modifying data in Parse **
             // ---------------------------
-            // 
+
+            //ADD
+            //-------
             // var dataToParse = dataArrayToUpload;
             // console.log(dataToParse)
-            // dataToParse.forEach(function(item, index){
-            //         var itemToUpload = new Parse.FurnitureItem(item);
-            //         _.delay(function(){itemToUpload.save()},80);
-            // })  
+            // uploadInventoryToParse(dataToParse)
 
-           
-            var self = this
-            console.log('routing initialized');
+            //DELETE
+            //-------
+            //parseDeleteLoop(10, 'greaterThan','createdAt', {"__type":"Date", "iso":"2015-04-16T22:45:08.256Z"})                    
+
+
+            //CREATE KEYWORDS
+            //-----------
+            // createKeyWordArrayForMRs(6000,14000,noNoWordsList)
+
 
             //Collections 
             this.shoppingCart = new Parse.FurnitureGroup();
@@ -167,23 +329,17 @@
             }
 
                 sessionStorage.clear()
-
-
-
         },
 
         removeFromCartHandler: function() {
             console.log('item removed heard by router')
             var MRidOnSS = sessionStorage.getItem('MR-item-ID');
-            console.log(this.shoppingCart)
             var modelRemoved = this.shoppingCart.models.filter(function(model) {
-                console.log(model)
                 return model.get('MR_id') === MRidOnSS;
             })
 
             this.shoppingCart.remove(modelRemoved);
             this.cartView.collection = this.shoppingCart
-            console.log(this.shoppingCart)
         },
 
         //Routes
@@ -202,7 +358,9 @@
             'consignment-form': 'loadConsignment',
             'thankyou': 'loadThankCustomer',
             'shopping-cart': 'loadShoppingCart',
-            
+
+
+            'products/*/search-results/:search': 'loadSearchResults',
             'products/*/category/:type': 'loadListingsByCategory',
             'products/*/listing/:mrId': 'loadSingleListing',
             'products/*/style/:styleName': 'loadStyleListings',
@@ -259,10 +417,9 @@
             data.currentCategoryTree.unshift('All Products');
             console.log(data.currentCategoryTree)
             this.breadCrumbView.collection = data
-
             this.breadCrumbView.render()
-        }
-        },
+            }
+        },  
 
         checkFooter: function() {
             var footerEl = document.querySelector('footer');
@@ -403,6 +560,22 @@
                 })
             })
            
+        },
+
+        loadSearchResults: function(keywords){
+            var self = this 
+
+            this.checkNav()
+            console.log('searchResults-loaded')
+            var wordsSearched = keywords.slice(keywords.indexOf('=')+1).replace(","," ")
+            console.log(wordsSearched)
+            searchInventoryByItemName(wordsSearched,noNoWordsList).then(function(data){
+                var sliced = _.slice(data,0,20)
+                self.productsListView.collection = sliced;
+                self.insertBreadCrumb(wordsSearched)
+                self.productsListView.render();
+                self.checkFooter();
+            })
         },
 
 
@@ -549,11 +722,8 @@
                 var retrievedModel = model[0]
                  self.editItemView.model = retrievedModel
                  self.editItemView.render();
-            })
-           
+            })           
         },
-
-
 
         loadAdminLogin: function() {
             console.log('admin login rendered')
@@ -562,8 +732,6 @@
             this.clearFooter();
             window.scrollTo(0,0)
             this.adminLoginView.render();
-
-
         },
 
 
@@ -574,7 +742,6 @@
             this.clearFooter();
             window.scrollTo(0,0)
             this.adminDashboardView.render();
-
         },
 
         loadUserLogin: function() {
@@ -599,7 +766,6 @@
                 imageArray: [],
                 imageTnArray: []
             }
-
             this.reorganizeImagesView.render();
         }
     })
@@ -612,7 +778,7 @@
             "click a.products-link": "triggerProductPageHash",
             "click a.cart-link": "triggerShoppingCartHash",
             "click a.about-link": "triggerAboutHash",
-            "click a.search-link": "handleSearchLink"
+            "click a.enter-search-terms": "keywordSearch"
         },
 
         triggerProductPageHash: function(evt) {
@@ -628,7 +794,12 @@
             window.location.hash = "/about-us"
         },
 
-        handleSearchLink: function() {}
+        keywordSearch: function(){
+            console.log('item searched')
+            var $itemSearchInput = $('.item-search-input');
+            var wordsSearched = $itemSearchInput.val().split(" ").join(",")
+            window.location.hash = "/products/search-results/keywords="+wordsSearched
+        }
     })
 
     Parse.BreadCrumbView = Parse.TemplateView.extend({
@@ -1651,6 +1822,30 @@
 
         }
     })
+
+    Parse.FurnitureItemSandbox = Parse.Object.extend({
+        className: "sandbox",
+
+        defaults: {
+        },
+
+        initialize: function() {
+            var self = this
+
+            //sanity check for price: if no price entered, then listed=false
+
+            this.on('change', function() {
+                self.save()
+            })
+        },
+
+        validate: function() {
+            //validate item name
+            //validate item category
+            //validate MR-ID
+            //validate: listing-status
+        }
+    })
     
     Parse.FurnitureGroup = Parse.Collection.extend({
         model: Parse.FurnitureItem
@@ -1671,9 +1866,7 @@
             "temp_img_8": undefined
 
         }
-
-
-    })
+   })
 
 
     

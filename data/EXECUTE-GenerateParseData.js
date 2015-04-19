@@ -33,17 +33,18 @@
     //     * MRID 
     //     * Images array
 
-    var highINDEX = 14402,
-        lowINDEX = 12501
+    var highINDEX = 7999,
+        lowINDEX = 7000
 
     if(typeof jpegDataArray !== 'undefined'){
         var filteredArray = jpegDataArray
             .filter(function(dataObj) {
-                return parseInt(dataObj.MR_id) >= lowINDEX && parseInt(dataObj.MR_id) <= highINDEX;
-            })
-            .map(function(dataObj) {
+                return parseInt(dataObj.MR_id.substr(2)) >= lowINDEX && parseInt(dataObj.MR_id.substr(2)) <= highINDEX;
+            }).map(function(dataObj) {
+                dataObj['MR_id'] = dataObj['MR_id'].substr(2)
                 return [dataObj['MR_id'], dataObj['images-src']];
-            })
+            });
+
         var testArray = []
             filteredArray.forEach(function(element) {
             if (testArray.indexOf(element[0]) === -1) {
@@ -128,7 +129,6 @@
             //    the img-links will be added as propereties (ex: 'database_img_X')
             //    the `imageCount` will be added as a property (max: 8 images)
             .map(function(filteredItem) {
-
                 //add images
                 organizedMR_IDImagesArray.forEach(function(itemWithImages) {
                     if (itemWithImages.MR_id === filteredItem.MR_id) {
@@ -138,7 +138,7 @@
                                 //thumbNailImage = 'http://www.metroretrofurniture.com/images/Buffet/ace82thomasvillebuffet06_t.jpg'
                                 filteredItem["database_img_LINK_t_" + (i + 1)] = thumbnailImage;
 
-                                if(thumbnailImage.indexOf('_t')>-1){
+                                if(thumbnailImage && thumbnailImage.indexOf('_t')>-1){
                                     var thumbNailLink = thumbnailImage;
                                     var locate_t = thumbNailLink.indexOf('_t');
                                     var fullSizeLink = thumbNailLink.slice(0,locate_t) + thumbNailLink.substr(locate_t+2)
@@ -151,7 +151,6 @@
                         filteredItem['imageCount'] = imgCount
                     }
                 })
-
                 //add product-info
                 organizedProductInfoArray.forEach(function(productInfo){
                     if (productInfo.MR_id === filteredItem.MR_id){
@@ -169,6 +168,8 @@
                 return filteredItem
             })
     }
+
+
     exports.dataArrayToUpload = modifiedDataSet;
 
     
