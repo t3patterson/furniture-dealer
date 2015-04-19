@@ -392,12 +392,15 @@
 
         },
 
-        insertBreadCrumb: function(categoryOption){
+        insertBreadCrumb: function(categoryOption, search){
             var data = {
                         categoryLabels: MRCategoryLabels,
                         categoryMap: MRCategoryMap,
                         currentCategory: categoryOption || "",
-                        currentCategoryTree: []
+                        searchTerms: categoryOption || "",
+                        currentCategoryTree: [],
+                        searchQuery: search==='search' ? search = true : search = false
+
                     }
 
             var breadCrumbEl = document.querySelector('.my-breadcrumb');
@@ -411,8 +414,7 @@
                 labelNum.forEach(function(labelNum){
                     data.currentCategoryTree.push(data.categoryLabels[labelNum])
                 })
-            
-            }
+            } 
 
             data.currentCategoryTree.unshift('All Products');
             console.log(data.currentCategoryTree)
@@ -567,12 +569,12 @@
 
             this.checkNav()
             console.log('searchResults-loaded')
-            var wordsSearched = keywords.slice(keywords.indexOf('=')+1).replace(","," ")
+            var wordsSearched = keywords.slice(keywords.indexOf('=')+1).replace(/,/g," ")
             console.log(wordsSearched)
             searchInventoryByItemName(wordsSearched,noNoWordsList).then(function(data){
                 var sliced = _.slice(data,0,20)
                 self.productsListView.collection = sliced;
-                self.insertBreadCrumb(wordsSearched)
+                self.insertBreadCrumb(wordsSearched, 'search')
                 self.productsListView.render();
                 self.checkFooter();
             })

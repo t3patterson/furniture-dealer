@@ -32,7 +32,7 @@
             </li>
             <%console.log('nav-breadcrumb-data:')%>
 			<%console.log(data)%>
-            <%data.currentCategoryTree.forEach(function(categoryName, index){
+            <%data.currentCategoryTree.forEach(function(categoryName, index){   
                 if( index !== data.currentCategoryTree.length-1 ){     
                 %>
                     <%if(categoryName==='All Products'){
@@ -51,7 +51,7 @@
                 <%} else if ( index === data.currentCategoryTree.length - 1) 
                 { %>            
                 
-                <li class="active"><span><%=capitalize(categoryName)%></span></li>
+                <li class="active"><span><%=categoryName && capitalize(categoryName) || "Results: " + data.searchTerms || "" %></span></li>
 
                 <%}%>
 
@@ -59,4 +59,10 @@
         </ol>
 </section>
 
-<h1 class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'><%=data.categoryLabels[data.currentCategory]||'Product'%> Listings</h1>
+<h1 class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'>
+    <%if(data.searchQuery){%>
+        Search Results for : <em><%= data.searchTerms %></em>
+    <%} else {%>
+    <%=data.categoryLabels[data.currentCategory]||'Product'%> Listings
+    <%}%>
+</h1>
