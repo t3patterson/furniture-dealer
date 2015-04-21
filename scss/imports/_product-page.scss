@@ -95,7 +95,18 @@
         a:hover {
             text-decoration: none;
             }
-
-
     }
 }
+
+.no-results {
+    .no-luck-container{
+        padding: 0 2% 20rem 2%;
+        text-align: center;
+
+    }
+    .no-luck-header{
+        background: yellow;
+    }
+}
+
+

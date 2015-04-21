@@ -8,41 +8,43 @@ Landing-Page
 /**
 Gallery
 **/
+$gallery-height: 450px;
 
 .gallery {
-    background: url('../images/landing-page/aae44thonetsidechair06.jpg') no-repeat center;
-    min-height: 600px;
+    background: $white;
     background-size: contain;
+    height: $gallery-height;
     position:relative;
-
-    h1{
-        color: $black;
-    }
-
-    > div {
-        color: white;
-        min-width: 75%;
-        text-align: center;
-
-        img {
-            display: block;
-            margin: 0 auto;
-            margin-bottom: 2.5em;
-        }
-
-        a.btn {
-            background-color: transparent;
-            border: $black 2px solid;
-            color: $black;
-            transition: border .2s;
-
-            &:hover{
-                border: $black 4px solid;
+    padding: 0;
+        
+        .absolute-center {
+            position: absolute;
+            z-index: 2;
+            color: white;
+            min-width: 75%;
+            text-align: center;
+            
+            h1{
+                color: $black;
             }
-        }
 
+            a.btn.products-link {
+                background-color: transparent;
+                border: $black 2px solid;
+                color: $black;
+                transition: border .2s;
+
+                &:hover{
+                    border: $black 4px solid;
+                }
+            }
+
+        }
+    .carousel{
+        height: $gallery-height
     }
 }
+
 
 /**
 UTILITY CLASSES

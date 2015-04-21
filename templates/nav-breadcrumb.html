@@ -31,9 +31,8 @@
             <li><a href="#">Home</a>
             </li>
             <%console.log('nav-breadcrumb-data:')%>
-			<%console.log(data)%>
             <%data.currentCategoryTree.forEach(function(categoryName, index){   
-                if( index !== data.currentCategoryTree.length-1 ){     
+                if(index !== data.currentCategoryTree.length-1 ){     
                 %>
                     <%if(categoryName==='All Products'){
                         var hlink="#/products"}
@@ -51,7 +50,7 @@
                 <%} else if ( index === data.currentCategoryTree.length - 1) 
                 { %>            
                 
-                <li class="active"><span><%=categoryName && capitalize(categoryName) || "Results: " + data.searchTerms || "" %></span></li>
+                <li class="active"><span><%=categoryName && capitalize(categoryName) || data.searchQuery &&"Results: " + data.searchTerms || "" %></span></li>
 
                 <%}%>
 
@@ -62,7 +61,11 @@
 <h1 class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'>
     <%if(data.searchQuery){%>
         Search Results for : <em><%= data.searchTerms %></em>
+    <%} else if(data.styleQuery){%>
+        <%=data.styleType||'Product'%> Listings
     <%} else {%>
     <%=data.categoryLabels[data.currentCategory]||'Product'%> Listings
     <%}%>
+    <br>
+    <small><%=data.totalMatches%></small>
 </h1>

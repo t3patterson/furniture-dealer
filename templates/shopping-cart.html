@@ -1,6 +1,6 @@
 <main class="shopping-cart">
     <div class="container-fluid">
-        <!-- Major Area 1  -->
+        <!-- Major Area 1::User-order  -->
         <div class="row">
             <div class="col-xs-12 user-order ">
                 <p class="keep-browsing">
@@ -31,7 +31,8 @@
                             if(!model.get('imageCount')){  
                                 var imgLink='./images/no_image.jpg'
                                 }else{
-                                    var imgLink = model.get('database_img_1');
+                                    console.log(model)
+                                    var imgLink = model.get('database_img_LINK_1');
                                 }
                         %>
                             
@@ -50,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <!-- Major Area 1::  -->
+        <!-- Major Area 2:: shipping -->
         <div class="row">
             <div class="col-xs-12 user-order ">
                 <div class="panel panel-warning">
@@ -76,13 +77,14 @@
                         </tbody>
                     </table>
                     <hr>
-                    <p class="go-checkout">
+                    
+                </div>
+            </div>
+        </div>
+        <p class="go-checkout">
                         <a class='btn btn-primary btn-lg btn-success finalize-order-btn' href=''>
                             <i class="fa fa-sign-in">&nbspGo to Checkout</i>
                         </a>
                     </p>
-                </div>
-            </div>
-        </div>
     </div>
 </main>

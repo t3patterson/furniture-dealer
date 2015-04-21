@@ -1,7 +1,22 @@
 ;(function(exports) {
     "use strict";
 
-
+    //UNRESOLVED ISSUES: 
+        // * Pagination and managing >100 successful matches on products-listing page
+        // 
+        // * Ensure customer-facing site is not showing sold inventory (pQuery.notEqualTo('inventoryStatus','0'))
+        // 
+        // * Updating Parse database with MR14403 - MR14425 
+        // 
+        // * Editing and modifying inventory data
+        // 
+        // * finding the cause for 'dead' links for single listings
+        // 
+        //  // * Employee Search functionality for Editing-Inventory
+        // 
+        // 
+        // * Payment system in place - ALEX
+    
     //Utility Functions
     function numberCommaSeparated(num, spaceOption) {
 
@@ -182,12 +197,14 @@
     }
     
     //Future-App Functions
-    function searchInventoryByItemName(inputValue, excludedWords){
-        
+    function searchInventoryByItemName(inputValue, soldItemsExcluded){
+        var excludedWords = ["the","in","by","for","of","on", "in", "and","with","&"]
+
+        //create a promise object to be resolved after an asynch process completes
         var $promise = $.Deferred()
 
         var pQuery = new Parse.Query(Parse.FurnitureItem)
-
+        if (soldItemsExcluded === true){pQuery.notEqualTo("inventoryStatus","0")}
         var inputArray = inputValue.split(" ")
         
         var queryValue = inputArray.filter(function(word){
@@ -199,7 +216,8 @@
         pQuery.containsAll("searchKeywords",queryValue)
         
         pQuery.find().then(function(searchResults){
-            if(searchResults.length === 0){searchResults = ('shit, you got nothing')}
+            if(searchResults.length === 0){searchResults = false}
+            var resolvedPromise = 
             console.log($promise)
             console.log(searchResults)
             $promise.resolve(searchResults)
@@ -210,14 +228,11 @@
     }
     
 
-    var noNoWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
 
 
     Parse.PageRouter = Parse.Router.extend({
         initialize: function() {
             console.log('routing initialized');
-
-
             // -------------------------
             // Code for modifying data in Parse **
             // ---------------------------
@@ -235,18 +250,20 @@
 
             //CREATE KEYWORDS
             //-----------
+            // var noNoWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
             // createKeyWordArrayForMRs(6000,14000,noNoWordsList)
 
 
             //Collections 
             this.shoppingCart = new Parse.FurnitureGroup();
 
-
-            //Set Up the Views
+            //----------------------
+            //Application Views
+            //----------------------
             this.navView = new Parse.NavView()
             this.homeView = new Parse.HomeView();
             this.footerView = new Parse.FooterView();
-            this.productsListView = new Parse.ProductPageView(); //will take this.collection 
+            this.productsListView = new Parse.ProductPageView(); //this.collection = anArray
             this.singleListingView = new Parse.SingleListingView({
                 cart: this.shoppingCart
             });
@@ -259,6 +276,7 @@
                 collection: this.shoppingCart
             })
             
+            this.cancelOrderView = new Parse.CancelOrderView();
             this.thankCustomerView = new Parse.ThanksView();
             
             this.newItemFormView = new Parse.EnterNewItemFormView();
@@ -294,7 +312,7 @@
         //collection-logic for adding items to the shopping cart
         addToCartHandler: function() {
             var self = this
-                //Get the MR-ID on Session Storage
+            //Get the MR-ID on Session Storage
             var MRidOnSS = parseInt(sessionStorage.getItem('MR-item-ID'));
             console.log(MRidOnSS)
 
@@ -306,6 +324,7 @@
                 console.log('collection not defined');
                 var pQuery = new Parse.Query(Parse.FurnitureItem);
                 pQuery.equalTo('MR_id', MRidOnSS)
+                
                 pQuery.find().then(function(result) {
                     console.log(result)
                     self.shoppingCart.add(result);
@@ -333,12 +352,16 @@
 
         removeFromCartHandler: function() {
             console.log('item removed heard by router')
-            var MRidOnSS = sessionStorage.getItem('MR-item-ID');
+            console.log(MRidOnSS)
+            var MRidOnSS = parseInt (sessionStorage.getItem('MR-item-ID'));
             var modelRemoved = this.shoppingCart.models.filter(function(model) {
                 return model.get('MR_id') === MRidOnSS;
             })
 
-            this.shoppingCart.remove(modelRemoved);
+            console.log(modelRemoved)
+            this.shoppingCart.remove(modelRemoved[0]);
+            console.log(this.shoppingCart)
+
             this.cartView.collection = this.shoppingCart
         },
 
@@ -353,17 +376,18 @@
            
             'admin/dashboard': 'loadAdminDashboard',
             'admin/login': 'loadAdminLogin',
-           
+
             'finalize-order': 'loadFinalizeOrder',
             'consignment-form': 'loadConsignment',
             'thankyou': 'loadThankCustomer',
+            'cancel-order':'loadCancelOrder',
             'shopping-cart': 'loadShoppingCart',
-
 
             'products/*/search-results/:search': 'loadSearchResults',
             'products/*/category/:type': 'loadListingsByCategory',
+            'products/*/style/:styleName': 'loadListingsByStyle',
+
             'products/*/listing/:mrId': 'loadSingleListing',
-            'products/*/style/:styleName': 'loadStyleListings',
             'products/categories': 'loadCategoriesPage',
             'products': 'loadProductsPg',
             'about-us': 'loadAboutPg',
@@ -374,102 +398,195 @@
             '*path': 'loadHome'
         },
 
+        //-----------------------------
+        //-----------------------------
+        // (I) Main Page Views (rendered inside '.wrapper')
+        //-----------------------------
+        //-----------------------------
+    
+        /**
+         * [loadHome-renders nav-bar, landing-page, footer]
+         * @return {[type]} [description]
+         */
         loadHome: function() {
             this.navView.render();
             window.scrollTo(0,0)
             this.homeView.render();
             this.clearBreadCrumb();
             this.footerView.render()
-            console.log(this.homeView)
         },
 
-        checkNav: function() {
-            var navEl = document.querySelector('nav');
+        
 
-            if (navEl.innerHTML.indexOf('div') === -1) {
-                this.navView.render()
-            }
-
-        },
-
-        insertBreadCrumb: function(categoryOption, search){
-            var data = {
-                        categoryLabels: MRCategoryLabels,
-                        categoryMap: MRCategoryMap,
-                        currentCategory: categoryOption || "",
-                        searchTerms: categoryOption || "",
-                        currentCategoryTree: [],
-                        searchQuery: search==='search' ? search = true : search = false
-
-                    }
-
-            var breadCrumbEl = document.querySelector('.my-breadcrumb');
-          
-            if (breadCrumbEl.innerHTML.indexOf('div') === -1) {
-            
-            
-
-            if(data.currentCategory){
-                var labelNum = returnCategoryTree(categoryOption,data.categoryMap);
-                labelNum.forEach(function(labelNum){
-                    data.currentCategoryTree.push(data.categoryLabels[labelNum])
-                })
-            } 
-
-            data.currentCategoryTree.unshift('All Products');
-            console.log(data.currentCategoryTree)
-            this.breadCrumbView.collection = data
-            this.breadCrumbView.render()
-            }
-        },  
-
-        checkFooter: function() {
-            var footerEl = document.querySelector('footer');
-            if (footerEl.innerHTML.indexOf('div') === -1) {
-                this.footerView.render()
-            }
-        },
-
-        clearBreadCrumb: function(){
-            document.querySelector('.my-breadcrumb').innerHTML = ""
-        },
-
-        clearFooter: function() {
-            document.querySelector('footer').innerHTML = ""
-        },
+        //-----------------------------
+        // 1) Multiple-Listings View ('product-page.html' rendered inside '.wrapper')
+        //-----------------------------
 
         /**
-         * [loadProductsPg description]
-         * ---------------------------------
-         * 1) makes a Parse-query for 30 items,
-         * 2) query-result returns a collection
+         * [loadProductsPg--uses product-page.html template]
+         * **********************************
+         * 1) makes a Parse-query for random 20 items that are not sold,
+         * 2) query-result returns an array of matched Parse models
          * 3) set productsListView.collection as query-result
-         * 3) render productsListView w/ collection
+         * 4) render productsListView w/ array of models
          */
         loadProductsPg: function() {
             var self = this
-            console.log('product-page loaded')
-            this.checkNav()
-            //new ParseQuery with FurnitureItem-model
+            //make sure navbar exists
+            this.checkNavBar()
+
+            //Make parse query that returns 20 results that are NOT sold (i.e. have inventory status of 0)
             var pQuery = new Parse.Query(Parse.FurnitureItem);
             pQuery.descending('MR_id');
-            pQuery.equalTo('inventoryStatus','1')
+            pQuery.notEqualTo('inventoryStatus','0')
             pQuery.limit(20);
-            //1) Make Query, 
-            //2) Set the productsListView collection with returned results
-            //3) Render the collection on the productsListView
-            pQuery.find().then(function(parseReturn) {
-                console.log(parseReturn)
-                self.productsListView.collection = parseReturn
-                window.scrollTo(0,0)
+
+            
+
+            //make query, when query returns data
+            pQuery.count().then(function(totalQueryMatches){
+                pQuery.find().then(function(arrayOfModels) {
+                        // data returned is an array of Parse models
+                        window.scrollTo(0,0);
+
+                        //put the array on the collection property of the products-view instance. then render the view with the collection
+                        self.productsListView.collection = arrayOfModels;
+                        self.productsListView.render();
+                        //insert the breadcrumb navigation & check the footer
+                        console.log(totalQueryMatches)
+                        var bcOptions = {totalMatches:totalQueryMatches}
+                        self.insertBreadCrumb(bcOptions);
+                        self.checkFooter();
+                })
+            })
+        },
+
+        
+
+        /**
+         * [loadListingsByCategory --uses product-page.html as a template]
+         *     @param : catNum = category Number
+         *     @NOTE  : routes from #/products/category/:catNum
+         * ----------------------------------
+         * 1) Take the categoryNumber from end of hash-route and take as a parameter
+         * 2) Make a parse query and return results that: 
+         *      a) have the categoryNumber in the categoryTree
+         *      b) are NOT sold 
+         * 3) Query returns matched results as an array
+         * 4) Render the collection
+         */
+        
+        loadListingsByCategory: function(catNum) {
+
+                var self = this
+                this.checkNavBar();
+
+                var pQuery = new Parse.Query(Parse.FurnitureItem);
+
+                pQuery.equalTo("categoryTreeByNumber", catNum);
+                pQuery.notEqualTo("inventoryStatus","0");
+                pQuery.limit(20)
+
+                pQuery.find().then(function(matchedCategoryModels) {
+                    window.scrollTo(0,0);
+
+                    self.productsListView.collection = matchedCategoryModels
+                    
+                    var bcOptions = {labelOption: catNum}
+
+                    self.insertBreadCrumb(bcOptions);
+                    self.checkFooter();
+
+                    self.productsListView.render();
+                })
+            },
+        
+        /**
+         * [loadListingsByStyle --uses product-page.html as a template]
+         *     @param : catNum = category Number
+         *     @NOTE  : routes from #/products/style/:styleName
+         * ----------------------------------
+         * 1) Take the style-name from end of hash-route and take as a parameter
+         * 2) Create a parse query and set it to: 
+         *      a) have the categoryNumber in the categoryTree
+         *      b) are NOT sold 
+         * 3) Query returns matched results as an array
+         * 4) Render the collection
+         */
+        
+        loadListingsByStyle: function(styleName){
+            var self = this;
+            console.log('styles loaded?')
+            this.checkNavBar();
+
+            var styleLabelMap = {
+                "mid-century": "Mid Century",
+                "art-deco": "Art Deco",
+                "scandinavian" : "Scandinavian",
+                "traditional": "Traditional"
+            }
+
+            var styleCollection = new Parse.FurnitureGroup()
+            var pQuery = new Parse.Query(Parse.FurnitureItem);
+            pQuery.notEqualTo('inventoryStatus','0');
+
+            if (styleName === "mid-century"){
+                pQuery.containsAll("searchKeywords",["mid","century"])
+            } else {
+                pQuery.equalTo("categoryTreeByName",styleLabelMap[styleName])
+                }
+
+            pQuery.find().then(function(dataArray){
+                console.log(dataArray)
+                window.scrollTo(0,0);
+                var slicedArray = _.slice(dataArray,0,20)
+                self.productsListView.collection = slicedArray;
+                self.productsListView.render()
+
+                var bcOptions = {
+                    labelOptions: styleLabelMap[styleName],
+                    queryType: 'style'
+                }
+                self.insertBreadCrumb(bcOptions);
+            })        
+        },
+
+        loadSearchResults: function(keywords){
+            var self = this 
+            this.checkNavBar()
+            
+            console.log('searchResults-loaded')
+            //get key words from hash route and put them into space-separated string: 
+            //   * (e.g. /results=herman,miller,chair >> 'herman miller chair')
+            var wordsSearched = keywords.slice(keywords.indexOf('=')+1).replace(/,/g," ")            
+
+            searchInventoryByItemName(wordsSearched,true).then(function(dataArray){
+                //take just 20 results
+                var limitedSet = Array.isArray(dataArray) ? _.slice(dataArray,0,20) : dataArray
+                self.productsListView.collection = limitedSet;
                 self.productsListView.render();
-                self.insertBreadCrumb();
+                var bcOptions = {
+                    searchTerms: wordsSearched,
+                    searchQuery: 'search'
+                }
+                self.insertBreadCrumb(bcOptions)
                 self.checkFooter();
             })
         },
 
+
+
+         /**
+         * [loadCategoriesPage--uses product-page.html template]
+         * ---------------------------------
+         * 1) makes a Parse-query for 20 items,
+         * 2) query-result returns a collection
+         * 3) set productsListView.collection as query-result
+         * 4) render productsListView w/ collection
+         */
+        
         loadCategoriesPage: function(){
-            this.checkNav()
+            this.checkNavBar()
             window.scrollTo(0,0)
 
             var data = {
@@ -483,109 +600,11 @@
         },
 
 
-
-        /**
-         * [loadCategoryListings description]
-         *     @param  {categoryType} string 
-         * ----------------------------------
-         * 1) Pass categoryType as a parameter
-         * 2) Make parse query and make equalTo based on categoryType
-         * 3) Query returns matched results as collection
-         * 4) Render the collection
-         */
-        
-        //BOOKMARK-b: make it where the hash route can search for subcategories
-        loadListingsByCategory: function(catNum) {
-
-                var self = this
-                console.log('category Page loaded');
-                this.checkNav();
-
-
-                var pQuery = new Parse.Query(Parse.FurnitureItem);
-
-                pQuery.equalTo("categoryTreeByNumber", catNum);
-                pQuery.limit(20)
-
-                pQuery.find().then(function(matched) {
-                    console.log(matched)
-                    self.productsListView.collection = matched
-                    self.checkFooter();
-                    window.scrollTo(0,0);
-
-                    self.productsListView.render(); //pass a collection;
-                    
-                    self.insertBreadCrumb(catNum);
-
-
-                })
-            },
-
-        loadStyleListings: function(styleName){
-            var self = this;
-
-            this.checkNav();
-
-            var styleLabelMap = {
-                "mid-century": "Mid Century",
-                "art-deco": "Art Deco",
-                "scandinavian" : "Scandinavian",
-                "traditional": "Traditional"
-            }
-
-            var styleCollection = new Parse.FurnitureGroup()
-            var pQuery = new Parse.Query(Parse.FurnitureItem);
-            pQuery.equalTo('inventoryStatus','1');
-
-            if (styleName === "mid-century"){
-                pQuery.limit(400);
-                var regexTest = false;
-                } else {
-                    pQuery.limit(60);
-                    
-                    pQuery.equalTo("categoryTreeByName",styleLabelMap[styleName])
-                    var regexTest = true;
-                }
-
-            pQuery.find().then(function(data){
-                data.forEach(function(listing){
-                    console.log(listing)
-                    if(listing.get('item') && (regexTest || listing.get('item').match(/mid century/gi))){
-                        if(styleCollection.length<=20) styleCollection.add(listing)
-                    }
-                    window.scrollTo(0,0);
-
-                    self.productsListView.collection = styleCollection
-                    self.productsListView.render()
-                    self.insertBreadCrumb();
-
-                })
-            })
-           
-        },
-
-        loadSearchResults: function(keywords){
-            var self = this 
-
-            this.checkNav()
-            console.log('searchResults-loaded')
-            var wordsSearched = keywords.slice(keywords.indexOf('=')+1).replace(/,/g," ")
-            console.log(wordsSearched)
-            searchInventoryByItemName(wordsSearched,noNoWordsList).then(function(data){
-                var sliced = _.slice(data,0,20)
-                self.productsListView.collection = sliced;
-                self.insertBreadCrumb(wordsSearched, 'search')
-                self.productsListView.render();
-                self.checkFooter();
-            })
-        },
-
-
         loadSingleListing: function(mrId) {
             var self = this
             mrId = parseInt(mrId)
             console.log('single-listing routed');
-            this.checkNav();
+            this.checkNavBar();
             //test to see if the collection exists
             if (!this.productsListView.collection) {
                 //if collection doesn't exist...
@@ -604,7 +623,6 @@
 
                     self.singleListingView.trigger('rendered')
                     console.log("'rendered' triggered")
-                        //put the model on browsedItems array
 
                     //render footer
                     self.insertBreadCrumb();  
@@ -633,13 +651,14 @@
             }
         },
 
+
+
         loadShoppingCart: function() {
-            var self = this
-            this.checkNav()
-            this.clearBreadCrumb();
-            self.cartView.collection
-            self.cartView.render();
             window.scrollTo(0,0)
+            var self = this
+            this.checkNavBar()
+            this.clearBreadCrumb();
+            self.cartView.render();
             self.checkFooter();
 
 
@@ -647,7 +666,7 @@
 
         loadFinalizeOrder: function() {
             console.log('finalizeOrder')
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0)
@@ -656,17 +675,15 @@
         },
 
         loadOrderConfirmation: function() {
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.checkFooter();
             this.orderConfView.render();
             window.scrollTo(0,0)
-
-
         },
 
         loadThankCustomer: function() {
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0)
@@ -675,9 +692,17 @@
 
         },
 
+        loadCancelOrder: function(){
+            this.checkNavBar();
+            this.clearBreadCrumb();
+            this.clearFooter();
+            window.scrollTo(0,0)
+            this.cancelOrderView.render();
+        },
+
         loadConsignment: function() {
             console.log('consignment-form loaded')
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.checkFooter();
             window.scrollTo(0,0);
@@ -693,7 +718,7 @@
                 categoryMap: MRCategoryMap
             }
             this.newItemFormView.collection = data
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0);
@@ -702,7 +727,7 @@
         },
 
         loadSearchItem:function(){
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0);
@@ -712,7 +737,7 @@
         loadEditExistingItemForm: function(mrId) {
             var self = this;
 
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0);
@@ -729,7 +754,7 @@
 
         loadAdminLogin: function() {
             console.log('admin login rendered')
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0)
@@ -739,7 +764,7 @@
 
         loadAdminDashboard: function() {
             console.log('dashboard')
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0)
@@ -748,7 +773,7 @@
 
         loadUserLogin: function() {
             console.log('login????')
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.clearFooter();
             window.scrollTo(0,0)
@@ -756,7 +781,7 @@
         },
 
         loadAboutPg: function() {
-            this.checkNav();
+            this.checkNavBar();
             this.clearBreadCrumb();
             this.checkFooter();
             window.scrollTo(0,0)
@@ -769,6 +794,96 @@
                 imageTnArray: []
             }
             this.reorganizeImagesView.render();
+        },
+
+        
+
+        //------------------------
+        // Partial Sub-Views (NavBar, Breadcrumb-Navigation, Footer)
+        //----------------------
+        // + These methods are for rendering page elements  depending on the main-view 
+        //      that the hash-route leads to
+
+        /**
+         * DESCRIPTION: 
+         *     + checks to see if NavBar is on the page, and re-renders if it is not 
+         *     * usually invoked when a page is refreshed and no browser
+         * @return [no-return]
+         */
+        
+        checkNavBar: function() {
+            var navEl = document.querySelector('nav');
+            
+            if (navEl.innerHTML.indexOf('div') === -1) {
+                this.navView.render()
+            }
+
+        },
+
+         /**
+         * DESCRIPTION: 
+         *     + Inserts the breadcrumb navigation 
+         *     * Present on the (1) mult-listings view 
+         * @return [no-return]
+         */
+        insertBreadCrumb: function(options){
+            var data = {
+                        //loads the category labels &  category map ()
+                        categoryLabels: MRCategoryLabels,
+                        categoryMap: MRCategoryMap,
+                        
+                        //empty array to establish the current-category's category tree in the view
+                        currentCategoryTree: [],
+                        currentCategory: options && options.labelOption || "",
+
+                        //tests to see if queryType is 'style'
+                        // if yes, breadcrumb <h1> will render string from loadListingsByStyle()
+                        styleQuery: options && options.queryType ==='style' ? true : false,
+                        styleType: options && options.labelOptions || "",   
+
+                        // tests to see if queryType is 'search'
+                        // if yes,  breadcrumb <h1> will render string from loadSearchResults()
+                        searchQuery: options && options.queryType==='search' ? true : false,
+                        searchTerms: options && options.labelOption || "",
+                                            
+                        
+                        //tests to see if there are total-matches
+                        totalMatches: options && options.totalMatches ||""
+                    }
+
+            var breadCrumbEl = document.querySelector('.my-breadcrumb');
+          
+            if (breadCrumbEl.innerHTML.indexOf('div') === -1) {
+            
+            
+
+            if(data.currentCategory){
+                var labelNum = returnCategoryTree(data.currentCategory, data.categoryMap);
+                labelNum.forEach(function(labelNum){
+                    data.currentCategoryTree.push(data.categoryLabels[labelNum])
+                })
+            } 
+
+            data.currentCategoryTree.unshift('All Products');
+            console.log(data.currentCategoryTree)
+            this.breadCrumbView.collection = data
+            this.breadCrumbView.render()
+            }
+        },  
+
+        checkFooter: function() {
+            var footerEl = document.querySelector('footer');
+            if (footerEl.innerHTML.indexOf('div') === -1) {
+                this.footerView.render()
+            }
+        },
+
+        clearBreadCrumb: function(){
+            document.querySelector('.my-breadcrumb').innerHTML = ""
+        },
+
+        clearFooter: function() {
+            document.querySelector('footer').innerHTML = ""
         }
     })
 
@@ -1119,6 +1234,12 @@
 
     Parse.ThanksView = Parse.TemplateView.extend({
         view: 'thank-customer',
+        el: '.wrapper'
+    })
+
+
+    Parse.CancelOrderView = Parse.TemplateView.extend({
+        view: 'order-canceled',
         el: '.wrapper'
     })
 
@@ -1542,8 +1663,6 @@
         el: '.wrapper',
         view: 'edit-existing-item',
 
-
-
         initialize: function(){
             var query = new Parse.Query(Parse.TemporaryPhotosForEdit);
             query.find().then(function(data){
@@ -1853,6 +1972,7 @@
         model: Parse.FurnitureItem
 
     })
+
 
     Parse.TemporaryPhotosForEdit = Parse.Object.extend({
         className: "TempPhotos",

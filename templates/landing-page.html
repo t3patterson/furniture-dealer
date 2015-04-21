@@ -1,8 +1,51 @@
 <!-- gallery.html -->
-<div class="gallery">
+<div class="gallery container-fluid">
     <div class="absolute-center">
         <h1>metro retro furniture</h1>
         <a class="btn btn-lg btn-default products-link" href="#" role="button">Recent Listings</a>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                </ol>
+                <!-- Test to see if image exists -->
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <div style="background:url(images/landing-page/acg101milobaughmanchair13.jpg) center center no-repeat; background-size:contain;" class="slider-size-single-listing">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div style="background:url(images/landing-page/aae44thonetsidechair06.jpg) center center no-repeat; background-size:contain;" class="slider-size-single-listing">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div style="background:url(images/landing-page/ada41desederecliningchair_02.jpg) center center no-repeat; background-size:contain;" class="slider-size-single-listing">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <i class="fa fa-chevron-left"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <i class="fa fa-chevron-right"></i>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 <!-- style.html -->
@@ -18,12 +61,12 @@
         <a class="col-xs-6 col-sm-3 style-link" href="#" data-byStyle="traditional">
             <p class="text">Traditional</p>
         </a>
-         <a class="col-xs-6 col-sm-3 style-link" href="#" data-byStyle="scandinavian">
+        <a class="col-xs-6 col-sm-3 style-link" href="#" data-byStyle="scandinavian">
             <p class="text">Scandinavian</p>
         </a>
     </div>
     <div class="col-xs-12 shop-button-div">
-           <a class="btn btn-lg btn-default shop-styles-btn" href="#" role="button">Shop Styles</a>
+        <a class="btn btn-lg btn-default shop-styles-btn" href="#" role="button">Shop Styles</a>
     </div>
 </div>
 <!-- by-category -->
@@ -36,26 +79,29 @@
     <div class="row">
         <div class="col-xs-12 col-sm-4 col-md-2 our-style">
             <a href="#" data-category="4" class="cat-link">
-                <img src="./images/by-category/dresser.svg">        
+                <img src="./images/by-category/dresser.svg">
                 <h5>case pieces</h5>
             </a>
         </div>
-          <div class="col-xs-12 col-sm-4 col-md-2 our-style">
+        <div class="col-xs-12 col-sm-4 col-md-2 our-style">
             <a href="#" data-category="1" class="cat-link">
-                <img src="./images/by-category/chair.svg">            <h5>seating</h5>
+                <img src="./images/by-category/chair.svg">
+                <h5>seating</h5>
             </a>
         </div>
         <div class="col-xs-12 col-sm-4 col-md-2 our-style">
             <a href="#" data-category="333" class="cat-link">
-                <img src="./images/by-category/table.svg"> <h5>tables</h5>
+                <img src="./images/by-category/table.svg">
+                <h5>tables</h5>
             </a>
         </div>
         <div class="col-xs-12 col-sm-4 col-md-2 our-style chair">
             <a href="#" data-category="3" class="cat-link">
-                <img src="./images/by-category/desk.svg">           <h5>desks</h5>
+                <img src="./images/by-category/desk.svg">
+                <h5>desks</h5>
             </a>
         </div>
-         <div class="col-xs-12 col-sm-4 col-md-2 our-style">
+        <div class="col-xs-12 col-sm-4 col-md-2 our-style">
             <a href="#" data-category="127" class="cat-link">
                 <img src="./images/by-category/rug.svg">
                 <h5>rugs</h5>
@@ -63,12 +109,12 @@
         </div>
         <div class="col-xs-12 col-sm-4 col-md-2 our-style">
             <a href="#" data-category="528" class="cat-link">
-                <img src="./images/by-category/lighting.svg"> 
+                <img src="./images/by-category/lighting.svg">
                 <h5>lighting</h5>
             </a>
         </div>
         <div class="col-xs-12 shop-button-div">
-           <a class="btn btn-lg btn-default shop-categories-btn" href="#" role="button">Shop More Categories</a>
+            <a class="btn btn-lg btn-default shop-categories-btn" href="#" role="button">Shop More Categories</a>
         </div>
     </div>
 </section>
@@ -78,5 +124,4 @@
     <div>
         <a class="btn btn-lg btn-default consignment-form-btn" href="#" role="button">Consign with MetroRetro</a>
     </div>
-   
 </div>
