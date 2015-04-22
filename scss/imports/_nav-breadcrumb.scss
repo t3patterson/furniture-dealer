@@ -24,13 +24,63 @@
     margin: 0;
     padding: 12px 15px;
     text-align: center; 
-    &.inactive{
-        display: none
+
+}
+
+.more-listings{
+    position:relative;
+    height: 10rem;
+
+    .nav-listings{
+        position:absolute;
+        border: 2px solid $black;
+        border-radius: 50%;
+        padding: 1rem;
+        transition: background .2s;
+        
+        &:hover{
+            background: $tan-translucent;
+            cursor: pointer;
+        }
     }
 
-    &.active{
-        display:block
+     .prev-20{
+        top: 10%;
+        left: 3%;
+       
+    }
+
+    .next-20{
+        top: 10%;
+        right: 3%
     }
 
 }
+
+
+.listings-pagination{
+    text-align: center; 
+    
+    .pagination{
+
+        .current{
+            color: red;
+            text-decoration: underline;
+        }
+        
+        .next5,
+        .prev5{
+            background: $beige;
+            color: $black
+        }
+
+        .end-cap{
+            background: $tan;
+            color: $black
+        }
+    }
+    
+
+}
+
 

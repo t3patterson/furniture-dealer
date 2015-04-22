@@ -232,6 +232,7 @@
 
     Parse.PageRouter = Parse.Router.extend({
         initialize: function() {
+            var self = this;
             console.log('routing initialized');
             // -------------------------
             // Code for modifying data in Parse **
@@ -297,12 +298,46 @@
             //-------------------
             //Application Event Listeners/Handlers
             //-------------------
+            
+
+            // Pagination
+            // ---------------
+            
+
+            this.breadCrumbView.on(('showNext20'),function(){
+                self.breadCrumbView.currentPage++
+
+                console.log(self.breadCrumbView.totalMatches)
+                 console.log(self.breadCrumbView.currentPage)
+                 console.log(self.breadCrumbView.totalPages())
+
+                var pQuery = self.currentQueryParams
+                console.log(pQuery)
+
+                pQuery.skip(20*(self.breadCrumbView.currentPage-1));
+
+                pQuery.find().then(function(dataArray){
+                    var bcOptions = {
+                        currentPage: self.breadCrumbView.currentPage,
+                        totalMatches: self.breadCrumbView.totalMatches
+                    }
+                    self.insertBreadCrumb(bcOptions)
+                    self.productsListView.collection = dataArray;
+                    self.productsListView.render()
+                })
+
+            
+            })
+
+           
+
+
+            // Shopping Cart
+            // -------------
             this.singleListingView.on('addToCart', this.addToCartHandler.bind(this))
 
             this.singleListingView.on('itemRemoved', this.removeFromCartHandler.bind(this))
             this.cartView.on('itemRemoved', this.removeFromCartHandler.bind(this))
-
-
             Parse.history.start();
         },
 
@@ -439,9 +474,9 @@
             var pQuery = new Parse.Query(Parse.FurnitureItem);
             pQuery.descending('MR_id');
             pQuery.notEqualTo('inventoryStatus','0')
-            pQuery.limit(20);
+            pQuery.limit(20)
 
-            
+            this.currentQueryParams = pQuery; //save pquery for later
 
             //make query, when query returns data
             pQuery.count().then(function(totalQueryMatches){
@@ -449,13 +484,18 @@
                         // data returned is an array of Parse models
                         window.scrollTo(0,0);
 
-                        //put the array on the collection property of the products-view instance. then render the view with the collection
-                        self.productsListView.collection = arrayOfModels;
+                        self.productsListView.collection = arrayOfModels
+                    
                         self.productsListView.render();
                         //insert the breadcrumb navigation & check the footer
-                        console.log(totalQueryMatches)
-                        var bcOptions = {totalMatches:totalQueryMatches}
-                        self.insertBreadCrumb(bcOptions);
+                        
+                        self.breadCrumbView.totalMatches = totalQueryMatches
+
+                        self.breadCrumbView.totalPages();
+                        self.breadCrumbView.currentPage = 1;
+
+                        var bcOptions = {totalMatches: totalQueryMatches}
+                        self.insertBreadCrumb(bcOptions)
                         self.checkFooter();
                 })
             })
@@ -539,17 +579,18 @@
             pQuery.find().then(function(dataArray){
                 console.log(dataArray)
                 window.scrollTo(0,0);
-                var slicedArray = _.slice(dataArray,0,20)
-                self.productsListView.collection = slicedArray;
-                self.productsListView.render()
-
                 var bcOptions = {
                     labelOptions: styleLabelMap[styleName],
                     queryType: 'style'
                 }
                 self.insertBreadCrumb(bcOptions);
+
+                self.productsListView.collection = dataArray
+                self.productsListView.render()
+
             })        
         },
+
 
         loadSearchResults: function(keywords){
             var self = this 
@@ -847,13 +888,21 @@
                         searchTerms: options && options.labelOption || "",
                                             
                         
-                        //tests to see if there are total-matches
-                        totalMatches: options && options.totalMatches ||""
+                        //Pagination
+                        
+                        totalMatches: options && options.totalMatches ||"",
+                        totalPages: options && options.totalMatches && Math.ceil(options.totalMatches/20 || ""),
+                        currentPage: options && options.currentPage || 1,
+ 
                     }
+
+            data.currentListingSet= [(data.currentPage-1)*20+1, 
+                        Math.min(data.totalMatches, (data.currentPage-1)*20+20)]
 
             var breadCrumbEl = document.querySelector('.my-breadcrumb');
           
-            if (breadCrumbEl.innerHTML.indexOf('div') === -1) {
+            if (breadCrumbEl.innerHTML.indexOf('div') === -1
+                ) {
             
             
 
@@ -862,13 +911,22 @@
                 labelNum.forEach(function(labelNum){
                     data.currentCategoryTree.push(data.categoryLabels[labelNum])
                 })
+
             } 
 
             data.currentCategoryTree.unshift('All Products');
-            console.log(data.currentCategoryTree)
-            this.breadCrumbView.collection = data
-            this.breadCrumbView.render()
+            console.log(data.currentCategoryTree);
+            this.breadCrumbView.collection = data;
+            this.breadCrumbView.render();
+            } else if (options.totalMatches){
+                this.breadCrumbView.collection = data;
+                console.log(this.breadCrumbView.collection.currentPage)
+                this.breadCrumbView.render();
+
             }
+
+
+
         },  
 
         checkFooter: function() {
@@ -921,7 +979,33 @@
 
     Parse.BreadCrumbView = Parse.TemplateView.extend({
         el: '.my-breadcrumb',
-        view: 'nav-breadcrumb'
+        view: 'nav-breadcrumb',
+
+        totalMatches: 0,
+        totalPages: function(){ return Math.ceil(this.totalMatches/20) },
+        currentPage: 1,
+
+
+        events: {
+            'click .next-20': 'queryDBAndReRenderNext',
+            'click .prev-20': 'queryDBAndReRenderPrev',
+            'click .select-page': 'goToPageX'
+        },
+         queryDBAndReRenderNext: function(evt){
+            evt.preventDefault();
+            this.trigger('showNext20');
+        },
+
+        queryDBAndReRenderPrev: function(event){
+            evt.preventDefault();
+        },
+
+        goToPageX: function(){
+
+        }
+
+
+
     })
 
     Parse.HomeView = Parse.TemplateView.extend({
@@ -1009,13 +1093,15 @@
         view: 'product-page',
         el: '.wrapper',
         events: {
-            'click .single-listing-link': 'triggerSingleListingHash',
-            'click .next-20': 'queryDBAndReRenderNext',
-            'click .prev-20': 'queryDBAndReRenderPrev'
-
+            'click .single-listing-link': 'triggerSingleListingHash'
         },
 
-        skipFactor:0,
+        listingsCount: 0,
+
+        totalPages: function(){
+            return this.listingsCount / 20
+        },
+
 
         triggerSingleListingHash: function(evt) {
             evt.preventDefault();
@@ -1024,74 +1110,7 @@
 
             var productMRid = $(evt.target).closest('.img-listing-container').attr('data-MR-ID')
             window.location.hash = "/products/listing/" + productMRid;
-        },
-
-        queryDBAndReRenderNext: function(){
-            var self = this;
-            console.log(window.location.hash)
-            
-            var pQuery = new Parse.Query(Parse.FurnitureItem)
-                this.skipFactor++
-                pQuery.limit(20)
-                pQuery.skip(this.skipFactor*20)
-
-            if(window.location.hash==="#/products"){
-                pQuery.find().then(function(data){
-                    self.collection = data
-                    self.render()
-                })
-            } else if(window.location.hash.indexOf('category')){
-                    var stringOmania = window.location.hash
-                    var dividerStr = 'category/'
-                    var cutOffIndex = stringOmania.indexOf('category/')
-                    console.log(stringOmania)
-                    console.log(dividerStr)
-                    console.log(cutOffIndex)
-                    var targetCatNum= stringOmania.substr(cutOffIndex+dividerStr.length)
-                    pQuery.equalTo("categoryTreeByNumber",targetCatNum)
-                    pQuery.find().then(function(data){
-                        self.collection = data
-                        console.log(self.collection)
-                        self.render()
-                    })
-            }
-            console.log(this.skipFactor)
-
-        },
-
-      queryDBAndReRenderPrev: function(){
-            var self = this;
-            console.log(window.location.hash)
-            
-            var pQuery = new Parse.Query(Parse.FurnitureItem)
-                if(this.skipFactor===0){return}
-                this.skipFactor===0 ? this.skipFactor = 0 : this.skipFactor--;
-
-                pQuery.limit(20)
-                pQuery.skip(this.skipFactor*20)
-
-            if(window.location.hash==="#/products"){
-                pQuery.find().then(function(data){
-                    self.collection = data
-                    self.render()
-                })
-            } else if(window.location.hash.indexOf('category')){
-                    var stringOmania = window.location.hash
-                    var dividerStr = 'category/'
-                    var cutOffIndex = stringOmania.indexOf('category/')
-                    console.log(stringOmania)
-                    console.log(dividerStr)
-                    console.log(cutOffIndex)
-                    var targetCatNum= stringOmania.substr(cutOffIndex+dividerStr.length)
-                    pQuery.equalTo("categoryTreeByNumber",targetCatNum)
-                    pQuery.find().then(function(data){
-                        self.collection = data
-                        console.log(self.collection)
-                        self.render()
-                    })
-            }
-            console.log(this.skipFactor)
-        },
+        }
 
 
     })
