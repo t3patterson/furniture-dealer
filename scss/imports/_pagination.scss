@@ -1,0 +1,30 @@
+.listings-pagination{
+    text-align: center; 
+        
+
+    .pagination{
+        & > .disabled > a {
+            cursor: no-drop;
+        }
+
+        & > li > a.current {
+            border-top: 2px black solid;    
+            border-bottom: 2px black solid;
+
+            color: red;
+        }
+
+        .next5,
+        .prev5{
+            background: $beige;
+            color: $black
+        }
+
+        .end-cap{
+            background: $tan;
+            color: $black
+        }
+    }
+    
+
+}

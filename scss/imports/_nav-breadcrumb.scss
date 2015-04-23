@@ -58,29 +58,3 @@
 }
 
 
-.listings-pagination{
-    text-align: center; 
-    
-    .pagination{
-
-        .current{
-            color: red;
-            text-decoration: underline;
-        }
-        
-        .next5,
-        .prev5{
-            background: $beige;
-            color: $black
-        }
-
-        .end-cap{
-            background: $tan;
-            color: $black
-        }
-    }
-    
-
-}
-
-

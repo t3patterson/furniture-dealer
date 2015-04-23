@@ -197,30 +197,24 @@
     }
     
     //Future-App Functions
-    function searchInventoryByItemName(inputValue, soldItemsExcluded){
-        var excludedWords = ["the","in","by","for","of","on", "in", "and","with","&"]
+    function searchInventoryByItemName(query){
+        
 
         //create a promise object to be resolved after an asynch process completes
         var $promise = $.Deferred()
 
-        var pQuery = new Parse.Query(Parse.FurnitureItem)
-        if (soldItemsExcluded === true){pQuery.notEqualTo("inventoryStatus","0")}
-        var inputArray = inputValue.split(" ")
-        
-        var queryValue = inputArray.filter(function(word){
-                    return excludedWords.indexOf(word)=== -1 
-                }).map(function(word){
-                    return word.toLowerCase()
-                })
+        var pquery = query
 
         pQuery.containsAll("searchKeywords",queryValue)
         
-        pQuery.find().then(function(searchResults){
-            if(searchResults.length === 0){searchResults = false}
-            var resolvedPromise = 
-            console.log($promise)
-            console.log(searchResults)
-            $promise.resolve(searchResults)
+        pQuery.count().then(function(totalMatched){
+            pQuery.find().then(function(searchResults){
+                if(searchResults.length === 0){searchResults = false}
+                var resolvedPromise = 
+                console.log(totalMatched)
+                console.log(searchResults)
+                $promise.resolve(searchResults)
+            })
         })
 
         return $promise
@@ -290,6 +284,8 @@
             // this.userLoginView = new Parse.UserLoginView();
             this.adminDashboardView = new Parse.AdminDashboardView();
             this.breadCrumbView = new Parse.BreadCrumbView();
+
+            this.paginationView = new Parse.PaginationView()
             
             //Temporary-app-helper 
             this.reorganizeImagesView = new Parse.ReorganizeImagesView();
@@ -304,32 +300,84 @@
             // ---------------
             
 
-            this.breadCrumbView.on(('showNext20'),function(){
-                self.breadCrumbView.currentPage++
-
-                console.log(self.breadCrumbView.totalMatches)
-                 console.log(self.breadCrumbView.currentPage)
-                 console.log(self.breadCrumbView.totalPages())
-
+            this.paginationView.on(('showNext20'),function(){
                 var pQuery = self.currentQueryParams
-                console.log(pQuery)
 
-                pQuery.skip(20*(self.breadCrumbView.currentPage-1));
+                self.paginationView.paginationOptions.currentPage = Math.min(++self.paginationView.paginationOptions.currentPage, self.paginationView.paginationOptions.totalPages)
+
+
+                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
 
                 pQuery.find().then(function(dataArray){
-                    var bcOptions = {
-                        currentPage: self.breadCrumbView.currentPage,
-                        totalMatches: self.breadCrumbView.totalMatches
-                    }
+                    
+                    var bcOptions = self.breadCrumbView.bcOptions
+                    var pagOptions = self.paginationView.paginationOptions
+                    
                     self.insertBreadCrumb(bcOptions)
+                    self.insertPagination(pagOptions)
                     self.productsListView.collection = dataArray;
+
+                    window.scrollTo(0,0)
                     self.productsListView.render()
                 })
-
-            
             })
 
-           
+            this.paginationView.on(('showPrev20'),function(){
+                console.log('previous20 heard')
+                var pQuery = self.currentQueryParams
+
+                self.breadCrumbView.bcOptions.currentPage--
+
+
+                if(self.breadCrumbView.bcOptions.currentPage<1){
+                    self.breadCrumbView.bcOptions.currentPage=1;
+                }
+                
+                console.log(self.paginationView.paginationOptions)
+
+                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
+
+                pQuery.find().then(function(dataArray){
+                    self.paginationView.paginationOptions
+                    
+                    var bcOptions = self.breadCrumbView.bcOptions
+                    var pagOptions = self.paginationView.paginationOptions
+                    
+                    self.insertBreadCrumb(bcOptions)
+                    self.insertPagination(pagOptions)
+                    self.productsListView.collection = dataArray;
+
+                    window.scrollTo(0,0)
+                    self.productsListView.render()
+                })
+            })
+
+            this.paginationView.on(('showPageX'),function(){
+                console.log('pageX heard')
+                var pQuery = self.currentQueryParams
+
+                var pageNumber = parseInt($("a[data-event='page'").text())
+                
+                self.paginationView.paginationOptions.currentPage = pageNumber
+
+                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
+
+                pQuery.find().then(function(dataArray){
+                    self.paginationView.paginationOptions
+                    
+                    var bcOptions = self.breadCrumbView.bcOptions
+                    var pagOptions = self.paginationView.paginationOptions
+                    
+                    self.insertBreadCrumb(bcOptions)
+                    self.insertPagination(pagOptions)
+                    self.productsListView.collection = dataArray;
+
+                    window.scrollTo(0,0)
+                    self.productsListView.render()
+                })
+            })
+
+            
 
 
             // Shopping Cart
@@ -448,7 +496,13 @@
             window.scrollTo(0,0)
             this.homeView.render();
             this.clearBreadCrumb();
-            this.footerView.render()
+            this.clearPagination();
+            this.footerView.render();
+            
+            var changeCarouselImage = function(){ $('.carousel .right').trigger('click') }
+
+                _.delay( function(){changeCarouselImage()},5000)
+            
         },
 
         
@@ -465,16 +519,50 @@
          * 3) set productsListView.collection as query-result
          * 4) render productsListView w/ array of models
          */
-        loadProductsPg: function() {
-            var self = this
-            //make sure navbar exists
-            this.checkNavBar()
+        
+        _pQueryAndRender: function(options, queryType, routeNodeOrInput){
+            var self = this;
+            this.breadCrumbView.bcOptions.queryType = queryType
 
-            //Make parse query that returns 20 results that are NOT sold (i.e. have inventory status of 0)
             var pQuery = new Parse.Query(Parse.FurnitureItem);
             pQuery.descending('MR_id');
             pQuery.notEqualTo('inventoryStatus','0')
-            pQuery.limit(20)
+            pQuery.limit(20);
+
+            switch (queryType){
+                case "category":
+                    pQuery.equalTo("categoryTreeByNumber", routeNodeOrInput);
+                    break;
+
+                case "style":  
+                   if (routeNodeOrInput === "mid-century"){
+                    pQuery.containsAll("searchKeywords",["mid","century"])
+                    } else {
+                    pQuery.equalTo("categoryTreeByName",options.labelOption)
+                    }
+
+                    break;
+                
+                case "search":
+
+                    var inputArray = routeNodeOrInput.split(" ")
+
+                    var excludedWords = ["the","in","by","for","of","on", "in", "and","with","&"]
+
+                    var queryValue = inputArray.filter(function(word){
+                                return excludedWords.indexOf(word)=== -1 
+                            }).map(function(word){
+                                return word.toLowerCase()
+                            })
+ 
+                    pQuery.containsAll("searchKeywords", queryValue);
+
+                    break;
+
+                default:
+                    pQuery = pQuery
+                    break;
+            }
 
             this.currentQueryParams = pQuery; //save pquery for later
 
@@ -485,22 +573,45 @@
                         window.scrollTo(0,0);
 
                         self.productsListView.collection = arrayOfModels
-                    
-                        self.productsListView.render();
                         //insert the breadcrumb navigation & check the footer
                         
-                        self.breadCrumbView.totalMatches = totalQueryMatches
+                        self.breadCrumbView.bcOptions.totalMatches = totalQueryMatches
 
-                        self.breadCrumbView.totalPages();
-                        self.breadCrumbView.currentPage = 1;
+                        self.breadCrumbView.bcOptions.totalPages = Math.ceil(totalQueryMatches/20 || "")
 
-                        var bcOptions = {totalMatches: totalQueryMatches}
+                        self.breadCrumbView.bcOptions.currentPage = 1;
+                        self.breadCrumbView.bcOptions.labelOption = options && options.labelOption || "";
+
+                        console.log(options)
+                        self.breadCrumbView.bcOptions.searchTerms = options && options.Option || "";
+
+                        console.log(self.breadCrumbView.bcOptions)
+                        var pagOptions = self.breadCrumbView.bcOptions
+                        var bcOptions = self.breadCrumbView.bcOptions
+                        
+                        self.paginationView.paginationOptions = pagOptions
+
+                        console.log(bcOptions)
                         self.insertBreadCrumb(bcOptions)
-                        self.checkFooter();
+                        self.insertPagination(pagOptions)
+                        console.log('1stRender')
+                        self.productsListView.render();
+
+                        self.checkFooter()
                 })
             })
         },
 
+        loadProductsPg: function() {
+            var self = this
+            //make sure navbar exists
+            this.checkNavBar()
+
+            //Make parse query that returns 20 results that are NOT sold (i.e. have inventory status of 0)
+            //
+ 
+           this._pQueryAndRender()  
+        },
         
 
         /**
@@ -517,29 +628,20 @@
          */
         
         loadListingsByCategory: function(catNum) {
+                var bcOptions = {
+                    labelOption: catNum,
+                    queryType: 'category'
+                }
+
+                var pagOptions = {
+
+                }
 
                 var self = this
                 this.checkNavBar();
 
-                var pQuery = new Parse.Query(Parse.FurnitureItem);
-
-                pQuery.equalTo("categoryTreeByNumber", catNum);
-                pQuery.notEqualTo("inventoryStatus","0");
-                pQuery.limit(20)
-
-                pQuery.find().then(function(matchedCategoryModels) {
-                    window.scrollTo(0,0);
-
-                    self.productsListView.collection = matchedCategoryModels
-                    
-                    var bcOptions = {labelOption: catNum}
-
-                    self.insertBreadCrumb(bcOptions);
-                    self.checkFooter();
-
-                    self.productsListView.render();
-                })
-            },
+                this._pQueryAndRender(bcOptions, "category", catNum)
+        },
         
         /**
          * [loadListingsByStyle --uses product-page.html as a template]
@@ -566,29 +668,12 @@
                 "traditional": "Traditional"
             }
 
-            var styleCollection = new Parse.FurnitureGroup()
-            var pQuery = new Parse.Query(Parse.FurnitureItem);
-            pQuery.notEqualTo('inventoryStatus','0');
-
-            if (styleName === "mid-century"){
-                pQuery.containsAll("searchKeywords",["mid","century"])
-            } else {
-                pQuery.equalTo("categoryTreeByName",styleLabelMap[styleName])
+            var bcOptions = {
+                    labelOption: styleLabelMap[styleName]
                 }
 
-            pQuery.find().then(function(dataArray){
-                console.log(dataArray)
-                window.scrollTo(0,0);
-                var bcOptions = {
-                    labelOptions: styleLabelMap[styleName],
-                    queryType: 'style'
-                }
-                self.insertBreadCrumb(bcOptions);
+            this._pQueryAndRender(bcOptions,'style',styleName)
 
-                self.productsListView.collection = dataArray
-                self.productsListView.render()
-
-            })        
         },
 
 
@@ -601,18 +686,11 @@
             //   * (e.g. /results=herman,miller,chair >> 'herman miller chair')
             var wordsSearched = keywords.slice(keywords.indexOf('=')+1).replace(/,/g," ")            
 
-            searchInventoryByItemName(wordsSearched,true).then(function(dataArray){
-                //take just 20 results
-                var limitedSet = Array.isArray(dataArray) ? _.slice(dataArray,0,20) : dataArray
-                self.productsListView.collection = limitedSet;
-                self.productsListView.render();
-                var bcOptions = {
-                    searchTerms: wordsSearched,
-                    searchQuery: 'search'
+                var options = {
+                    labelOption: wordsSearched,
                 }
-                self.insertBreadCrumb(bcOptions)
-                self.checkFooter();
-            })
+                this._pQueryAndRender(options,'search',wordsSearched)
+
         },
 
 
@@ -636,6 +714,8 @@
             }
 
             this.clearBreadCrumb();
+            this.clearPagination();
+
             this.categoriesView.collection = data
             this.categoriesView.render()
         },
@@ -666,7 +746,9 @@
                     console.log("'rendered' triggered")
 
                     //render footer
-                    self.insertBreadCrumb();  
+                    self.insertBreadCrumb();
+                    self.clearPagination();
+                    self.paginationView.render();
                     self.checkFooter();
 
                 })
@@ -686,6 +768,7 @@
                 this.singleListingView.trigger('rendered');
                 console.log("'rendered' triggered");
                 this.insertBreadCrumb();
+                this.clearPagination(); 
                 this.checkFooter();
 
 
@@ -699,6 +782,7 @@
             var self = this
             this.checkNavBar()
             this.clearBreadCrumb();
+            this.clearPagination();
             self.cartView.render();
             self.checkFooter();
 
@@ -709,6 +793,7 @@
             console.log('finalizeOrder')
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0)
             this.finalizeOrderView.render();
@@ -718,6 +803,7 @@
         loadOrderConfirmation: function() {
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.checkFooter();
             this.orderConfView.render();
             window.scrollTo(0,0)
@@ -726,6 +812,7 @@
         loadThankCustomer: function() {
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0)
             this.thankCustomerView.render();
@@ -736,6 +823,7 @@
         loadCancelOrder: function(){
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0)
             this.cancelOrderView.render();
@@ -745,6 +833,7 @@
             console.log('consignment-form loaded')
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.checkFooter();
             window.scrollTo(0,0);
             this.consignView.render();
@@ -761,6 +850,7 @@
             this.newItemFormView.collection = data
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0);
             this.newItemFormView.render()
@@ -770,6 +860,7 @@
         loadSearchItem:function(){
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0);
             this.searchItemView.render();
@@ -780,6 +871,7 @@
 
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0);
 
@@ -797,6 +889,7 @@
             console.log('admin login rendered')
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0)
             this.adminLoginView.render();
@@ -807,6 +900,7 @@
             console.log('dashboard')
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0)
             this.adminDashboardView.render();
@@ -816,6 +910,7 @@
             console.log('login????')
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.clearFooter();
             window.scrollTo(0,0)
             this.userLoginView.render();
@@ -824,6 +919,7 @@
         loadAboutPg: function() {
             this.checkNavBar();
             this.clearBreadCrumb();
+            this.clearPagination();
             this.checkFooter();
             window.scrollTo(0,0)
             this.aboutView.render();
@@ -868,8 +964,12 @@
          * @return [no-return]
          */
         insertBreadCrumb: function(options){
+
+            //create the options
+            //
             var data = {
                         //loads the category labels &  category map ()
+                        categoryQuery: options && options.queryType === 'category' ? true : false,
                         categoryLabels: MRCategoryLabels,
                         categoryMap: MRCategoryMap,
                         
@@ -880,7 +980,7 @@
                         //tests to see if queryType is 'style'
                         // if yes, breadcrumb <h1> will render string from loadListingsByStyle()
                         styleQuery: options && options.queryType ==='style' ? true : false,
-                        styleType: options && options.labelOptions || "",   
+                        styleType: options && options.labelOption || "",   
 
                         // tests to see if queryType is 'search'
                         // if yes,  breadcrumb <h1> will render string from loadSearchResults()
@@ -896,38 +996,43 @@
  
                     }
 
+
             data.currentListingSet= [(data.currentPage-1)*20+1, 
                         Math.min(data.totalMatches, (data.currentPage-1)*20+20)]
 
             var breadCrumbEl = document.querySelector('.my-breadcrumb');
-          
-            if (breadCrumbEl.innerHTML.indexOf('div') === -1
-                ) {
             
-            
-
-            if(data.currentCategory){
+            if (data.categoryQuery) {
+                console.log(data.currentCategory)
                 var labelNum = returnCategoryTree(data.currentCategory, data.categoryMap);
+
+                console.log(labelNum)
                 labelNum.forEach(function(labelNum){
                     data.currentCategoryTree.push(data.categoryLabels[labelNum])
                 })
+            }
 
-            } 
 
             data.currentCategoryTree.unshift('All Products');
             console.log(data.currentCategoryTree);
             this.breadCrumbView.collection = data;
             this.breadCrumbView.render();
-            } else if (options.totalMatches){
-                this.breadCrumbView.collection = data;
-                console.log(this.breadCrumbView.collection.currentPage)
-                this.breadCrumbView.render();
 
+        },
+
+        insertPagination: function(options){
+            var data = {
+                totalMatches: options && options.totalMatches ||"",
+                totalPages: options && options.totalMatches && Math.ceil(options.totalMatches/20 || ""),
+                currentPage: options && options.currentPage || 1
             }
+            
+            this.paginationView.collection = data
+            this.paginationView.render();
 
 
 
-        },  
+        },
 
         checkFooter: function() {
             var footerEl = document.querySelector('footer');
@@ -938,6 +1043,10 @@
 
         clearBreadCrumb: function(){
             document.querySelector('.my-breadcrumb').innerHTML = ""
+        },
+
+        clearPagination: function(){
+            document.querySelector('.listings-pagination').innerHTML=""
         },
 
         clearFooter: function() {
@@ -953,6 +1062,7 @@
             "click a.products-link": "triggerProductPageHash",
             "click a.cart-link": "triggerShoppingCartHash",
             "click a.about-link": "triggerAboutHash",
+            "click a.search-toggle": "toggleSearch",
             "click a.enter-search-terms": "keywordSearch"
         },
 
@@ -969,6 +1079,11 @@
             window.location.hash = "/about-us"
         },
 
+        toggleSearch:function(evt){
+            evt.preventDefault()
+            $('.search-bar').toggle();
+        },
+
         keywordSearch: function(){
             console.log('item searched')
             var $itemSearchInput = $('.item-search-input');
@@ -979,35 +1094,51 @@
 
     Parse.BreadCrumbView = Parse.TemplateView.extend({
         el: '.my-breadcrumb',
-        view: 'nav-breadcrumb',
+        view: 'nav-breadcrumb',    
+        bcOptions: {
+            totalMatches: 0,
+            totalPages: function(){ return Math.ceil(this.totalMatches/20) },
+            currentPage: 1,
+        },
 
-        totalMatches: 0,
-        totalPages: function(){ return Math.ceil(this.totalMatches/20) },
-        currentPage: 1,
+    })
 
+    Parse.PaginationView = Parse.TemplateView.extend({
+        el: '.listings-pagination',
+        view: 'pagination',
+        
+        paginationOptions: {
+            
+        },
+
+        calcTotalPages: function(){
+            return Math.ceil(this.totalMatches/20)
+        },
 
         events: {
-            'click .next-20': 'queryDBAndReRenderNext',
-            'click .prev-20': 'queryDBAndReRenderPrev',
-            'click .select-page': 'goToPageX'
+            'click .next-20': 'triggerNext20',
+            'click .prev-20': 'triggerPrev20',
+            'click .select-page': 'triggerPageX'
         },
-         queryDBAndReRenderNext: function(evt){
+
+         triggerNext20: function(evt){
             evt.preventDefault();
             this.trigger('showNext20');
         },
 
-        queryDBAndReRenderPrev: function(event){
+        triggerPrev20: function(evt){
             evt.preventDefault();
+            this.trigger('showPrev20')
         },
 
-        goToPageX: function(){
-
+        triggerPageX: function(evt){
+            evt.preventDefault();
+            $(evt.target).attr('data-event','page')
+            this.trigger('showPageX')
         }
-
-
-
     })
 
+    
     Parse.HomeView = Parse.TemplateView.extend({
         view: 'landing-page',
         el: '.wrapper',
@@ -1069,7 +1200,6 @@
             //BOOKMARK-a: add correct hash route;
             console.log(categoryTag)
             window.location.hash="/products/category/"+categoryTag
-
         }
     })
 

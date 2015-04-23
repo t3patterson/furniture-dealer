@@ -31,7 +31,7 @@
             <li><a href="#">Home</a>
             </li>
             <%console.log('nav-breadcrumb-data:')%>
-            <%data.currentCategoryTree.forEach(function(categoryName, index){   
+            <%  data.currentCategoryTree.forEach(function(categoryName, index){   
                 if(index !== data.currentCategoryTree.length-1 ){     
                 %>
                     <%if(categoryName==='All Products'){
@@ -60,106 +60,19 @@
 
 <section class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'>
     <h1 >
+        <%console.log(data)%>
         <%if(data.searchQuery){%>
             Search Results for : <em><%= data.searchTerms %></em>
         <%} else if(data.styleQuery){%>
-            <%=data.styleType||'Product'%> Listings
+            <%=data.styleType || 'Product'%> Listings
         <%} else {%>
         <%=data.categoryLabels[data.currentCategory]||'Product'%> Listings
         <%}%>
         <br>
-        <%console.log(data.currentListingSet)%>
         <small>
         [ <%=data.currentListingSet[0]%> - <%=data.currentListingSet[1]%> ]  of <%=data.totalMatches%>
         </small>
     </h1>
 </section>
 
-<section class="listings-pagination container-fluid">
-        <div class="row">
-          
-            <nav class='listings-pagination <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'>
-                  <ul class="pagination">
-
-                   <%  console.log("total-pages: "+data.totalPages);
-                console.log("current-page: "+data.currentPage);
-
-                var pagination = {
-                    beginning: 1,
-                    ending: data.totalPages,
-                    currentPage: data.currentPage,
-                    prevPage: data.currentPage-1,
-                    nextPage: data.currentPage+1,
-                    next5: data.currentPage + 6,
-                    prev5: data.currentPage - 6,
-                }
-
-                var arrowStatus
-
-                pagination.currentPage ===  pagination.beginning ? arrowStatus = 'disabled' : arrowStatus =''
-
-                pagination.currentPage === pagination.ending ? 
-                    arrowStatus = 'disabled' : arrowStatus = ''
-
-                %>
-
-                  <li class="<%=arrowStatus%>"><a href="#" class="prev-20" aria-label="Previous"> <i class="fa fa-arrow-left fa-2x"></i>
-                    </a></li>
-            
-
-
-            <% var i = 1
-            for(i ; i <= data.totalPages; i++){
-                    //-----first-page-----//
-                    if( i === pagination.beginning ){ %>
-                    <li  ><a class="end-cap"  href="#"><%=i%></a></li>
-
-            <% }    //-----prev-5-----//
-                    if( i === pagination.prev5 && pagination.prev5 > pagination.beginning){ %>
-                    <li><a href="#" class="prev5"><%=i%></a></li>
-
-            <% }    //-----prev page-----//
-                    if( i === pagination.prevPage && pagination.prevPage !== pagination.beginning ){ %>
-                    <li><a href="#"><%=i%></a></li>
-
-            <% }    //-----current page-----//
-                    if( i === pagination.currentPage && i !== pagination.beginning ){ %>
-                    <li><a class='current'><%=i%></a></li>
-
-            <% }    //-----next page-----//
-                    if( i === pagination.nextPage && pagination.nextPage !== pagination.ending ){ %>
-                    <li><a href="#"><%=i%></a></li>
-
-             <% }    //-----next-5-----//
-                    if( i === pagination.next5 && pagination.next5 < pagination.ending ){ %>
-
-                    <li><a href="#" class="next5"><%=i%></a></li>
-
-            <% }    //-----last-page-----//
-                    if( i === pagination.ending ){ %>
-
-                    <li ><a class="end-cap" href="#"><%=i%></a></li>
-
-            <% } %>
-                
-
-
-            <% } %>
-    
-                <li class="<%=arrowStatus%>">
-                  <a href="#" class='next-20' aria-label="Next">
-                    <span aria-hidden="true" ><i class="fa fa-arrow-right fa-2x"></i></span>
-                  </a>
-                </li>
-
-
-
-                  </ul>
-            </nav>
-
-
-
-
-        </div>
-    </section>
 

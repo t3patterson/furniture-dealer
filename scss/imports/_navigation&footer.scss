@@ -31,11 +31,26 @@ nav {
     }
     li.search-furniture {
         position: relative;
-        .search-bar {
+
+         .search-bar{
+            display: none;
             position: absolute;
-            left: 75px;
-            top: 5px;
-            width: 15rem;
+            left: 80px;
+            top: 10px;
+            width: 30rem;
+
+            .item-search-input{
+                width: 27rem;
+                position: absolute;
+                z-index:2;
+            }
+            .enter-search-terms {
+                position: absolute;
+                height: 34px;
+                right: 15px;
+                top: 0px;
+                z-index:3;
+            }
         }
     }
 }
@@ -65,7 +80,7 @@ footer {
         text-shadow: 1px 1px 1px #000;
         border-left: 1px solid $tan;
         .location {
-            font-size: 18px
+            font-size: 18px;
         }
     }
 }
@@ -77,12 +92,7 @@ footer {
     }
     li.search-furniture {
         position: relative;
-        .search-bar {
-            position: absolute;
-            left: 0%;
-            top: 90%;
-            margin-top: .8rem;
-            max-width: 20rem;
-        }
+       
     }
 }
+

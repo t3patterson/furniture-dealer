@@ -1,0 +1,138 @@
+<%console.log('pagination data:')%>
+<%console.log(data)%>
+<%
+    // note: data should be 
+    //capitalize the first letter for the <h1> tag
+
+    //test to see if the route is a single-listing
+    
+    function testForSingleListing(currentRoute){
+        if( currentRoute.indexOf('listing')>-1 ) {
+            console.log('singleListing');
+            return true;
+            
+        }  else {
+                console.log('productsListing')
+                return false
+        }
+           
+    }
+
+    var currentRoute = window.location.hash
+
+%>
+<div class="row <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>">
+          <div class="col-xs-12">
+            <nav class= ''>
+                  <ul class="pagination">
+
+                   <%  console.log("total-pages: "+data.totalPages);
+                console.log("current-page: "+data.currentPage);
+
+                var pagination = {
+                    beginning: 1,
+                    ending: data.totalPages,
+                    currentPage: data.currentPage,
+                    prevPage: data.currentPage-1,
+                    nextPage: data.currentPage+1,
+
+                    next5: data.currentPage + 5,
+                    prev5: data.currentPage - 5,
+                }
+
+                var leftArrowStatus;
+                var rightArrowStatus;
+                console.log('left arrow test')
+                console.log(pagination.currentPage === pagination.beginning)
+                pagination.currentPage ===  pagination.beginning ? leftArrowStatus = 'disabled' : leftArrowStatus =''
+
+                pagination.currentPage === pagination.ending ? 
+                    rightArrowStatus = 'disabled' : rightArrowStatus = ''
+
+                %>
+
+                  <li class="<%=leftArrowStatus%>" ><a href="#" class="prev-20" aria-label="Previous"> <i class="fa fa-arrow-left fa-2x"></i>
+                    </a></li>
+            
+
+
+            <% var i = 1
+            for(i ; i <= data.totalPages; i++){
+                if(i===pagination.currentPage){var current='current'}
+                    //-----first-page-----//
+                    if( i === pagination.beginning ){ %>
+            
+                    <li><a class="select-page end-cap <%=current||''%>" href="#"><%=i%></a></li>
+
+            <% }    //-----prev-5-----//
+                    if( i === pagination.prev5 && pagination.prev5 > pagination.beginning){ %>
+                    <li><a href="#" class="select-page prev5"><%=i%></a></li>
+            
+            <% }    //-----minus4 page-----//
+                    if( i === pagination.prevPage-3 && pagination.prevPage-3 > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page" ><%=i%></a></li>
+
+            <% }    //-----minus3 page-----//
+                    if( i === pagination.prevPage-2 && pagination.prevPage-2 > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page"><%=i%></a></li>
+
+            <% }    //-----minus2 page-----//
+                    if( i === pagination.prevPage-1 && pagination.prevPage-1 > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page"><%=i%></a></li>
+
+            <% }    //-----prev page-----//
+                    if( i === pagination.prevPage && pagination.prevPage > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page"><%=i%></a></li>
+
+            <% }    //-----current page-----//
+                    if( i === pagination.currentPage && i !== pagination.beginning && i !== pagination.ending ){ %>
+                    <li><a class="select-page <%=current||''%>"><%=i%></a></li>
+
+            <% }    //-----next page-----//
+                    if( i === pagination.nextPage && pagination.nextPage !== pagination.ending && pagination.nextPage !== pagination.beginning+1){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
+                
+                 <% }    //-----plus2 page-----//
+                    if( i === pagination.nextPage +1 && pagination.nextPage + 1 !== pagination.ending && pagination.nextPage + 1 !== pagination.beginning+2){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
+
+                    <% }    //-----plus3 page-----//
+                    if( i === pagination.nextPage +2 && pagination.nextPage + 2 !== pagination.ending && pagination.nextPage + 2 !== pagination.beginning+3){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
+
+
+                    <% }    //-----plus4 page-----//
+                    if( i === pagination.nextPage +3 && pagination.nextPage + 3 !== pagination.ending && pagination.nextPage + 3 !== pagination.beginning+4){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
+
+
+             <% }    //-----next-5-----//
+                    if( i === pagination.next5 && pagination.next5 < pagination.ending && pagination.currentPage +5 !== pagination.beginning +5){ %>
+
+                    <li><a href="#" class="select-page next5"><%=i%></a></li>
+
+            <% }    //-----last-page-----//
+                    if( i === pagination.ending && pagination.ending !== pagination.beginning ){ 
+                        if (pagination.currentPage === pagination.ending){var current2 = 'current'}%>
+                    <li ><a class="select-page   end-cap <%= current2 || ''%> " href="#"><%=i%></a></li>
+
+            <% } %>
+                
+
+
+            <% } %>
+    
+                <li class="<%=rightArrowStatus%>">
+                  <a href="#" class='next-20' aria-label="Next">
+                    <span aria-hidden="true" ><i class="fa fa-arrow-right fa-2x"></i></span>
+                  </a>
+                </li>
+
+
+
+                  </ul>
+            </nav>
+
+        </div>
+    </div>
+

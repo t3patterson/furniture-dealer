@@ -10,12 +10,14 @@ Gallery
 **/
 $gallery-height: 450px;
 
-.gallery {
+.splash-page {
     background: $white;
     background-size: contain;
     height: $gallery-height;
     position:relative;
-    padding: 0;
+        .gallery{
+            padding: 0
+        }
         
         .absolute-center {
             position: absolute;
