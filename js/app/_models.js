@@ -71,7 +71,7 @@
    })
     
     exports.Parse.FurnitureItem = Parse.FurnitureItem
-    exports.Parse.FurnitureItemGroup = Parse.Parse.FurnitureItemGroup 
+    exports.Parse.FurnitureItemGroup = Parse.FurnitureItemGroup 
     exports.Parse.FurnitureItemSandbox = Parse.FurnitureItemSandbox
     exports.Parse.TemporaryPhotosForEdit = Parse.TemporaryPhotosForEdit
 

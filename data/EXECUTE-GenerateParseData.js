@@ -33,8 +33,8 @@
     //     * MRID 
     //     * Images array
 
-    var highINDEX = 7999,
-        lowINDEX = 7000
+    var highINDEX = 5999,
+        lowINDEX = 5000
 
     if(typeof jpegDataArray !== 'undefined'){
         var filteredArray = jpegDataArray

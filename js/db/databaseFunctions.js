@@ -1,6 +1,6 @@
 ;(function(exports) {
 
-    var DataBaseManagement = {
+    var dbManagement = {
 
         parseDeleteLoop : function (iterations, queryType, queryField, queryValue) {
             function setQueryParameter(query, queryType){
@@ -78,7 +78,7 @@
                 })
         },
 
-        createKeyWordArrayForMRs : function(floorMR,upperMR, excludedWordsList, callback){
+        editArrayData : function(floorMR,upperMR, callback){
             if ( (upperMR-floorMR) / 100  < 1 ){
                 var totalQueries = 1
             } else{
@@ -87,10 +87,12 @@
 
             console.log(totalQueries)
             
-            callback( floorMR, upperMR, totalQueries, excludedWordsList)  
+            callback(floorMR, upperMR, totalQueries)  
         },
 
-        _queryEditAndSave : function(floorMR, upperMR, iterations, excludedWordsList){
+        _queryEditAndSaveKeyWords : function(floorMR, upperMR, iterations){
+            var excludedWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
+
             var doItOnce = function(upperMR, excludedWordsList){
                 console.log(upperMR)
                 var pQuery = new Parse.Query(Parse.FurnitureItem);
@@ -123,6 +125,33 @@
             iterations--
             console.log(iterations)
             if(iterations){ _.delay(function(){_queryEditAndSave( floorMR, upperMR, iterations, excludedWordsList)},10000)}
+        },
+
+        _queryEditAndSaveInventoryQuantity : function(floorMR, upperMR, iterations){
+            var doItOnce = function(upperMR){
+                console.log(upperMR)
+                var pQuery = new Parse.Query(Parse.FurnitureItem);
+                pQuery.greaterThan("MR_id",Math.max(upperMR-100,floorMR))
+                pQuery.lessThanOrEqualTo("MR_id",upperMR)
+                pQuery.find().then(function(data){
+                    console.log(data)
+                    data.forEach(function(model){
+                        _.delay(function(){
+                            var inventoryQuantity = parseInt(model.get('inventoryStatus'))
+
+                            model.set("inventoryQuantity",inventoryQuantity)
+                            model.save()
+                        }, 50)
+                    })
+                })
+            }
+
+            doItOnce(upperMR);
+            upperMR = upperMR - 100
+            iterations--
+            console.log(iterations)
+
+            if(iterations){ _.delay(function(){dbManagement._queryEditAndSaveInventoryQuantity(floorMR, upperMR, iterations)},10000)}
         }
     }
 
@@ -134,18 +163,21 @@
     // -------
     // var dataToParse = dataArrayToUpload;
     // console.log(dataToParse)
-    // DatabaseManagement.uploadInventoryToParse(dataToParse)
+    // dbManagement.uploadInventoryToParse(dataToParse)
 
     //DELETE
     //-------
-    //DatabaseManagement.parseDeleteLoop(10, 'greaterThan','createdAt', {"__type":"Date", "iso":"2015-04-16T22:45:08.256Z"})                    
+    //dbManagement.parseDeleteLoop(10, 'greaterThan','createdAt', {"__type":"Date", "iso":"2015-04-16T22:45:08.256Z"})                    
 
 
     //CREATE KEYWORDS
     //-----------
-    // var noNoWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
-    // DatabaseManagement.createKeyWordArrayForMRs(6000,14000,noNoWordsList)
+    // dbManagement.editArrayData(6000,14000,noNoWordsList,dbManagement._queryEditAndSaveKeywords)
 
+     // EditArrayData
+     // dbManagement.editArrayData(14200,14402,dbManagement._queryEditAndSaveInventoryQuantity)
+
+     exports.dbManagement = dbManagement
 
 })(typeof module === "object" ? module.exports : window);
 

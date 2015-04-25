@@ -36,7 +36,6 @@ function app(){
 
         //my app
         //
-        ,{url: "./js/db/databaseFunctions.js"}
         ,{url: "./js/utility/utilityFunctions.js"}
 
         ,{url: "./js/app/_models.js"}
@@ -44,12 +43,13 @@ function app(){
         ,{url: "./js/app/adminView.js"}
         ,{url: "./js/app/categoriesView.js"}
         ,{url: "./js/app/cartView.js"}
-        ,{url: "./js/app/employeeView.js"}
+        ,{url: "./js/app/employeeViews.js"}
         ,{url: "./js/app/homeView.js"}
         ,{url: "./js/app/miscViews.js"}
         ,{url: "./js/app/multiView.js"}
         ,{url: "./js/app/pageLayout.js"}
         ,{url: "./js/app/singleView.js"}
+
 
 
         ,{url: "./js/Client.js"}
@@ -59,6 +59,8 @@ function app(){
         // ,{url: "./data/INPUT-jpegData.js"}
         // ,{url: "./data/INPUT-productInfo.js"}
         // ,{url: "./data/EXECUTE-GenerateParseData.js"}
+        // ,{url: "./js/db/databaseFunctions.js"}
+
         ,{url: "./data/scripts-organizeCategories/categoryMap2.js"}
         ,{url: "./data/scripts-organizeCategories/allCategories.js"}
 
@@ -72,6 +74,8 @@ function app(){
 
         // start app?
         Parse.initialize('8cefZxGY6FiSAhEw5YCwN9mBjgoiUgGcdJnTZgdy','RWjs5EKsDkBlZ1L05crkUetjonIG1DGNiaM664OY');
+
+        // dbManagement.editArrayData(4999,8001,dbManagement._queryEditAndSaveInventoryQuantity)
 
         // 
         //----------------

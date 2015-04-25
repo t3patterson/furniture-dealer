@@ -18,10 +18,11 @@
             z-index: 1;
             background: $white;
             border: 2px solid $black;
-            transition: border .2s;
+            transition: border .2s, box-shadow .2s;
 
             &:hover{
-                border: 6px solid $brown;
+                border: 2px solid $brown;
+                box-shadow: 0px 0px 10px #333;    
             }
 
             .caption{
