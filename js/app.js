@@ -47,7 +47,7 @@ function app(){
         ,{url: "./js/app/homeView.js"}
         ,{url: "./js/app/miscViews.js"}
         ,{url: "./js/app/multiView.js"}
-        ,{url: "./js/app/pageLayout.js"}
+        ,{url: "./js/app/pageLayoutElements.js"}
         ,{url: "./js/app/singleView.js"}
 
 
