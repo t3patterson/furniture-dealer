@@ -28,19 +28,19 @@
             if (iterations){
                     _.delay(function(){
                        var query = new Parse.Query(Parse.FurnitureItem); 
-                       setQueryParameter(query,queryType)
+                       //setQueryParameter(query,queryType)
                         
                         query.find().then(function(dataFromParse){
                             console.log(dataFromParse)
                              dataFromParse.forEach(function(model){
                                  _.delay(function(){
                                 model.destroy()
-                                }, 50) 
+                                }, 80) 
                             })  
                         })
                         iterations--
-                        parseDeleteLoop(iterations,queryType, queryField,queryValue)
-                    },6000) 
+                        dbManagement.parseDeleteLoop(iterations,queryType, queryField,queryValue)
+                    },10000) 
                 }
         },
 
@@ -52,8 +52,8 @@
             itemToUpload.save().then(function(){
                 if(iterations){
                     _.delay(function(){
-                        uploadInventoryToParse(dataArrayToParse)  
-                    },50)
+                        dbManagement.uploadInventoryToParse(dataArrayToParse)  
+                    },70)
                 }
             })
         },
@@ -106,16 +106,17 @@
                             if(model.get('item')){ 
                                 var splitDescriptionArray = model.get('item').split(" ")
                                 var filteredDescriptionArray = splitDescriptionArray.filter(function(word){
-                                console.log(word)
                                 return excludedWordsList.indexOf(word)=== -1 
                                  }).map(function(word){
                                 return word.toLowerCase()
-                            })
-                        }
+                                })
+                            }
+                            
+                            filteredDescriptionArray.push('MR'+model.get('MR_id'));
+                            model.set('searchKeywords', filteredDescriptionArray);
+                            model.save();
 
-                            model.set("searchKeywords",filteredDescriptionArray)
-                            model.save()
-                        }, 50)
+                        }, 70)
                     })
                 })
             }
@@ -124,7 +125,7 @@
             upperMR = upperMR - 100
             iterations--
             console.log(iterations)
-            if(iterations){ _.delay(function(){_queryEditAndSave( floorMR, upperMR, iterations, excludedWordsList)},10000)}
+            if(iterations>0){ _.delay(function(){dbManagement._queryEditAndSaveKeyWords( floorMR, upperMR, iterations)},10000)}
         },
 
         _queryEditAndSaveInventoryQuantity : function(floorMR, upperMR, iterations){
@@ -139,9 +140,9 @@
                         _.delay(function(){
                             var inventoryQuantity = parseInt(model.get('inventoryStatus'))
 
-                            model.set("inventoryQuantity",inventoryQuantity)
+                            model.set("inventoryCount",inventoryQuantity)
                             model.save()
-                        }, 50)
+                        }, 60)
                     })
                 })
             }
@@ -150,8 +151,10 @@
             upperMR = upperMR - 100
             iterations--
             console.log(iterations)
-
-            if(iterations){ _.delay(function(){dbManagement._queryEditAndSaveInventoryQuantity(floorMR, upperMR, iterations)},10000)}
+            if(iterations){ 
+                console.log(true)
+                _.delay(function(){dbManagement._queryEditAndSaveInventoryQuantity(floorMR, upperMR, iterations)},10000)
+            }
         }
     }
 
@@ -167,7 +170,7 @@
 
     //DELETE
     //-------
-    //dbManagement.parseDeleteLoop(10, 'greaterThan','createdAt', {"__type":"Date", "iso":"2015-04-16T22:45:08.256Z"})                    
+        // dbManagement.parseDeleteLoop(10, 'greaterThan','createdAt', {"__type":"Date", "iso":"2015-04-16T23:01:00.256Z"})                    
 
 
     //CREATE KEYWORDS

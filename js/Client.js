@@ -70,6 +70,7 @@
             this.navView = new Parse.NavView()
             this.breadCrumbView = new Parse.BreadCrumbView();
             this.paginationView = new Parse.PaginationView()
+            this.paginationViewBottom = new Parse.PaginationViewBottom()
             this.footerView = new Parse.FooterView();
             
            
@@ -89,82 +90,16 @@
             // 1) Pagination (PaginationView | BreadcrumbView | Procd)
             // -----------------
             
-            this.paginationView.on(('showNext20'),function(){
-                var pQuery = self.currentQueryParams
+           
 
-                self.paginationView.paginationOptions.currentPage = Math.min(++self.paginationView.paginationOptions.currentPage, self.paginationView.paginationOptions.totalPages)
+            this.paginationView.on(('showNext20'),this.events_pagination_showNext20.bind(this))
+            this.paginationViewBottom.on(('showNext20'),this.events_pagination_showNext20.bind(this))
+            
+            this.paginationView.on(('showPrev20'), this.events_pagination_showPrev20.bind(this))
+            this.paginationViewBottom.on(('showPrev20'),this.events_pagination_showPrev20.bind(this))
 
-
-                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
-
-                pQuery.find().then(function(dataArray){
-                    
-                    var bcOptions = self.breadCrumbView.bcOptions
-                    var pagOptions = self.paginationView.paginationOptions
-                    
-                    self.pageLayout_insertBreadCrumb(bcOptions)
-                    self.pageLayout_insertPagination(pagOptions)
-                    self.multiListingView.collection = dataArray;
-
-                    window.scrollTo(0,0)
-                    self.multiListingView.render()
-                })
-            })
-
-            this.paginationView.on(('showPrev20'),function(){
-                console.log('previous20 heard')
-                var pQuery = self.currentQueryParams
-
-                self.breadCrumbView.bcOptions.currentPage--
-
-
-                if(self.breadCrumbView.bcOptions.currentPage<1){
-                    self.breadCrumbView.bcOptions.currentPage=1;
-                }
-                
-                console.log(self.paginationView.paginationOptions)
-
-                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
-
-                pQuery.find().then(function(dataArray){
-                    self.paginationView.paginationOptions
-                    
-                    var bcOptions = self.breadCrumbView.bcOptions
-                    var pagOptions = self.paginationView.paginationOptions
-                    
-                    self.pageLayout_insertBreadCrumb(bcOptions)
-                    self.insertPagination(pagOptions)
-                    self.multiListingView.collection = dataArray;
-
-                    window.scrollTo(0,0)
-                    self.multiListingView.render()
-                })
-            })
-
-            this.paginationView.on(('showPageX'),function(){
-                console.log('pageX heard')
-                var pQuery = self.currentQueryParams
-
-                var pageNumber = parseInt($("a[data-event='page'").text())
-                
-                self.paginationView.paginationOptions.currentPage = pageNumber
-
-                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
-
-                pQuery.find().then(function(dataArray){
-                    self.paginationView.paginationOptions
-                    
-                    var bcOptions = self.breadCrumbView.bcOptions
-                    var pagOptions = self.paginationView.paginationOptions
-                    
-                    self.pageLayout_insertBreadCrumb(bcOptions)
-                    self.pageLayout_insertPagination(pagOptions)
-                    self.multiListingView.collection = dataArray;
-
-                    window.scrollTo(0,0)
-                    self.multiListingView.render()
-                })
-            })
+            this.paginationView.on(('showPageX'),this.events_pagination_showPageX.bind(this))
+            this.paginationViewBottom.on(('showPageX'),this.events_pagination_showPageX.bind(this))
 
             // --------------------------------
             // 2) Shopping Cart & SingleListing 
@@ -179,6 +114,85 @@
         },
 
         //Events - Handlers
+
+        events_pagination_showNext20 : function (){
+                var self = this
+                var pQuery = self.currentQueryParams
+
+                this.paginationView.paginationOptions.currentPage = Math.min(++self.paginationView.paginationOptions.currentPage, self.paginationView.paginationOptions.totalPages)
+
+
+                pQuery.skip(20*(this.paginationView.paginationOptions.currentPage-1));
+
+                pQuery.find().then(function(dataArray){
+                    
+                    var bcOptions = self.breadCrumbView.bcOptions
+                    var pagOptions = self.paginationView.paginationOptions
+                    
+                    self.pageLayout_insertBreadCrumb(bcOptions)
+                    self.pageLayout_insertPagination(pagOptions)
+                    self.multiListingView.collection = dataArray;
+
+                    window.scrollTo(0,0)
+                    self.multiListingView.render()
+                })
+            },
+
+
+        events_pagination_showPrev20: function(){
+                var self = this;
+                var pQuery = self.currentQueryParams
+
+                this.paginationView.paginationOptions.currentPage--
+
+
+                if(this.paginationView.paginationOptions.currentPage<1){
+                    this.paginationView.paginationOptions.currentPage=1;
+                }
+                
+
+                pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
+
+                pQuery.find().then(function(dataArray){
+                    self.paginationView.paginationOptions
+                    
+                    var bcOptions = self.breadCrumbView.bcOptions
+                    var pagOptions = self.paginationView.paginationOptions
+                    
+                    self.pageLayout_insertBreadCrumb(bcOptions)
+                    self.pageLayout_insertPagination(pagOptions)
+                    self.multiListingView.collection = dataArray;
+
+                    window.scrollTo(0,0)
+                    self.multiListingView.render()
+                })
+            },
+
+        events_pagination_showPageX: function(){
+            var self = this
+            var pQuery = self.currentQueryParams
+
+            var pageNumber = parseInt($("a[data-event='page'").text())
+            
+            this.paginationView.paginationOptions.currentPage = pageNumber
+
+            pQuery.skip(20*(self.paginationView.paginationOptions.currentPage-1));
+
+            pQuery.find().then(function(dataArray){
+                self.paginationView.paginationOptions
+                
+                var bcOptions = self.breadCrumbView.bcOptions
+                var pagOptions = self.paginationView.paginationOptions
+                
+                self.pageLayout_insertBreadCrumb(bcOptions)
+                self.pageLayout_insertPagination(pagOptions)
+                self.multiListingView.collection = dataArray;
+
+                window.scrollTo(0,0)
+                self.multiListingView.render()
+            })
+            
+        },
 
         //Handling the view-logic and 
         //collection-logic for adding items to the shopping cart
@@ -274,99 +288,6 @@
     // Models & Collections
     //****************
     //
-
-    Parse.FurnitureItem = Parse.Object.extend({
-        className: "mrInventory",
-
-        defaults: {
-         // Sofa, Dining-Table, Bedframe, Rug
-                // color: "",
-                // timePeriod: // 
-                // styleTags:, // Scandi, Art-Deco, Industrial, Contemporary
-                // designer_creator: ""
-                // status: "",
-                // manufactureDate: 0,
-                // condition:"",
-                // height: 0,
-                // width: 0,
-                // depth: 0,
-                // dateOfEntry: 0,
-                // newArrival: false,
-                // inventoryStatus: {
-                //     listed: true
-                //     available: true,
-                //     shipped: false,
-                //     successfulDelivery: false
-                //     },
-                // sold: false,
-                // clearance: false
-        },
-
-        initialize: function() {
-            var self = this
-
-            //sanity check for price: if no price entered, then listed=false
-
-            this.on('change', function() {
-                self.save()
-            })
-        },
-
-        validate: function() {
-            //validate item name
-            //validate item category
-            //validate MR-ID
-            //validate: listing-status
-
-        }
-    })
-
-    Parse.FurnitureItemSandbox = Parse.Object.extend({
-        className: "sandbox",
-
-        defaults: {
-        },
-
-        initialize: function() {
-            var self = this
-
-            //sanity check for price: if no price entered, then listed=false
-
-            this.on('change', function() {
-                self.save()
-            })
-        },
-
-        validate: function() {
-            //validate item name
-            //validate item category
-            //validate MR-ID
-            //validate: listing-status
-        }
-    })
-    
-    Parse.FurnitureGroup = Parse.Collection.extend({
-        model: Parse.FurnitureItem
-    })
-
-
-    Parse.TemporaryPhotosForEdit = Parse.Object.extend({
-        className: "TempPhotos",
-        defaults: {
-            "imageName" : "",
-            "temp_img_1": undefined,
-            "temp_img_2": undefined,
-            "temp_img_3": undefined,
-            "temp_img_4": undefined,
-            "temp_img_5": undefined,
-            "temp_img_6": undefined,
-            "temp_img_7": undefined,
-            "temp_img_8": undefined
-
-        }
-   })
-
-
     
 
 

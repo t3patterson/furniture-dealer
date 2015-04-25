@@ -33,7 +33,12 @@
                     var queryValue = inputArray.filter(function(word){
                                 return excludedWords.indexOf(word)=== -1 
                             }).map(function(word){
-                                return word.toLowerCase()
+
+                                // only capitalized MR's will be searched, 
+                                // all others searched strings will be reduced to lowerCase
+                                if (word.indexOf('MR')>-1) {
+                                    return word
+                                } else {return word.toLowerCase() }
                             })
  
                     pQuery.containsAll("searchKeywords", queryValue);

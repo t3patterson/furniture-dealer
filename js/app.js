@@ -59,7 +59,7 @@ function app(){
         // ,{url: "./data/INPUT-jpegData.js"}
         // ,{url: "./data/INPUT-productInfo.js"}
         // ,{url: "./data/EXECUTE-GenerateParseData.js"}
-        // ,{url: "./js/db/databaseFunctions.js"}
+        ,{url: "./js/db/databaseFunctions.js"}
 
         ,{url: "./data/scripts-organizeCategories/categoryMap2.js"}
         ,{url: "./data/scripts-organizeCategories/allCategories.js"}
@@ -75,7 +75,10 @@ function app(){
         // start app?
         Parse.initialize('8cefZxGY6FiSAhEw5YCwN9mBjgoiUgGcdJnTZgdy','RWjs5EKsDkBlZ1L05crkUetjonIG1DGNiaM664OY');
 
-        // dbManagement.editArrayData(4999,8001,dbManagement._queryEditAndSaveInventoryQuantity)
+        // console.log(dataArrayToUpload)
+        // dbManagement.uploadInventoryToParse(dataArrayToUpload)
+        // dbManagement.editArrayData(4999,8000,dbManagement._queryEditAndSaveKeyWords)
+        // dbManagement.editArrayData(8000,14405,dbManagement._queryEditAndSaveInventoryQuantity)
 
         // 
         //----------------

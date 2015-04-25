@@ -72,8 +72,12 @@
                 currentPage: options && options.currentPage || 1
             }
             
-            this.paginationView.collection = data
+            this.paginationView.collection = data;
+            this.paginationViewBottom.collection = data;
+            console.log(this.paginationViewBottom)
+            
             this.paginationView.render();
+            this.paginationViewBottom.render();
         },
 
         pageLayout_checkFooter: function() {
@@ -88,7 +92,9 @@
         },
 
         pageLayout_clearPagination: function(){
-            document.querySelector('.listings-pagination').innerHTML=""
+            document.querySelector('.pagination-top').innerHTML=""
+            document.querySelector('.pagination-bottom').innerHTML=""
+
         },
 
         pageLayout_clearFooter: function() {
@@ -151,7 +157,7 @@
     })
 
     Parse.PaginationView = Parse.TemplateView.extend({
-        el: '.listings-pagination',
+        el: '.pagination-top',
         view: 'pagination',
         
         paginationOptions: {
@@ -170,6 +176,7 @@
 
          triggerNext20: function(evt){
             evt.preventDefault();
+            console.log(evt)
             this.trigger('showNext20');
         },
 
@@ -185,10 +192,16 @@
         }
     })
 
+    Parse.PaginationViewBottom = Parse.PaginationView.extend({
+        el: '.pagination-bottom',
+        view: 'pagination'
+    })
+
     exports.Parse.Router = Parse.Router;
     exports.Parse.NavView = Parse.NavView;
     exports.Parse.FooterView = Parse.FooterView
     exports.Parse.PaginationView = Parse.PaginationView;
+    exports.Parse.PaginationViewBottom = Parse.PaginationViewBottom;
     exports.Parse.BreadCrumbView = Parse.BreadCrumbView;
 
 
