@@ -32,13 +32,29 @@ function app(){
         {url: "./bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"},
 
         {url: "./bower_components/pace/pace.min.js"},
-        {url: "./js/TemplateView.js"},
+        {url: "./js/TemplateView.js"}
 
-        //braintree sdk
         //my app
-        {url: "./js/Client.js"}
+        //
+        ,{url: "./js/db/databaseFunctions.js"}
+        ,{url: "./js/utility/utilityFunctions.js"}
+
+        ,{url: "./js/app/_models.js"}
+
+        ,{url: "./js/app/adminView.js"}
+        ,{url: "./js/app/categoriesView.js"}
+        ,{url: "./js/app/cartView.js"}
+        ,{url: "./js/app/employeeView.js"}
+        ,{url: "./js/app/homeView.js"}
+        ,{url: "./js/app/miscViews.js"}
+        ,{url: "./js/app/multiView.js"}
+        ,{url: "./js/app/pageLayout.js"}
+        ,{url: "./js/app/singleView.js"}
+
+
+        ,{url: "./js/Client.js"}
         
-        // //DATA SCRIPTS
+        //DATA SCRIPTS
         // ,{url: "./data/INPUT-totalSet.js"}
         // ,{url: "./data/INPUT-jpegData.js"}
         // ,{url: "./data/INPUT-productInfo.js"}
