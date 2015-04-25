@@ -38,7 +38,7 @@ function app(){
         //
         ,{url: "./js/utility/utilityFunctions.js"}
 
-        ,{url: "./js/app/_models.js"}
+        ,{url: "./js/app/models.js"}
 
         ,{url: "./js/app/adminView.js"}
         ,{url: "./js/app/categoriesView.js"}
