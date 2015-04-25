@@ -53,7 +53,6 @@
         model: Parse.FurnitureItem
     })
 
-
     Parse.TemporaryPhotosForEdit = Parse.Object.extend({
         className: "TempPhotos",
         defaults: {
