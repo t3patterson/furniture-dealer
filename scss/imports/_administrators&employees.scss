@@ -96,7 +96,7 @@
 			.remove-category{
 
 				&:hover > i{
-					color: indianred;
+					color: palegoldenrod;
 					cursor: pointer;
 				}
 
@@ -105,9 +105,6 @@
 				}
 
 			}
-		}
-		tr {
-			border-bottom: 1px solid $black
 		}
 
 	}
@@ -132,6 +129,10 @@
 		em{
 			text-decoration: underline;
 		}
+	}
+
+	.send-away{
+		padding-top: 2rem;
 	}
 	
 }

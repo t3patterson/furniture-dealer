@@ -201,32 +201,147 @@
 
         submitItemToDB: function(evt) {
             evt.preventDefault()
-
+                    //MR-Id
                 var $newMrId = $('.MR-ID-display'),
+                    
+                    //Item
                     $newItemName = $('.new-item-name'),
+                    
+                    //Price
                     $newItemPrice = ($('.new-item-price')),
+                    
+                    //Description, Condition, Deisgner, Dimensions, Manufacturer
                     $newItemDesc = $('.new-item-desc'),
                     $newItemCondition = $('.new-item-condition'),
                     $newItemDesigner = $('.new-item-designer'),
                     $newItemDimensions = $('.new-item-dimensions'),
                     $newItemManufacturer = $('.new-item-manufacturer'),
-                    $topLevelCategory = $('.top-level-category'),
-                    $subCategory_1 = $('.sub-category-1'),
-                    $subCategory_2 = $('.sub-category-2'),
-                    $newImgFile = $('.selected-img-file')
+                    
+                    //Categories
+                    $topLevelCategory = $('.single-entry .top-level-category'),
+                    $subCategory_1 = $('.single-entry .sub-category-1'),
+                    $subCategory_2 = $('.single-entry .sub-category-2'),
+                    
+                    //Images
+                    $newImgFileFull = $('.selected-full-img-files')
+                    $newImgFileTn = $('.selected-tn-img-files')
 
-                //
+                    //InventoryCount
+                    $inventoryCount = $('.inventory-count')
+
+                    //3rd-Party Vendors
+                    $checkedVendors = $(".vendors input:checked")
+
+                    //Consignment
+                    $consignment = $(".consigned-item input:checked")
                 
-                var categoryTreeByNumber= []
-                if($topLevelCategory.find('option:selected').val()) { categoryTreeByNumber.push($topLevelCategory.find('option:selected').val()) }
-                if($subCategory_1.find('option:selected').val()) {categoryTreeByNumber.push($subCategory_1.find('option:selected').val())}
-                if($subCategory_2.find('option:selected').val()) {categoryTreeByNumber.push($subCategory_2.find('option:selected').val())}
+                var returnFilesGroupFromDOM = function (uploadedFiles){
+                    var counter = 1;
+                    var filesGroupArray = [];
 
+                    //iterate over all the properties of the uploaded files
+                    for (var file in uploadedFiles) {
+                        //filter the iteration for over those properties that have their own 'size' property
+                        //i.e. (only the files, not .length or other stuff on the prototype)
+                        if (uploadedFiles[file].hasOwnProperty('size')) {
+                            //put the files on a sub-array and then push them to a grouped array
+                            var fileWithFileNameArray = []
+                            fileWithFileNameArray.push($newMrId.text() + "-" + "photo" + counter); //push name
+                            fileWithFileNameArray.push(uploadedFiles[file]); //push uploaded file
+                            filesGroupArray.push(fileWithFileNameArray);
+                            counter++;
+                        }
+                    }
 
-                console.log(categoryTreeByNumber)
-                var treeByName = categoryTreeByNumber.map(function(categoryNum){
-                    return MRCategoryLabels[categoryNum]
-                })
+                    return filesGroupArray
+                }
+
+                var saveImageFilesToParse = function(filesGroupFull, filesGroupTn, itemModel) {
+                    
+                    console.log('loading files....')
+
+                    itemModel.set("imageCount", filesGroupFull.length)
+
+                    var promises = []
+
+                    filesGroupFull.forEach(function(imgFile, filesIndex) {
+                        var parseImgFile = new Parse.File("fullPhoto"+filesIndex, imgFile[1]);                    
+                        parseImgFile.save()
+                            .then(function(parseFile) {
+                                var imgNameInDB = ("database_img_FILE_" + (filesIndex + 1))
+                                itemModel.set(imgNameInDB, parseFile);
+                                promises.push(itemModel)      
+                        })
+                    })
+
+                    filesGroupTn.forEach(function(imgFile, filesIndex) {
+                        var parseImgFile = new Parse.File("tnPhoto"+filesIndex, imgFile[1]);                    
+                        
+                        parseImgFile.save()
+                            .then(function(parseFile) {
+                                var imgNameInDB = ("database_img_FILE_t_" + (filesIndex + 1))
+                                itemModel.set(imgNameInDB, parseFile);
+                                promises.push(itemModel)
+                            })
+                    })
+
+                    return Parse.Promise.when(promises)
+                }
+
+                var createSearchKeywords = function(itemModel){
+                    var excludedSearchWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
+                    
+                    var splitDescriptionArray = itemModel.get('item').split(" ")
+                    
+                    var filteredDescriptionArray = splitDescriptionArray.filter(function(word){
+                        return excludedSearchWordsList.indexOf(word)=== -1 
+                         }).map(function(word){
+                        return word.toLowerCase()
+                    })
+
+                    filteredDescriptionArray.push('MR'+itemModel.get('MR_id'));
+
+                    return filteredDescriptionArray
+                }
+
+                var createVendorsList = function(vendorsCheckedInDOM){
+                    var thirdPartyVendorsList = [] 
+
+                    $.each(vendorsCheckedInDOM, function(index, checkedVendor){
+                        thirdPartyVendorsList.push(checkedVendor.value)
+                    })
+                    
+                    return thirdPartyVendorsList  
+                }
+
+                
+
+                var createCategoryTree = function(){
+                    newItemCategoryTreeByName = []
+                    newItemCategoryTreeByNumber = []
+
+                    $.each($('tbody tr'), function(index,value){
+                        if($(value).find('.top-level-entry').text() ) {
+                            newItemCategoryTreeByName.push($(value).find('.top-level-entry').text())
+                            newItemCategoryTreeByNumber.push($(value).find('.top-level-entry').attr('data-labelNum'))
+                        }
+
+                        if( $(value).find('.sub-cat1-entry').text() ){ 
+                            newItemCategoryTreeByName.push( $(value).find('.sub-cat1-entry').text())
+                            newItemCategoryTreeByNumber.push($(value).find('.sub-cat1-entry').attr('data-labelNum'))
+                        }
+
+                        if( $(value).find('.sub-cat2-entry').text() ){ 
+                            newItemCategoryTreeByName.push($(value).find('.sub-cat2-entry').text())
+                            newItemCategoryTreeByNumber.push($(value).find('.sub-cat2-entry').attr('data-labelNum'))
+                        }
+                    })
+
+                    return {
+                        byName: newItemCategoryTreeByName,
+                        byNumber: newItemCategoryTreeByNumber
+                    }
+                }
 
                 var newFurnitureItemModel = new Parse.FurnitureItem({
                     MR_id: parseInt($newMrId.text()),
@@ -238,68 +353,41 @@
                     designer: $newItemDesigner.val(),
                     dimensions: $newItemDimensions.val(),
                     manufacturer: $newItemManufacturer.val(),
-                    categoryTreeByNumber: categoryTreeByNumber || "",
-                    categoriesByNumber: [categoryTreeByNumber[categoryTreeByNumber.length-1]] || "",
-                    categoryTreeByName: treeByName || "",
-                    categoriesByName: [treeByName[treeByName.length-1]]|| "",
-                    inventoryStatus: "1"
+                    categoryTreeByNumber: [],
+                    categoryTreeByName: [],
+                    inventoryCount: parseInt($inventoryCount.val()),
+                    thirdPartyVendors: [],
+                    isConsigned: $consignment.val() === 'true' ? true : false,
                 })
 
+                var categoryTree = createCategoryTree()
+                console.log(categoryTree)
+                newFurnitureItemModel.set("categoryTreeByNumber", categoryTree.byNumber)
+                newFurnitureItemModel.set("categoryTreeByName", categoryTree.byName);
+                newFurnitureItemModel.set('thirdPartyVendors', createVendorsList($checkedVendors))                                                
+                newFurnitureItemModel.set('searchKeywords', createSearchKeywords(newFurnitureItemModel));
+
+                var letssseee = createSearchKeywords(newFurnitureItemModel)
+                console.log(letssseee)
+
+
                 //Create a Parse.File and put the file from the DOM onto it
-                var uploadedFiles = $newImgFile[0].files
+                var uploadedFullImgFiles = $newImgFileFull[0].files
+                var uploadedTnImgFiles = $newImgFileTn[0].files
 
-                var counter = 1;
-                var filesGroupArray = [];
+                var fullSizeImageFiles = returnFilesGroupFromDOM(uploadedFullImgFiles);
+                var thumbNailImageFiles = returnFilesGroupFromDOM(uploadedTnImgFiles);
 
-                //iterate over all the properties of the uploaded files
-                for (var file in uploadedFiles) {
-                    //filter the iteration for over those properties that have their own 'size' property
-                    //i.e. (only the files, not .length or other stuff on the prototype)
-                    if (uploadedFiles[file].hasOwnProperty('size')) {
-                        //put the files on a sub-array and then push them to a grouped array
-                        var fileWithFileNameArray = []
-                        fileWithFileNameArray.push($newMrId.text() + "-" + "photo" + counter); //push name
-                        fileWithFileNameArray.push(uploadedFiles[file]); //push uploaded file
-                        filesGroupArray.push(fileWithFileNameArray);
-                        counter++;
-                    }
-                }
+                saveImageFilesToParse(fullSizeImageFiles,thumbNailImageFiles,newFurnitureItemModel).then(function(data){
+                    console.log('images <saved!!!!></saved!!!!>!!')            
+                    console.log(newFurnitureItemModel)
+                    newFurnitureItemModel.save()
+                })
 
-                //create load function that iterates over img-files and saves them to parse server
-                var loadFiles = function(filesGroup, itemModel) {
-                    console.log('loading files....')
-                    var totalFiles = filesGroup.length;
-                    
-                    filesGroup.forEach(function(imgFile, filesIndex) {
-                        var parseImgFile = new Parse.File(imgFile[0], imgFile[1]);
-                        console.log(parseImgFile)
-                    
-                        parseImgFile.save()
-                            .then(function(parseFile) {
-                                console.log(parseFile)
-                                var imgNameInDB = ("database_img_FILE_" + (filesIndex + 1))
-                                itemModel.set(imgNameInDB, parseFile);
-                                
-                                if (filesIndex + 1 === filesGroup.length) {
-                                    console.log(itemModel)
-                                    itemModel.set("imageCount", filesGroup.length)
-                                
-                                    itemModel.save().then(function(result) {
-                                        console.log(result)
-                                    }).fail(function(error) {
-                                        console.log(error)
-                                    });
-                                }
-                            })
+              
 
-                    })
-                }
-
-                loadFiles(filesGroupArray, newFurnitureItemModel)
-
-
-
-
+                //**********************************
+                //+++++++++++++++++++++++++++++++++
                 //Clear out the form inputs
 
                 $newMrId.text("");
@@ -311,7 +399,6 @@
                 $newItemDimensions.val("");
                 $newItemManufacturer.val("")
 
-
                 //For Categories: Clear out the <option> in <select> top-level category and sub-category
                 console.log($('option.sub-category1-value'));
                 $('option.sub-category1-value').remove();
@@ -322,7 +409,8 @@
                 $subCategory_2.find('.disabled-subcat2-option').text('--Must Select Sub-Category--').prop('selected',true).prop('disabled',true);
 
                 //For ImageFiles: Clear the files stored in <input type="file" multiple>
-                this._resetField($newImgFile)
+                this._resetField($newImgFileFull)
+                this._resetField($newImgFileTn)
 
                 //remove styles
                 $('.form-group').each(function() {

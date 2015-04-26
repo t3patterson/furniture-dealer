@@ -84,7 +84,7 @@
                 <table class="table table-condensed">
                       <thead>
                         <tr>
-                            <th class="table-title" colspan="4">Currently-Selected Categories</th>
+                            <th class="table-title" colspan="4">Currently-Selected Categories For This Item</th>
                         </tr>
                         <tr>
                           <th>Top-Level</th>
@@ -119,41 +119,41 @@
                 </div>
                 
                 <hr>
-            <div class="major-section">
+            <div class="major-section other-details">
                 <h4>Other Details</h4>
                      <div class="form-group">
-                        <label class="control-label" for="exampleInputEmail1">Inventory-Count <small>(for multiple quantities)</small></label>
-                        <input type="number" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="For multiple quantities" min="0" value="1">
+                        <label class="control-label">Inventory-Count <small>(for multiple quantities)</small></label>
+                        <input type="number" class="form-control inventory-count" placeholder="For multiple quantities" min="0" value="1">
                     </div>
 
                 <div class="form-group">
                     <label class="control-label" for="MR_id">Third Party Vendor</label>
-                    <div class='other-details'>
+                    <div class='vendors'>
                         <label class="checkbox-inline">
-                          <input type="checkbox" value="first-dibs"> 1stDibs
+                          <input type="checkbox" value="first-dibs" name="vendor1"> 1stDibs
                         </label>
                         <label class="checkbox-inline">
-                          <input type="checkbox" value="ebay"> Ebay
+                          <input type="checkbox" value="ebay" name="vendor2"> Ebay
                         </label>
                         <label class="checkbox-inline">
-                          <input type="checkbox" value="one-kings-lane"> One King's Lane
+                          <input type="checkbox" value="one-kings-lane" name="vendor3"> One King's Lane
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group consigned-item">
                     <label class="control-label" for="MR_id">Consignment</label>
                     <div class='other-options'>
                         <label class="radio-inline">
                           <input type="radio" name="inlineRadioOptions" value="true"> Yes
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" value="false" checked   > No
+                          <input type="radio" name="inlineRadioOptions" value="false" checked > No
                         </label>
                     </div>
                 </div>
             </div>
 
-                 <p class="action-button">
+                 <p class="action-button send-away">
                     <button class='btn btn-primary btn-success btn-large'>Submit New Item to Database</button>&nbsp&nbsp <span class="response-msg"></span>
                 </p>
             </form>
