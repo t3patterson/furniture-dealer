@@ -59,10 +59,59 @@
 }
 
 .enter-new-item{
+	h4{
+		border-bottom: 2px $black solid;
+		background: $tan;
+	}
+
 	.form-group{
 		padding-left: 5%;
 	}
+
+	.action-button{
+		text-align: center;
+	}
+
+	.major-section{
+		border: 3px solid $sand;
+		padding: 0px 1%;
+	}
 	
+	table{
+		thead{
+			.table-title{
+				text-align: center;
+				vertical-align: center;
+				font-size: 18px;
+				background: $grey;
+
+			}
+		}
+		tbody{
+			td{
+				vertical-align: center;
+			}
+			
+
+			.remove-category{
+
+				&:hover > i{
+					color: indianred;
+					cursor: pointer;
+				}
+
+				i{
+				color: $brown;
+				}
+
+			}
+		}
+		tr {
+			border-bottom: 1px solid $black
+		}
+
+	}
+
 	.categories{
 		.form-control{
 			width: 50%;
@@ -76,6 +125,12 @@
 		.subcategory-group-2{
 			margin-top: 6px;
 			padding-left: 10%;
+		}
+	}
+
+	.image-upload{
+		em{
+			text-decoration: underline;
 		}
 	}
 	

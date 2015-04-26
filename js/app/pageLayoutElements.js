@@ -99,7 +99,6 @@
 
         pageLayout_clearFooter: function() {
             document.querySelector('footer').innerHTML = ""
-        .location.hash = "/products/listing/" + productMRid;
         }
     })
     

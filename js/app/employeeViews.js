@@ -1,4 +1,4 @@
-;(function(exports) {
+    ;(function(exports) {
 
     Parse.Router = Parse.Router.extend({
 
@@ -82,9 +82,40 @@
             'submit .new-item-form': 'submitItemToDB',
             'blur .top-level-category': 'handleTopLevelSelection',
             'blur .sub-category-1': 'handleSubCategory_1_Selection',
+            'click .add-item-category': 'handleAddItemCategory'
+
         },
 
-        subCategory1: "",
+        handleAddItemCategory: function(evt){
+            evt.preventDefault();
+            var topLevelVal = $('.top-level-category').val(),
+            subCat1Val = $('.sub-category-1').val(),
+            subCat2Val = $('.sub-category-2').val()
+
+
+            var newRow = $('<tr>')
+            var newCell = $('<td>')
+
+
+            var cell1 = $('<td>').addClass('top-level-entry active').text(MRCategoryLabels[topLevelVal]).attr('data-labelNum',topLevelVal),
+            cell2 = $('<td>').addClass('sub-cat1-entry').text(MRCategoryLabels[subCat1Val]).attr('data-labelNum',subCat1Val),
+            cell3 = $('<td>').addClass('sub-cat2-entry').text(MRCategoryLabels[subCat2Val]).attr('data-labelNum',subCat2Val)
+            cell4 = $('<td>').addClass('remove-category').html('<i class="fa fa-times fa-2x"></i>')
+
+            newRow.addClass('single-entry')
+            newRow.append(cell1)
+            newRow.append(cell2)
+            newRow.append(cell3)
+            newRow.append(cell4)
+
+            console.log(newRow)
+            $('.category-entries').append(newRow)
+
+            $('.top-level-category').val('')
+            $('.sub-category-1').val('')
+            $('.sub-category-2').val('')
+        },
+
 
         handleTopLevelSelection: function(evt){
             console.log(evt)
@@ -497,12 +528,13 @@
         events:{
             'click .get-mr-imgs': 'getImagesFromDB',
             'click .upload-imgs': 'saveImagesToDB',
-            'click .select-image': 'handleSelected'
+            'click .select-image': 'handleSelected',
         },
 
         imgTotal: 0,
         imgCounter: 0,
         currentMR: null,
+
 
 
         getImagesFromDB:function(evt){

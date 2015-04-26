@@ -6,13 +6,17 @@
             <h3>Enter-New-Item</h3>
             <p class="big-card"><i class="fa fa-tag"></i></p>
             <form class="new-item-form">
+            <div class="major-section">
+
                 <h4>Product Information</h4>
                 <div class="form-group">
                     <label class="control-label" for="MR_id">Metro Retro ID for this Item:</label>
-                    <p class="form-control MR-ID-display"></p>
-                    <button class="btn btn-primary btn-sm generate-MR">
-                        Generate New MR-ID
-                    </button>
+                    <p class="form-control MR-ID-display "></p>
+                    <p class="action-button">
+                        <button class="btn btn-primary btn-sm generate-MR">
+                            Generate New MR-ID
+                        </button>
+                    </p>
                 </div>
                 <hr>
                 <div class="form-group">
@@ -43,10 +47,13 @@
                     <label class="control-label" for="exampleInputEmail1">Original Manufacturer</label>
                     <input type="text" class="form-control new-item-manufacturer" id="shipping-AddressLine1" placeholder="Optional">
                 </div>
+            </div>
                 <hr>
+            <div class="major-section categories">
+
                 <h4>Category Information</h4>
-                <div class="form-group categories">
-                    <label class="control-label " for="exampleInputEmail1">Furniture Top-Level Category</label>
+                <div class="form-group">
+                    <label class="control-label" for="exampleInputEmail1">Furniture Top-Level Category</label>
                     <select class="form-control top-level-category">
                         <option value="" class="disabled-top-level-option" disabled selected>--Select Category--</option>
                         <%_.forEach(data.categoryMap[ 'top-level'],function(categoryNum){%>
@@ -71,21 +78,54 @@
                         </select>
                     </div>
                 </div>
+                <p class="action-button">  
+                    <button class="btn btn-primary btn-sm add-item-category">Add item-category</button>
+                </p>
+                <table class="table table-condensed">
+                      <thead>
+                        <tr>
+                            <th class="table-title" colspan="4">Currently-Selected Categories</th>
+                        </tr>
+                        <tr>
+                          <th>Top-Level</th>
+                          <th>1st Sub-Category</th>
+                          <th>2nd Sub-Category</th>
+                          <th class="remove">Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody class='category-entries'>
+
+                      </tbody>
+                </table>
+            </div>
                 <hr>
-                <h4>Add Images</h4>
-                <div class="form-group">
-                    <label for="uploadImage">Upload <em>FULL-SIZED</em> Image files</label>
-                    <div class="upload-image-group">
-                        <input type="file" class="selected-img-file" multiple>
-                        <p class="help-block">file should be in either <code>.jpg</code> or <code>.png</code> format</p>
+                <div class="major-section image-upload">
+                    <h4>Add Images</h4>
+                    <div class="form-group">
+                        <label for="uploadImage">Upload <em>FULL-SIZED</em> Image files</label>
+                        <div class="upload-image-group">
+                            <input type="file" class="selected-full-img-files" multiple>
+                            <p class="help-block">file should be in either <code>.jpg</code> or <code>.png</code> format</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="uploadImage">Upload <em>THUMBNAIL-SIZED</em> Image files</label>
+                        <div class="upload-image-group">
+                            <input type="file" class="selected-tn-img-files" multiple>
+                            <p class="help-block">file should be in either <code>.jpg</code> or <code>.png</code> format</p>
+                        </div>
                     </div>
                 </div>
-                <p>
-                    <button class='btn btn-primary btn-success btn-large'>Submit New Item to Database</button>&nbsp&nbsp <span class="response-msg"></span>
-                </p>
-                <hr>
                 
+                <hr>
+            <div class="major-section">
                 <h4>Other Details</h4>
+                     <div class="form-group">
+                        <label class="control-label" for="exampleInputEmail1">Inventory-Count <small>(for multiple quantities)</small></label>
+                        <input type="number" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="For multiple quantities" min="0" value="1">
+                    </div>
+
                 <div class="form-group">
                     <label class="control-label" for="MR_id">Third Party Vendor</label>
                     <div class='other-details'>
@@ -111,6 +151,11 @@
                         </label>
                     </div>
                 </div>
+            </div>
+
+                 <p class="action-button">
+                    <button class='btn btn-primary btn-success btn-large'>Submit New Item to Database</button>&nbsp&nbsp <span class="response-msg"></span>
+                </p>
             </form>
         </div>
     </div>
