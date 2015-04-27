@@ -305,7 +305,7 @@
                 }
 
                 var createSearchKeywords = function(itemModel){
-                    var excludedSearchWordsList = ["the","in","by","for","of","on", "in", "and","with","&"]
+                    var excludedSearchWordsList = ["the","in","by","for","of","on", "in", "a", "an", "and","with","&"]
                     
                     var splitDescriptionArray = itemModel.get('item').split(" ")
                     
@@ -394,7 +394,7 @@
                 })
 
                 var categoryData= createCategoryInfo()
-                console.log(categoryData)
+
                 newFurnitureItemModel.set("categoriesByName", categoryData.categoryByName)
                 newFurnitureItemModel.set("categoriesByNumber", categoryData.categoryByNumber)
                 newFurnitureItemModel.set("categoryTreeByNumber", categoryData.treeByNumber)
@@ -402,9 +402,6 @@
 
                 newFurnitureItemModel.set('thirdPartyVendors', createVendorsList($checkedVendors))                                                
                 newFurnitureItemModel.set('searchKeywords', createSearchKeywords(newFurnitureItemModel));
-
-                var letssseee = createSearchKeywords(newFurnitureItemModel)
-                console.log(letssseee)
 
 
                 //Create a Parse.File and put the file from the DOM onto it
@@ -573,11 +570,12 @@
         view: 'edit-existing-item',
 
         events: {
-            'change .selected-img-file': 'checkFile',
+            //'change .selected-img-file': 'checkFile',
             'blur .edit-top-level-category': 'handleTopLevelSelection',
             'blur .edit-sub-category--1': 'handleSubCategory_1_Selection',
             'click .edit-add-item-category': 'handleAddItemCategory',
-            'click .edit-reset': 'resetItemCategories'
+            'click .edit-reset': 'resetItemCategories',
+            'submit .edit-item-form': 'saveEditsToDB'
         },
 
 
@@ -753,8 +751,130 @@
         resetItemCategories: function(evt){
             evt.preventDefault();
             $('tbody').html('')
-        }
+        },
 
+        saveEditsToDB: function(evt){
+            evt.preventDefault();
+            var self = this
+
+
+            var createSearchKeywords = function(itemModel){
+                    var excludedSearchWordsList = ["the","in","by","for","of","on", "in", "and","with","&", "a", "an"]
+                    
+                    var splitDescriptionArray = itemModel.get('item').split(" ")
+                    
+                    var filteredDescriptionArray = splitDescriptionArray.filter(function(word){
+                        return excludedSearchWordsList.indexOf(word)=== -1 
+                         }).map(function(word){
+                        return word.toLowerCase()
+                    })
+
+                    filteredDescriptionArray.push('MR'+itemModel.get('MR_id'));
+
+                    return filteredDescriptionArray
+                }
+
+            var createCategoryInfo = function(){
+                    categoryTreeAllNames = [];
+                    categoryTreeAllNumbers = [];
+
+                    terminalCategoryNames = []
+                    terminalCategoryNumbers = []
+
+                    $.each($('tbody tr'), function(index,value){
+                            thisCategoryTreeByName = [];
+                            thisCategoryTreeByNumber =[];
+
+                            thisTerminalCategoryByName =[];
+                            thisTerminalCategoryByNumber=[];
+
+                        if($(value).find('.top-level-entry').text() ) {
+                            thisCategoryTreeByName.push($(value).find('.top-level-entry').text())
+                            thisCategoryTreeByNumber.push($(value).find('.top-level-entry').attr('data-labelNum'))
+                        }
+
+                        if( $(value).find('.sub-cat1-entry').text() ){ 
+                            thisCategoryTreeByName.push( $(value).find('.sub-cat1-entry').text())
+                            thisCategoryTreeByNumber.push($(value).find('.sub-cat1-entry').attr('data-labelNum'))
+                        }
+
+                        if( $(value).find('.sub-cat2-entry').text() ){ 
+                            thisCategoryTreeByName.push($(value).find('.sub-cat2-entry').text())
+                            thisCategoryTreeByNumber.push($(value).find('.sub-cat2-entry').attr('data-labelNum'))
+                        }
+
+                        categoryTreeAllNames = categoryTreeAllNames.concat(thisCategoryTreeByName)
+                        categoryTreeAllNumbers = categoryTreeAllNumbers.concat(thisCategoryTreeByNumber)
+
+                        terminalCategoryNames.push(thisCategoryTreeByName[thisCategoryTreeByName.length-1])
+                        terminalCategoryNumbers.push(thisCategoryTreeByNumber[thisCategoryTreeByNumber.length-1])
+                    
+                    })
+
+                    return {
+                        treeByName: categoryTreeAllNames,
+                        treeByNumber: categoryTreeAllNumbers,
+                        categoryByName: terminalCategoryNames,
+                        categoryByNumber: terminalCategoryNumbers
+                    }
+                }
+
+            console.log(this.model.modelForEdit)
+            this.model.modelForEdit.set( 'item' , $('.edit-item-name').val() );
+            this.model.modelForEdit.set( 'price' , parseInt($('.edit-item-price').val()) );
+            this.model.modelForEdit.set( 'priceDollar', "$"+ utility_numberCommaSeparated( parseInt( $('.edit-item-price').val() ) ) );
+            this.model.modelForEdit.set( 'description', $('.edit-item-desc').val() );
+            this.model.modelForEdit.set( 'condition', $('.edit-item-condition').val() );
+            this.model.modelForEdit.set( 'dimensions', $('.edit-item-dimensions').val() );
+            this.model.modelForEdit.set( 'designer', $('.edit-item-designer').val());
+            this.model.modelForEdit.set( 'manufacturer', $('.edit-item-manufacturer').val());
+
+            var thirdPartyVendorsList = []
+            $.each( $('.vendors input:checked'), function(index, element){
+                thirdPartyVendorsList.push(element.value)
+            })
+
+            var categoryData = createCategoryInfo()
+            this.model.modelForEdit.set("categoriesByName", categoryData.categoryByName)
+            this.model.modelForEdit.set("categoriesByNumber", categoryData.categoryByNumber)
+            this.model.modelForEdit.set("categoryTreeByNumber", categoryData.treeByNumber)
+            this.model.modelForEdit.set("categoryTreeByName", categoryData.treeByName);
+        
+            this.model.modelForEdit.set( 'thirdPartyVendors', thirdPartyVendorsList );
+            this.model.modelForEdit.set( 'inventoryCount', $('inventoryCount').val() );
+            this.model.modelForEdit.set( 'isConsigned', $('.edit-consigned-item input:checked').val() ==="true" ? true : false)
+
+            this.model.modelForEdit.set("searchKeywords", createSearchKeywords(this.model.modelForEdit))
+            
+            $('.organize-regular-images').find('.img-upload-edit').each(function(index, el){
+                if($(el).find('input')[0].files.length){
+                    var imgFile = $(el).find('input')[0].files
+                    var parseImgFile = new Parse.File("fullPhoto"+index, imgFile[0]);                    
+                    
+                    parseImgFile.save().then(function(parseFile){
+                        console.log(parseFile)
+                        console.log(self)
+                        self.model.modelForEdit.set('database_img_FILE_'+(index+1), parseFile)
+                        self.model.modelForEdit.save()
+                    })
+                }
+            }) 
+
+            $('.organize-thumbnail-images').find('.img-upload-edit').each(function(index, el){
+                if($(el).find('input')[0].files.length){
+                    var imgFile = $(el).find('input')[0].files
+                    var parseImgFile = new Parse.File("tnPhoto"+index, imgFile[0]);                    
+                    
+                    parseImgFile.save().then(function(parseFile){
+                        console.log(parseFile)
+                        console.log(self)
+                        self.model.modelForEdit.set('database_img_FILE_t_'+(index+1), parseFile)
+                        self.model.modelForEdit.save()
+                    })
+                }
+            })
+
+        }
     })
 
     Parse.EmployeeReorganizeImagesView = Parse.TemplateView.extend({
@@ -770,8 +890,6 @@
         imgTotal: 0,
         imgCounter: 0,
         currentMR: null,
-
-
 
         getImagesFromDB:function(evt){
             var self = this
