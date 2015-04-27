@@ -572,7 +572,7 @@
         events: {
             //'change .selected-img-file': 'checkFile',
             'blur .edit-top-level-category': 'handleTopLevelSelection',
-            'blur .edit-sub-category--1': 'handleSubCategory_1_Selection',
+            'blur .edit-sub-category-1': 'handleSubCategory_1_Selection',
             'click .edit-add-item-category': 'handleAddItemCategory',
             'click .edit-reset': 'resetItemCategories',
             'submit .edit-item-form': 'saveEditsToDB'
@@ -688,7 +688,6 @@
 
         handleSubCategory_1_Selection:function(evt){
             var self = this;
-            console.log('<select> sub-cat-1 blurred')
             $('select.edit-sub-category-2').prop('disabled',false)//
             $('option.sub-category2-value').remove()
             $('option.disabled-subcat2-option').prop('selected', true)
