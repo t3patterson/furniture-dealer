@@ -19,6 +19,7 @@
                 categoryLabels: MRCategoryLabels,
                 categoryMap: MRCategoryMap
             }
+
             this.newItemFormView.collection = data
             this.pageLayout_checkNavBar();
             this.pageLayout_clearBreadCrumb();
@@ -35,10 +36,12 @@
             this.pageLayout_clearPagination();
             this.pageLayout_clearFooter();
             window.scrollTo(0,0);
-            this.searchItemView.render();
+            this.searchExistingItemView.render();
         },
 
-        employeeView_loadEditExistingItemForm: function(mrId) {pageLayout_checkNavBar();
+        employeeView_loadEditExistingItemForm: function(mrId) {
+            var self = this;
+            this.pageLayout_checkNavBar();
             this.pageLayout_clearBreadCrumb();
             this.pageLayout_clearPagination();
             this.pageLayout_clearFooter();
@@ -47,11 +50,16 @@
             var pQuery = new Parse.Query(Parse.FurnitureItem);
             pQuery.equalTo('MR_id',parseInt(mrId))
             
-            pQuery.find().then(function(model){
+            pQuery.find().then((function(model){
                 var retrievedModel = model[0]
-                 self.editItemView.model = retrievedModel
+                 self.editItemView.model = {
+                    modelForEdit: retrievedModel,
+                    categoryLabels: MRCategoryLabels,
+                    categoryMap: MRCategoryMap
+                }
+
                  self.editItemView.render();
-            })           
+            }))           
         },
 
         employeeView_loadReorganizeImgs: function(){
@@ -82,8 +90,13 @@
             'submit .new-item-form': 'submitItemToDB',
             'blur .top-level-category': 'handleTopLevelSelection',
             'blur .sub-category-1': 'handleSubCategory_1_Selection',
-            'click .add-item-category': 'handleAddItemCategory'
+            'click .add-item-category': 'handleAddItemCategory',
+            'click .reset': 'resetItemCategories'
+        },
 
+        resetItemCategories: function(evt){
+            evt.preventDefault()
+            $('tbody').html('')
         },
 
         handleAddItemCategory: function(evt){
@@ -97,16 +110,14 @@
             var newCell = $('<td>')
 
 
-            var cell1 = $('<td>').addClass('top-level-entry active').text(MRCategoryLabels[topLevelVal]).attr('data-labelNum',topLevelVal),
+            var cell1 = $('<td>').addClass('top-level-entry').text(MRCategoryLabels[topLevelVal]).attr('data-labelNum',topLevelVal),
             cell2 = $('<td>').addClass('sub-cat1-entry').text(MRCategoryLabels[subCat1Val]).attr('data-labelNum',subCat1Val),
             cell3 = $('<td>').addClass('sub-cat2-entry').text(MRCategoryLabels[subCat2Val]).attr('data-labelNum',subCat2Val)
-            cell4 = $('<td>').addClass('remove-category').html('<i class="fa fa-times fa-2x"></i>')
 
             newRow.addClass('single-entry')
             newRow.append(cell1)
             newRow.append(cell2)
             newRow.append(cell3)
-            newRow.append(cell4)
 
             console.log(newRow)
             $('.category-entries').append(newRow)
@@ -123,6 +134,10 @@
             $('.sub-category-1').prop('disabled',false)//
             $('option.sub-category1-value').remove()
             $('.disabled-subcat1-option').prop('selected', true);
+
+            $('.sub-category-2').prop('disabled',true)
+            $('option.sub-category2-value').remove()
+            $('option.disabled-subcat2-option').prop('selected', true)
 
             var firstLevelCategory = $('.top-level-category').val()
 
@@ -201,6 +216,7 @@
 
         submitItemToDB: function(evt) {
             evt.preventDefault()
+            if(!$('.MR-ID-display').text()){return }
                     //MR-Id
                 var $newMrId = $('.MR-ID-display'),
                     
@@ -314,32 +330,49 @@
                     return thirdPartyVendorsList  
                 }
 
-                
+                var createCategoryInfo = function(){
+                  
+                    categoryTreeAllNames = [];
+                    categoryTreeAllNumbers = [];
 
-                var createCategoryTree = function(){
-                    newItemCategoryTreeByName = []
-                    newItemCategoryTreeByNumber = []
+                    terminalCategoryNames = []
+                    terminalCategoryNumbers = []
 
                     $.each($('tbody tr'), function(index,value){
+                            thisCategoryTreeByName = [];
+                            thisCategoryTreeByNumber =[];
+
+                            thisTerminalCategoryByName =[];
+                            thisTerminalCategoryByNumber=[];
+
                         if($(value).find('.top-level-entry').text() ) {
-                            newItemCategoryTreeByName.push($(value).find('.top-level-entry').text())
-                            newItemCategoryTreeByNumber.push($(value).find('.top-level-entry').attr('data-labelNum'))
+                            thisCategoryTreeByName.push($(value).find('.top-level-entry').text())
+                            thisCategoryTreeByNumber.push($(value).find('.top-level-entry').attr('data-labelNum'))
                         }
 
                         if( $(value).find('.sub-cat1-entry').text() ){ 
-                            newItemCategoryTreeByName.push( $(value).find('.sub-cat1-entry').text())
-                            newItemCategoryTreeByNumber.push($(value).find('.sub-cat1-entry').attr('data-labelNum'))
+                            thisCategoryTreeByName.push( $(value).find('.sub-cat1-entry').text())
+                            thisCategoryTreeByNumber.push($(value).find('.sub-cat1-entry').attr('data-labelNum'))
                         }
 
                         if( $(value).find('.sub-cat2-entry').text() ){ 
-                            newItemCategoryTreeByName.push($(value).find('.sub-cat2-entry').text())
-                            newItemCategoryTreeByNumber.push($(value).find('.sub-cat2-entry').attr('data-labelNum'))
+                            thisCategoryTreeByName.push($(value).find('.sub-cat2-entry').text())
+                            thisCategoryTreeByNumber.push($(value).find('.sub-cat2-entry').attr('data-labelNum'))
                         }
+
+                        categoryTreeAllNames = categoryTreeAllNames.concat(thisCategoryTreeByName)
+                        categoryTreeAllNumbers = categoryTreeAllNumbers.concat(thisCategoryTreeByNumber)
+
+                        terminalCategoryNames.push(thisCategoryTreeByName[thisCategoryTreeByName.length-1])
+                        terminalCategoryNumbers.push(thisCategoryTreeByNumber[thisCategoryTreeByNumber.length-1])
+                    
                     })
 
                     return {
-                        byName: newItemCategoryTreeByName,
-                        byNumber: newItemCategoryTreeByNumber
+                        treeByName: categoryTreeAllNames,
+                        treeByNumber: categoryTreeAllNumbers,
+                        categoryByName: terminalCategoryNames,
+                        categoryByNumber: terminalCategoryNumbers
                     }
                 }
 
@@ -360,10 +393,13 @@
                     isConsigned: $consignment.val() === 'true' ? true : false,
                 })
 
-                var categoryTree = createCategoryTree()
-                console.log(categoryTree)
-                newFurnitureItemModel.set("categoryTreeByNumber", categoryTree.byNumber)
-                newFurnitureItemModel.set("categoryTreeByName", categoryTree.byName);
+                var categoryData= createCategoryInfo()
+                console.log(categoryData)
+                newFurnitureItemModel.set("categoriesByName", categoryData.categoryByName)
+                newFurnitureItemModel.set("categoriesByNumber", categoryData.categoryByNumber)
+                newFurnitureItemModel.set("categoryTreeByNumber", categoryData.treeByNumber)
+                newFurnitureItemModel.set("categoryTreeByName", categoryData.treeByName);
+
                 newFurnitureItemModel.set('thirdPartyVendors', createVendorsList($checkedVendors))                                                
                 newFurnitureItemModel.set('searchKeywords', createSearchKeywords(newFurnitureItemModel));
 
@@ -397,8 +433,8 @@
                 $newItemCondition.val("");
                 $newItemDesigner.val("");
                 $newItemDimensions.val("");
-                $newItemManufacturer.val("")
-
+                $newItemManufacturer.val("");
+                    
                 //For Categories: Clear out the <option> in <select> top-level category and sub-category
                 console.log($('option.sub-category1-value'));
                 $('option.sub-category1-value').remove();
@@ -407,16 +443,25 @@
                 $topLevelCategory.find('.disabled-top-level-option').text('--Select Category--').prop('selected',true);
                 $subCategory_1.find('.disabled-subcat1-option').text('--Must Select Top-Level Category--').prop('selected',true).prop('disabled',true);
                 $subCategory_2.find('.disabled-subcat2-option').text('--Must Select Sub-Category--').prop('selected',true).prop('disabled',true);
+                $('tbody').html('')
 
                 //For ImageFiles: Clear the files stored in <input type="file" multiple>
                 this._resetField($newImgFileFull)
                 this._resetField($newImgFileTn)
+
+                //For 'Other Details' Settings
+                $inventoryCount.val("1");
+                $('.vendors input').attr('checked',false)
+                $('.consigned-yes').attr('checked',false);
+                $('.consigned-no').attr('checked',true);
 
                 //remove styles
                 $('.form-group').each(function() {
                     $(this).removeClass('has-success has-error')
 
                 })
+
+                window.scrollTo(0,0)
             // }
         },
 
@@ -527,6 +572,15 @@
         el: '.wrapper',
         view: 'edit-existing-item',
 
+        events: {
+            'change .selected-img-file': 'checkFile',
+            'blur .edit-top-level-category': 'handleTopLevelSelection',
+            'blur .edit-sub-category--1': 'handleSubCategory_1_Selection',
+            'click .edit-add-item-category': 'handleAddItemCategory',
+            'click .edit-reset': 'resetItemCategories'
+        },
+
+
         initialize: function(){
             var query = new Parse.Query(Parse.TemporaryPhotosForEdit);
             query.find().then(function(data){
@@ -537,12 +591,6 @@
                 return Parse.Promise.when(promises)
             })
         },
-
-        events: {
-            'change .selected-img-file': 'checkFile'
-        },
-
-
 
         checkFile: function(e){
             console.log(e)
@@ -603,10 +651,110 @@
                     savetheTempFilesAndChangeTheImage();
                 }
 
-                //save the file & image to the database
-               
+                //save the file & image to the database  
             }
+        },
+        
+        handleTopLevelSelection: function(evt){
+            console.log(evt)
+            var self = this;
+            $('.edit-sub-category-1').prop('disabled',false)//
+            $('option.sub-category1-value').remove()
+            $('.disabled-subcat1-option').prop('selected', true);
+
+            $('.sub-category-2').prop('disabled',true)
+            $('option.sub-category2-value').remove()
+            $('option.disabled-subcat2-option').prop('selected', true)
+
+            var firstLevelCategory = $('.edit-top-level-category').val()
+            var subCategories = this.model.categoryMap[firstLevelCategory];
+
+            if(!subCategories){
+                console.log('noSubCategories')
+                $('.disabled-subcat1-option').text("--No subcategories for this option--")
+                $('.edit-sub-category-1').prop('disabled',true);
+
+            } else {subCategories.forEach(function(subCategoryNum){
+                $('.disabled-subcat1-option').text("--Select Sub-Category--")
+
+                var subCategoryHTMLOptionEl = $('<option>');
+                    subCategoryHTMLOptionEl
+                        .val(subCategoryNum)
+                        .addClass('sub-category1-value')
+                        .text(self.model.categoryLabels[subCategoryNum]+" - ("+subCategoryNum+")")
+                    $('select.edit-sub-category-1').append(subCategoryHTMLOptionEl)
+
+                })
+            }
+        },
+
+        handleSubCategory_1_Selection:function(evt){
+            var self = this;
+            console.log('<select> sub-cat-1 blurred')
+            $('select.edit-sub-category-2').prop('disabled',false)//
+            $('option.sub-category2-value').remove()
+            $('option.disabled-subcat2-option').prop('selected', true)
+
+            var selectedSubCategory = $('select.edit-sub-category-1').val();
+
+            var subCategories = this.model.categoryMap[selectedSubCategory];
+
+            if(!subCategories){
+                console.log('noSubCategories-2')
+                $('.disabled-subcat2-option').text("--No subcategories for this option--");
+                $('.edit-sub-category-2').prop('disabled',true);
+            
+            } else {
+                subCategories.forEach(function(subCategoryNum){
+                
+                $('.disabled-subcat2-option').text("--Select Sub-Category--")
+
+                    var subCategoryHTMLOptionEl = $('<option>');
+
+                    subCategoryHTMLOptionEl
+                        .val(subCategoryNum)
+                        .addClass('sub-category2-value')
+                        .text(self.model.categoryLabels[subCategoryNum]+" - ("+subCategoryNum+")")
+
+                    $('select.edit-sub-category-2').append(subCategoryHTMLOptionEl);
+                    
+                })
+            }
+        },
+
+        handleAddItemCategory: function(evt){
+            evt.preventDefault();
+            var topLevelVal = $('.edit-top-level-category').val(),
+            subCat1Val = $('.edit-sub-category-1').val(),
+            subCat2Val = $('.edit-sub-category-2').val()
+
+
+            var newRow = $('<tr>')
+            var newCell = $('<td>')
+
+
+            var cell1 = $('<td>').addClass('top-level-entry').text(MRCategoryLabels[topLevelVal]).attr('data-labelNum',topLevelVal),
+            cell2 = $('<td>').addClass('sub-cat1-entry').text(MRCategoryLabels[subCat1Val]).attr('data-labelNum',subCat1Val),
+            cell3 = $('<td>').addClass('sub-cat2-entry').text(MRCategoryLabels[subCat2Val]).attr('data-labelNum',subCat2Val)
+
+            newRow.addClass('single-entry')
+            newRow.append(cell1)
+            newRow.append(cell2)
+            newRow.append(cell3)
+
+            console.log(newRow)
+            $('.category-entries').append(newRow)
+
+            $('.edit-top-level-category').val('')
+            $('.edit-sub-category-1').val('')
+            $('.edit-sub-category-2').val('')
+        },
+
+        resetItemCategories: function(evt){
+            evt.preventDefault();
+            $('tbody').html('')
         }
+
     })
 
     Parse.EmployeeReorganizeImagesView = Parse.TemplateView.extend({

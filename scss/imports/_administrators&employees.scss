@@ -91,20 +91,7 @@
 			td{
 				vertical-align: center;
 			}
-			
-
-			.remove-category{
-
-				&:hover > i{
-					color: palegoldenrod;
-					cursor: pointer;
-				}
-
-				i{
-				color: $brown;
-				}
-
-			}
+		
 		}
 
 	}
@@ -143,7 +130,20 @@
 	text-align: center
 	}
 }
+
+
 .edit-existing-item{
+	.major-section{
+		border: 3px solid $tan;
+		padding: 0px 1%;
+	}
+
+
+	.action-button{
+		text-align: center;
+	}
+
+
 	img.principal-img{
 		display: block;
 		max-height: 400px;
@@ -154,8 +154,51 @@
 		color: blue;
 	}
 
+	em {
+		text-decoration: underline;
+	}
+
 	.img-upload-edit{
 		padding-top: 1.5rem;
 	}
+	
+	.categories{
+
+		.form-control{
+			width: 50%;
+		}
+
+		.subcategory-group-1 {
+			margin-top: 6px;
+			padding-left: 5%;
+		}
+
+		.subcategory-group-2{
+			margin-top: 6px;
+			padding-left: 10%;
+		}
+	}
+
+	table{
+		thead{
+			.table-title{
+				text-align: center;
+				vertical-align: center;
+				font-size: 18px;
+				background: $grey;
+
+			}
+		}
+		tbody{
+			td{
+				vertical-align: center;
+				color: blue;
+			}
+		
+		}
+
+	}
+
+
 
 }

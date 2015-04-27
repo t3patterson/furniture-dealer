@@ -81,20 +81,21 @@
                 <p class="action-button">  
                     <button class="btn btn-primary btn-sm add-item-category">Add item-category</button>
                 </p>
+                <p class="action-button">  
+                    <button class="btn btn-danger btn-xs reset">Reset</button>
+                </p>
                 <table class="table table-condensed">
                       <thead>
                         <tr>
-                            <th class="table-title" colspan="4">Currently-Selected Categories For This Item</th>
+                            <th class="table-title" colspan="3">Currently-Selected Categories For This Item</th>
                         </tr>
                         <tr>
                           <th>Top-Level</th>
                           <th>1st Sub-Category</th>
                           <th>2nd Sub-Category</th>
-                          <th class="remove">Remove</th>
                         </tr>
                       </thead>
                       <tbody class='category-entries'>
-
                       </tbody>
                 </table>
             </div>
@@ -144,13 +145,14 @@
                     <label class="control-label" for="MR_id">Consignment</label>
                     <div class='other-options'>
                         <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" value="true"> Yes
+                          <input type="radio" class="consigned-yes" name="consignmentRadio" value="true"> Yes
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" value="false" checked > No
+                          <input type="radio" class="consigned-no" name="consignmentRadio" value="false" checked > No
                         </label>
                     </div>
                 </div>
+
             </div>
 
                  <p class="action-button send-away">

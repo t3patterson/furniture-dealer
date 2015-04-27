@@ -1,3 +1,6 @@
+<%
+    %>
+
 <main class="container-fluid edit-existing-item">
     <div class="row">
         <div class="col-xs-10 col-xs-offset-1 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
@@ -5,132 +8,324 @@
             <h3>Edit-Existing-Item</h3>
             <p class="big-card"><i class="fa fa-pencil-square-o"></i></p>
             <form class="edit-item-form">
-                <h4>Product Information</h4>
-                <div class="form-group">
-                    <label class="control-label" for="MR_id">Metro Retro ID for this Item:</label>
-                    <p type="text" class="form-control mr-listing">
-                        <%=data.get( 'MR_id')%>
-                    </p>
-                </div>
-                <hr>
-                <div class="principal-img">
-                    <% if(data.attributes && data.get('database_img_LINK_1')){
-                        var imgSrc = data.get('database_img_LINK_1');
-                        console.log(imgSrc)
-                        } else if (data.attributes && data.get('database_img_FILE_1')){
-                            console.log(imgSrc)
-                            var imgSrc = data.get('database_img_FILE_1')._url;
-                        } else { 
-                            var imgSrc = "./images/no_image.jpg" 
-                        }
-                    %>
-
-                    <img src="<%=imgSrc%>" alt="item image" >
-
-
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="itenName">Item Name</label>
-                    <input type="text" class="form-control new-item-name" placeholder="undefined" value="<%=data.get('item')%>">
-
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="itemPrice">Item Price</label>
-                    <input type="text" class="form-control new-item-price" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('price')%>">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="ItemDescription">Item Description</label>
-                    <textarea class="form-control new-item-desc" rows="4" maxlength="400"><%=data.get('description')%>
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="exampleInputEmail1">Condition</label>
-                    <input type="text" class="form-control new-item-condition" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('condition')%>">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="exampleInputEmail1">Dimensions</label>
-                    <input type="text" class="form-control new-item-dimensions" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('manufacturer')%>">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="exampleInputEmail1">Designer</label>
-                    <input type="text" class="form-control new-item-designer" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('designer')%>">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="exampleInputEmail1">Original Manufacturer</label>
-                    <input type="text" class="form-control new-item-manufacturer" id="shipping-AddressLine1" placeholder="undefined" value="<%=data.get('manufacturer')%>">
-                </div>
-                <hr>
-                <h4>Category Information</h4>
-                <hr>
-                <h4>Organize <em>regular-sized</em> images</h4>
-                <div class="container-fluid">
-                
-                <%console.log(data)
-                for( var i = 1; i <= 8; i++ ){
-                    imgSrc=""
-
-                    if(data.attributes && data.get('database_img_LINK_'+i)) {
-                        console.log('imgLink');
-                        var imgSrc = data.get('database_img_LINK_'+i)
-                        console.log(imgSrc);
-
-                        } else if (data.get('database_img_FILE_'+i)){
-                            console.log('imgFILE');
-                            var imgSrc = data.get('database_img_FILE_'+i)._url;
-                        
-                        } else { 
-                            console.log("no img or file")
-                            var placeholder = "no image file" 
-
-                        }
-                    %>
-                    <div class="row img-upload-edit">
-                        <div class="col-xs-4">
-                            <strong>Current Image-<%=i%></strong>
-                            
-                        </div>
-                        <div class="col-xs-2">
-                            <img src="<%= imgSrc || "" %>" alt="no-img" class="thumbnail sample-img-<%=i%>">
-                        </div>
-                        
-                        <div class="col-xs-4">
-                            <input type="file" class="selected-img-file" data-index="<%=i%>">
-                        </div>
-                    </div>
-                <%}%>
-
-
-
-                    <div class="form-group img-input">
+                <div class="major-section">
+                    <h4>Product Information</h4>
+                    <div class="form-group">
+                        <label class="control-label" for="MR_id">Metro Retro ID for this Item:</label>
+                        <p type="text" class="form-control mr-listing">
+                            <strong><%=data.modelForEdit.get( 'MR_id')%></strong>
+                        </p>
                     </div>
                     <hr>
+                    <div class="principal-img">
+                        <% if(data.modelForEdit.attributes && data.modelForEdit.get('database_img_LINK_1')){
+                            var imgSrc = data.modelForEdit.get('database_img_LINK_1');
+                            console.log(imgSrc)
+                            } else if (data.modelForEdit.attributes && data.modelForEdit.get('database_img_FILE_1')){
+                                var imgSrc = data.modelForEdit.get('database_img_FILE_1')._url;
+                            } else { 
+                                var imgSrc = "./images/no_image.jpg" 
+                            }
+                        %>
+
+                        <img src="<%=imgSrc%>" alt="item image" >
+
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="itenName">Item Name</label>
+                        <input type="text" class="form-control edit-item-name" placeholder="undefined" value="<%=data.modelForEdit.get('item')%>">
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="itemPrice">Item Price</label>
+                        <input type="text" class="form-control edit-item-price"  placeholder="undefined" value="<%=data.modelForEdit.get('price')%>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ItemDescription">Item Description</label>
+                        <textarea class="form-control edit-item-desc" rows="4" maxlength="400"><%=data.modelForEdit.get('description')%>
+                        </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="exampleInputEmail1">Condition</label>
+                        <input type="text" class="form-control edit-item-condition"  placeholder="undefined" value="<%=data.modelForEdit.get('condition')%>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="exampleInputEmail1">Dimensions</label>
+                        <input type="text" class="form-control edit-item-dimensions"  placeholder="undefined" value="<%=data.modelForEdit.get('dimensions')%>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="exampleInputEmail1">Designer</label>
+                        <input type="text" class="form-control edit-item-designer"  placeholder="undefined" value="<%=data.modelForEdit.get('designer')%>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="exampleInputEmail1">Original Manufacturer</label>
+                        <input type="text" class="form-control edit-item-dimensions"  placeholder="undefined" value="<%=data.modelForEdit.get('manufacturer')%>">
+                    </div>
+                </div>
+                <hr>
+                <div class="major-section categories">
+                    <h4>Category Information</h4>
+                    <div class="form-group">
+                        <select class="form-control edit-top-level-category">
+                            <option value="" class="disabled-top-level-option" disabled selected>--Select Category--</option>
+
+<%_.forEach(data.categoryMap[ 'top-level'],function(categoryNum){%>
+                            <option value="<%=categoryNum%>" class='first-level-value'>
+                                <%=data.categoryLabels[categoryNum]%> - (
+                                    <%=categoryNum%>)
+                            </option>
+<%})%>
+                            </select>
+                         <div class="subcategory-group-1">
+                            <label class="control-label sub-category-1-label" for="exampleInputEmail1">1st Sub-Category</label>
+                            <select class="form-control edit-sub-category-1" data-topLevel="" disabled>
+                                <option value="" class="disabled-subcat1-option" disabled selected>--Must Select Top-Level Category--</option>
+                                <!-- Insert subcategories here -->
+                            </select>
+                        </div>
+                        <div class="subcategory-group-2">
+                            <label class="control-label sub-category-2-label" for="edit-second-subcategory">2nd Sub-Category</label>
+                            <select class="form-control sub-category-2" data-topLevel="" disabled>
+                                <option value="" class="disabled-subcat2-option" disabled selected>--Must Select Sub-Category--</option>
+                                <!-- Insert subcategories here -->
+                            </select>
+                        </div>
+                    </div>
+                    <p class="action-button">  
+                        <button class="btn btn-primary btn-sm edit-add-item-category">Add item-category</button>
+                    </p>
+                    <p class="action-button">  
+                        <button class="btn btn-danger btn-xs edit-reset">Reset</button>
+                    </p>
+                    <table class="table table-condensed">
+                      <thead>
+                        <tr>
+                            <th class="table-title" colspan="3">Currently-Selected Categories For This Item</th>
+                        </tr>
+                        <tr>
+                          <th>Top-Level</th>
+                          <th>1st Sub-Category</th>
+                          <th>2nd Sub-Category</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class='category-entries'>
+<% console.log(data.modelForEdit.get('categoriesByNumber'))%>
+<%if (data.modelForEdit.get('categoriesByNumber') ){
+        data.modelForEdit.get('categoriesByNumber').forEach(function(category){
+                console.log('<<<< category >>>')
+                console.log(category)
+                var singleCatList = returnCategoryTree(category,data.categoryMap, data.categoryLabels)
+%>
+                            <tr>
+                                <td data-labelnum=<%=singleCatList[0]%>>
+                                <%=data.categoryLabels[singleCatList[0]]%>
+                                </td>
+                                <td data-labelnum=<%=singleCatList[1]%>>
+                                    <%=data.categoryLabels[singleCatList[1]]%>
+                                </td>
+                                <td data-labelnum=<%=singleCatList[1]%>>
+                                    <%=data.categoryLabels[singleCatList[2]]%>
+                                </td>
+                            </tr>
+                      </tbody>
+<%      })
+}%>
+                </table>
+                </div>
+                <hr>
+                <div class="major-section organize-regular-images">
+
+                    <h4>Organize <em>regular-sized</em> images</h4>
+                    <div class="container-fluid">
+                    
+                    <%
+                     if(data.modelForEdit.attributes && data.modelForEdit.get('database_img_LINK_1')) {
+                    %>
+                        <p class="action-button">  
+                            <button class="btn btn-success btn-sm submit-to-db">Submit Current Edits to DB</button>
+                        </p>
+
+                        <p><a href="#/employee/fix-images">Link to Separate Page to Fix Images on MR-Items from Previous System</a>
+                        </p>
+
+                   <% } else { 
+                    for( var i = 1; i <= 8; i++ ){
+
+                        if (data.modelForEdit.get('database_img_FILE_'+i)){
+                                console.log('imgFILE');
+                                var imgSrc = data.modelForEdit.get('database_img_FILE_'+i)._url;
+                            
+                            } else { 
+                                console.log("no img or file");
+                                var placeholder = "no image file";
+                                var imgSrc = "  ";
+
+                            }
+                        %>
+                        <div class="row img-upload-edit">
+                            <div class="col-xs-4">
+                                <strong>Current Image-<%=i%></strong>
+                                
+                            </div>
+                            <div class="col-xs-2">
+                                <img src="<%= imgSrc || "" %>" alt="no-img" class="thumbnail sample-img-<%=i%>">
+                            </div>
+                            
+                            <div class="col-xs-4">
+                                <input type="file" class="selected-img-file" data-index="<%=i%>">
+                            </div>
+                        </div>
+                    <%}%>
+                    <%}%>
+                    </div>
+
+        
+
+                        <div class="form-group img-input">
+                        </div>
+                </div>
+                <hr>
+                <div class="major-section organize-thumbnail-images">
+
+                    <h4>Organize <em>thumbnail-sized</em> images</h4>
+                    <div class="container-fluid">
+                    
+                    <%
+                     if(data.modelForEdit.attributes && data.modelForEdit.get('database_img_LINK_t_1')) {
+                    %>
+                        <p class="action-button">  
+                            <button class="btn btn-success btn-sm submit-to-db">Submit Current Edits to DB</button>
+                        </p>
+
+                        <p><a href="#/employee/fix-images">Link to Separate Page to Fix Images on MR-Items from Previous System</a>
+                        </p>
+
+
+                   <% } else { 
+                    for( var i = 1; i <= 8; i++ ){
+
+                        if (data.modelForEdit.get('database_img_FILE_t_'+i)){
+                                console.log('imgFILE');
+                                var imgSrcTn = data.modelForEdit.get('database_img_FILE_t_'+i)._url;
+                            
+                            } else { 
+                                console.log("no img or file");
+                                var placeholder = "no image file";
+                                var imgSrcTn = "";
+
+                            }
+                        %>
+                        <div class="row img-upload-edit">
+                            <div class="col-xs-4">
+                                <strong>Current Image-<%=i%></strong>
+                                
+                            </div>
+                            <div class="col-xs-2">
+                                <img src="<%= imgSrcTn || "" %>" alt="no-img" class="thumbnail sample-img-<%=i%>">
+                            </div>
+                            
+                            <div class="col-xs-4">
+                                <input type="file" class="selected-img-file" data-index="<%=i%>">
+                            </div>
+                        </div>
+                    <%}%>
+                    <%}%>
+                    </div>
+
+        
+
+                        <div class="form-group img-input">
+                        </div>
+                </div>
+                <hr>
+            <div class="major-section">
+                <%console.log(data.modelForEdit)%>
                     <h4>Other Details</h4>
-                    <div class="form-group">
-                        <label class="control-label" for="MR_id">Third Party Vendor</label>
-                        <div class='other-details'>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" value="first-dibs"> 1stDibs
-                            </label>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" value="ebay"> Ebay
-                            </label>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" value="one-kings-lane"> One King's Lane
-                            </label>
-                        </div>
+                     <div class="form-group">
+                        <label class="control-label">Inventory-Count <small>(for multiple quantities)</small></label>
+                        <input type="number" class="form-control inventory-count" placeholder="For multiple quantities" min="0" value="1">
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="MR_id">Consignment</label>
-                        <div class='other-options'>
-                            <label class="radio-inline">
-                                <input type="radio" name="inlineRadioOptions" value="true"> Yes
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="inlineRadioOptions" value="false" checked> No
-                            </label>
-                        </div>
+
+                <div class="form-group">
+            <%if(data.modelForEdit.get('thirdPartyVendors')){
+                
+                var checked1stDibs = data.modelForEdit.get('thirdPartyVendors').indexOf('first-dibs')
+                if(checked1stDibs > -1 ) { var vendor1Status = "checked" } else { var vendor1Status = "" }
+
+                var checkedebay = data.modelForEdit.get('thirdPartyVendors').indexOf('ebay')
+                if (checkedebay > -1 ) { var vendor2Status = "checked" } else { var vendor2Status = "" }
+
+                var checkedOneKings = data.modelForEdit.get('thirdPartyVendors').indexOf('one-kings-lane-dibs')
+                if ( checkedOneKings > -1 ){ var vendor3Status = "checked" } else { var vendor3Status = "" }
+
+                }%>
+                    <label class="control-label" for="MR_id">Third Party Vendor</label>
+                    <div class='vendors'>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" value="first-dibs" name="vendor1" <%=vendor1Status||""%>> 1stDibs
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" value="ebay" name="vendor2" <%=vendor2Status||""%>> Ebay
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" value="one-kings-lane" name="vendor3" <%=vendor3Status||""%>> One King's Lane
+                        </label>
                     </div>
+                </div>
+                <div class="form-group consigned-item">
+                    <%if(data.modelForEdit.get('isConsigned')){
+                
+                    var itemConsigned = data.modelForEdit.get('isConsigned')
+                    if(itemConsigned) { var yesConsigned = "checked" } else { var noConsigned = "checked" }
+
+
+                    }%>
+
+                    <label class="control-label" for="MR_id">Consignment</label>
+                    <div class='other-options'>
+                        <label class="radio-inline">
+                          <input type="radio" name="inlineRadioOptions" value="true" <%=yesConsigned||""%> > Yes
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="inlineRadioOptions" value="false" <%=noConsigned||""%> > No
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <p class="action-button">  
+                <button class="btn btn-success edit-save-to-db">Save Edits to Database</button>
+            </p>
+           
             </form>
             </div>
         </div>
 </main>
+
+<% function returnCategoryTree(value, categoryMap, categoryLabels){
+    var categoryTree = [];
+    var MRCategories = categoryLabels;
+
+    if (categoryMap['top-level'].indexOf(value) !== -1){
+        categoryTree.push(value)
+    } else {
+
+        while(categoryTree.indexOf(value)===-1){
+        categoryTree.push(value)
+
+            for (var key in categoryMap){
+                if (categoryMap['top-level'].indexOf(value)>-1){
+                    var i = categoryMap['top-level'].indexOf(value);
+                    categoryTree.push(categoryMap['top-level'][i])
+                    break
+                } else if(categoryMap[key].indexOf(value)>-1){
+                    value = key
+                }
+            }
+        }
+    }
+
+    return categoryTree.reverse()
+}
+%>
