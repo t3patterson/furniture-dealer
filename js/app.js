@@ -30,6 +30,7 @@ function app(){
         // bootstrap carousel
         {url: "./bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"},
         {url: "./bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"},
+        {url: "./bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"},
 
         {url: "./bower_components/pace/pace.min.js"},
         {url: "./js/TemplateView.js"}
@@ -59,7 +60,7 @@ function app(){
         // ,{url: "./data/INPUT-jpegData.js"}
         // ,{url: "./data/INPUT-productInfo.js"}
         // ,{url: "./data/EXECUTE-GenerateParseData.js"}
-        ,{url: "./js/db/databaseFunctions.js"}
+        // ,{url: "./js/db/databaseFunctions.js"}
 
         ,{url: "./data/scripts-organizeCategories/categoryMap2.js"}
         ,{url: "./data/scripts-organizeCategories/allCategories.js"}

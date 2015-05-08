@@ -116,7 +116,6 @@
 
         triggerProductPageHash: function(evt) {
             evt.preventDefault();
-            window.location.hash = "/products"
         },
         triggerShoppingCartHash: function(evt) {
             evt.preventDefault();

@@ -27,15 +27,20 @@ $gallery-height: 450px;
             text-align: center;
             
             h1{
+                background: rgba(255,255,255,.50);
+                border-radius: 5px;
                 color: $black;
+                font-weight: 700;
+                width: 400px;
+                margin: auto;
             }
 
-            a.btn.products-link {
-                background-color: transparent;
+            a.products-link {
+                background-color: rgba(225,225,225,.7);
                 border: $black 2px solid;
                 color: $black;
                 transition: border .2s;
-
+                
                 &:hover{
                     border: $black 4px solid;
                 }
@@ -43,7 +48,27 @@ $gallery-height: 450px;
 
         }
     .carousel{
-        height: $gallery-height
+        height: $gallery-height;
+        
+        .carousel-control{
+            z-index: 10;
+        }
+        
+        .carousel-inner{
+            padding-top: 8%;
+        }
+
+        @media screen and (max-width: 768px){
+            .landing-single-listing{
+                height: 133px;
+            }
+        }
+        @media screen and (min-width: 769px){
+            .landing-single-listing{
+                height: 300px;
+            }
+        }
+
     }
 }
 
@@ -166,7 +191,6 @@ section.selection-by-cat {
     
     h2{
         margin-bottom: 24px;
-        text-shadow: 1px 1px 1px $white;
     }
 
     h2, & > div {
