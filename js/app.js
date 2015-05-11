@@ -51,15 +51,13 @@ function app(){
         ,{url: "./js/app/pageLayoutElements.js"}
         ,{url: "./js/app/singleView.js"}
 
-
-
         ,{url: "./js/Client.js"}
         
         //DATA SCRIPTS
         // ,{url: "./data/INPUT-totalSet.js"}
         // ,{url: "./data/INPUT-jpegData.js"}
         // ,{url: "./data/INPUT-productInfo.js"}
-        // ,{url: "./data/EXECUTE-GenerateParseData.js"}
+        // ,{url: "./data/EXECUTE-GenerateParseData-OLD_ITEMS.js"}
         // ,{url: "./js/db/databaseFunctions.js"}
 
         ,{url: "./data/scripts-organizeCategories/categoryMap2.js"}
@@ -78,8 +76,8 @@ function app(){
 
         // console.log(dataArrayToUpload)
         // dbManagement.uploadInventoryToParse(dataArrayToUpload)
-        // dbManagement.editArrayData(4999,8000,dbManagement._queryEditAndSaveKeyWords)
-        // dbManagement.editArrayData(8000,14405,dbManagement._queryEditAndSaveInventoryQuantity)
+        // dbManagement.editArrayData(2000,4000,dbManagement._queryEditAndSaveKeyWords)
+        // dbManagement.editArrayData(1999,4001,dbManagement._queryEditAndSaveInventoryQuantity)
 
         // 
         //----------------

@@ -6,6 +6,16 @@
 		text-align: right;
 	}
 
+	.back-2-products{
+		border: 1px $beige solid;
+		color: $black;
+	}
+
+	.finalize-order-btn{
+		background: $black;
+		border: 0px;
+	}
+
 	.order-summary {
 		th {
 			vertical-align: middle;

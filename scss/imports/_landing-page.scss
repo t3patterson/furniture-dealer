@@ -93,7 +93,7 @@ CATEGORIES
     padding-top: 2rem;
     padding-bottom: 4rem;
     text-align: center;
-    background: $tan;
+    border: 10px solid  $tan;
     .row {
         > * {
             text-align: center;
@@ -185,7 +185,7 @@ section.selection-by-cat {
 /** CONSIGNMENT **/
 
 .consignment {
-    background-color: $beige;
+    border: 10px solid $beige;
     padding-top: 4em;
     padding-bottom: 4em;
     

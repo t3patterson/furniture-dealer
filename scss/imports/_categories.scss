@@ -1,56 +1,36 @@
 .categories-page{
-	background: $beige;
-
 	h1{
 		text-align: center;
 		background: $black;
-		color: $white;
 		padding: 12px 0px;
 		margin-bottom: 0px;
+		color: $white;
 	}
 
 	.category-block:nth-child(1n){
-		background: $tan;
+		border: 10px solid $tan;
 	}
 	.category-block:nth-child(2n){
-		background: $brown;
-		color: $white;
-		text-shadow: 1px 1px 1px $black;
+		border: 10px solid $brown;
 	}
 	.category-block:nth-child(3n){
-		background: $sand;
-		color: $white;
-		text-shadow: 1px 1px 1px $black;
+		border: 10px solid $sand;
 	}
-
 	.category-block:nth-child(5n){
-		background: $black;
-		color: $white;
-		text-shadow: 1px 1px 1px $black;
-		
+		border: 10px solid $black;
 	}
 
 	.category-block:nth-child(7n){
-		background: $sand;
-		color: $white;
-		text-shadow: 1px 1px 1px $black;
-
+		border: 10px solid $sand;
 	}
 
-	.category-block:nth-child(1n) a,{
-		color: $black
+	.category-block a{
+		color: $black;
+
+		&:hover{
+			color: #337ab7;
+		}
 	}
-
-	
-	.category-block:nth-child(2n) a,
-	.category-block:nth-child(3n) a,
-	.category-block:nth-child(5n) a,
-	.category-block:nth-child(7n) a {
-		color: $white;
-	}
-
-
-
 
 	h2{}
 

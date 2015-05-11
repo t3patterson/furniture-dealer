@@ -33,8 +33,8 @@
     //     * MRID 
     //     * Images array
 
-    var highINDEX = 3980,
-        lowINDEX = 4000
+    var highINDEX = 4000,
+        lowINDEX = 2000
 
     if(typeof jpegDataArray !== 'undefined'){
         var filteredArray = jpegDataArray
@@ -72,6 +72,8 @@
             organizedMR_IDImagesArray.push(newDataObj);
         })
     }
+
+    console.log(organizedMR_IDImagesArray)
 
     //----------------------
     //2 Put data from 'product-info' scrape into
@@ -150,7 +152,7 @@
                         })
                         filteredItem['imageCount'] = imgCount
                     }
-                })
+                }   )
                 //add product-info
                 organizedProductInfoArray.forEach(function(productInfo){
                     if (productInfo.MR_id === filteredItem.MR_id){

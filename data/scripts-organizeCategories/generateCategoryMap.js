@@ -1,6 +1,5 @@
 
-var categoryMap = MRCategoryMap;
-var 
+var categoryMap = MRCategoryMap; 
 
 function returnCategoryTree(value, categoryMap){
 	var categoryTree = [];
@@ -43,8 +42,6 @@ totalSet.forEach(function(listing){
 		
 	})
 })
-
-console.log(totalSet)
 
 $('body').html(JSON.stringify(totalSet))
 

@@ -58,8 +58,11 @@
         </ol>
 </section>
 
-<section class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>'>
-    <h1 >
+<section class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>' >
+        
+
+    <h1>
+
         <%console.log(data)%>
         <%if(data.searchQuery){%>
             Search Results for : <em><%= data.searchTerms %></em>

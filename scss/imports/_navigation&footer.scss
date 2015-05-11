@@ -38,16 +38,16 @@ nav {
             left: 80px;
             top: 10px;
             width: 30rem;
-
+            
             .item-search-input{
-                width: 27rem;
+                width: 20rem;
                 position: absolute;
                 z-index:2;
             }
             .enter-search-terms {
                 position: absolute;
                 height: 34px;
-                right: 15px;
+                right: 6.25rem;
                 top: 0px;
                 z-index:3;
             }
@@ -56,11 +56,10 @@ nav {
 }
 
 footer {
-    background: $brown;
     padding: 0;
     .social-div {
-        padding-bottom: 5%;
-        color: $white;
+        height: 427px;
+        border: 10px solid $brown;  
         .social-lnk {
             text-align: center;
             padding-top: 5%;
@@ -75,11 +74,8 @@ footer {
         }
     }
     .address-div {
-        background: $sand;
-        color: $white;
-        text-shadow: 1px 1px 1px #000;
-        border-left: 1px solid $tan;
-        .location {
+        border: 10px solid $sand;
+            .location {
             font-size: 18px;
         }
     }
