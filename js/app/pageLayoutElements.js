@@ -94,7 +94,6 @@
         pageLayout_clearPagination: function(){
             document.querySelector('.pagination-top').innerHTML=""
             document.querySelector('.pagination-bottom').innerHTML=""
-
         },
 
         pageLayout_clearFooter: function() {
@@ -169,7 +168,8 @@
         events: {
             'click .next-20': 'triggerNext20',
             'click .prev-20': 'triggerPrev20',
-            'click .select-page': 'triggerPageX'
+            'click .select-page': 'triggerPageX',
+            'click .go-2-page': 'triggerPageX' 
         },
 
          triggerNext20: function(evt){
@@ -185,7 +185,19 @@
 
         triggerPageX: function(evt){
             evt.preventDefault();
-            $(evt.target).attr('data-event','page')
+            var $target = $(evt.target)
+            if($target.hasClass('select-page')){
+                $target.attr('data-event','page')
+            }
+
+             if($target.hasClass('go-2-page')){
+                var $pageInput = $('.page-input input')
+                console.log(this.paginationOptions.totalPages)
+                var pageCeiling = Math.min(parseInt($pageInput.val()), this.paginationOptions.totalPages)
+                $pageInput.val(pageCeiling) 
+
+            }
+
             this.trigger('showPageX')
         }
     })

@@ -35,6 +35,9 @@
                     currentPage: data.currentPage,
                     prevPage: data.currentPage-1,
                     nextPage: data.currentPage+1,
+
+                    next5: data.currentPage + 5,
+                    prev5: data.currentPage - 5,
                 }
 
                 var leftArrowStatus;
@@ -48,6 +51,9 @@
 
                 %>
 
+                  <li class="<%=leftArrowStatus%>" ><a href="#" class="prev-20" aria-label="Previous"> <i class="fa fa-arrow-left fa-2x"></i>
+                    </a></li>
+            
 
 
             <% var i = 1
@@ -56,23 +62,23 @@
                     //-----first-page-----//
                     if( i === pagination.beginning ){ %>
             
-                    <li><a class="select-page <%=current||''%>" href="#"><%=i%></a></li>
+                    <li><a class="select-page end-cap <%=current||''%>" href="#"><%=i%></a></li>
 
             <% }    //-----prev-5-----//
-                    if( i === pagination.currentPage-5 && pagination.currentPage-5 > pagination.beginning){ %>
+                    if( i === pagination.prev5 && pagination.prev5 > pagination.beginning){ %>
                     <li><a href="#" class="select-page prev5"><%=i%></a></li>
             
             <% }    //-----minus4 page-----//
-                    if( i === pagination.currentPage-4 && pagination.currentPage-4 > pagination.beginning ){ %>
-                    <li><a href="#" class="select-page no-mobile" ><%=i%></a></li>
+                    if( i === pagination.prevPage-3 && pagination.prevPage-3 > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page" ><%=i%></a></li>
 
             <% }    //-----minus3 page-----//
-                    if( i === pagination.currentPage-3 && pagination.currentPage-3 > pagination.beginning ){ %>
-                    <li><a href="#" class="select-page no-mobile"><%=i%></a></li>
+                    if( i === pagination.prevPage-2 && pagination.prevPage-2 > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page"><%=i%></a></li>
 
             <% }    //-----minus2 page-----//
-                    if( i === pagination.currentPage -2 && pagination.currentPage-2 > pagination.beginning ){ %>
-                    <li><a href="#" class="select-page no-mobile"><%=i%></a></li>
+                    if( i === pagination.prevPage-1 && pagination.prevPage-1 > pagination.beginning ){ %>
+                    <li><a href="#" class="select-page"><%=i%></a></li>
 
             <% }    //-----prev page-----//
                     if( i === pagination.prevPage && pagination.prevPage > pagination.beginning ){ %>
@@ -83,25 +89,25 @@
                     <li><a class="select-page <%=current||''%>"><%=i%></a></li>
 
             <% }    //-----next page-----//
-                    if( i === pagination.nextPage && pagination.nextPage !== pagination.ending){ %>
+                    if( i === pagination.nextPage && pagination.nextPage !== pagination.ending && pagination.nextPage !== pagination.beginning+1){ %>
                     <li><a class="select-page" href="#"><%=i%></a></li>
                 
                  <% }    //-----plus2 page-----//
-                    if( i === pagination.currentPage +2 && pagination.currentPage +3  + 1 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
+                    if( i === pagination.nextPage +1 && pagination.nextPage + 1 !== pagination.ending && pagination.nextPage + 1 !== pagination.beginning+2){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
 
                     <% }    //-----plus3 page-----//
-                    if( i === pagination.currentPage +3 && pagination.currentPage +3 + 2 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
+                    if( i === pagination.nextPage +2 && pagination.nextPage + 2 !== pagination.ending && pagination.nextPage + 2 !== pagination.beginning+3){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
 
 
                     <% }    //-----plus4 page-----//
-                    if( i === pagination.currentPage +4 && pagination.currentPage +3  + 4 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
+                    if( i === pagination.nextPage +3 && pagination.nextPage + 3 !== pagination.ending && pagination.nextPage + 3 !== pagination.beginning+4){ %>
+                    <li><a class="select-page" href="#"><%=i%></a></li>
 
 
-             <% }    //-----plus5 -----//
-                    if( i === pagination.currentPage +5 && pagination.currentPage +5 < pagination.ending){ %>
+             <% }    //-----next-5-----//
+                    if( i === pagination.next5 && pagination.next5 < pagination.ending && pagination.currentPage +5 !== pagination.beginning +5){ %>
 
                     <li><a href="#" class="select-page next5"><%=i%></a></li>
 
@@ -112,19 +118,21 @@
 
             <% } %>
                 
+
+
             <% } %>
     
+                <li class="<%=rightArrowStatus%>">
+                  <a href="#" class='next-20' aria-label="Next">
+                    <span aria-hidden="true" ><i class="fa fa-arrow-right fa-2x"></i></span>
+                  </a>
+                </li>
+
+
+
                   </ul>
             </nav>
 
-            <div class="input-group page-input">
-                  <span class="input-group-addon">Page #</span>
-                  <span><input type="number" max="<%=pagination.ending%>"     class="form-control" aria-describedby="basic-addon1">
-                  </span>
-                  <span class="input-group-btn">
-                    <button class="btn btn-default go-2-page" type="button">Go!</button>
-                  </span>
-            </div>
         </div>
-</div>
+    </div>
 

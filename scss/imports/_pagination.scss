@@ -1,8 +1,10 @@
 .listings-pagination{
-    text-align: center; 
+    text-align: right; 
         
 
-    .pagination{
+    nav .pagination{
+        margin-bottom: 5px;
+
         & > .disabled > a {
             cursor: no-drop;
         }
@@ -26,5 +28,27 @@
         }
     }
     
+    .page-input{
+        display: inline-block;
+        margin: 0;
+        & > *,
+        button {
+            width: 8rem;
+            height: 35px;
+            display:table-cell;
+        }
+        span.input-group-addon {
+            background: $black;
+            color: $white;
+        }
+
+        input.form-control{
+            text-align: center;
+            display: table-cell; 
+        }
+        button{
+            border-color: $red;
+        }
+    }
 
 }

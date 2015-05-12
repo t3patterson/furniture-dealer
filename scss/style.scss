@@ -140,6 +140,12 @@ h1, h2{
     display:block
 }
 
+@media screen and (max-width: 768px){
+    .no-mobile {
+        display: none;  
+    }
+}
+
 
 
 @import "./imports/_navigation&footer"; 

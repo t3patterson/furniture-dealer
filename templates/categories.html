@@ -1,23 +1,30 @@
-	<%console.log(data)%>
+	<% Array.prototype.forEACH = function(cb){
+        var i,
+            len = this.length
+
+        for(i=0; i < len; i++ ){
+            cb(this[i], i, this)
+        }
+    }%>
 	<main class="categories-page">
 		<h1>Browse Category</h1>
 
 		<div class="container-fluid">
 			
 			<div class="row">
-			<%data.categoryMap['top-level'].forEach(function(topLevelSingle){%>
+			<%data.categoryMap['top-level'].forEACH(function(topLevelSingle){%>
 				
 				<div class="col-xs-12 col-sm-6 col-md-4 category-block">
 					<h2><a href="#" class='category-tag' data-tag="<%=topLevelSingle%>"><%=data.categoryLabels[topLevelSingle]%></a></h2>
 						
 						<%if(data.categoryMap[topLevelSingle]){
 						
-							data.categoryMap[topLevelSingle].forEach(function(subCategory1){%>
+							data.categoryMap[topLevelSingle].forEACH(function(subCategory1){%>
 
 							<h4><a href="#" class='category-tag' data-tag="<%=subCategory1%>"><%=data.categoryLabels[subCategory1]%></a></h4>
 							
 							<%if (data.categoryMap[subCategory1]){
-									data.categoryMap[subCategory1].forEach(function(subCategory2){%>
+									data.categoryMap[subCategory1].forEACH(function(subCategory2){%>
 									<h6><a href="#" class='category-tag' data-tag="<%=subCategory2%>"> <%=data.categoryLabels[subCategory2]%></a></h6>
 									<%})%>
 

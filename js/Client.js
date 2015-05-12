@@ -101,6 +101,10 @@
             this.paginationView.on(('showPageX'),this.events_pagination_showPageX.bind(this))
             this.paginationViewBottom.on(('showPageX'),this.events_pagination_showPageX.bind(this))
 
+           // this.paginationView.on(('showPageY'),this.events_pagination_showPageY.bind(this))
+//            this.paginationViewBottom.on(('showPageY'),this.events_pagination_showPageY.bind(this))
+
+
             // --------------------------------
             // 2) Shopping Cart & SingleListing 
             // ----------------------------------
@@ -169,10 +173,12 @@
             },
 
         events_pagination_showPageX: function(){
-            var self = this
-            var pQuery = self.currentQueryParams
+            var self = this,
+             pQuery = self.currentQueryParams,
+             $selectedPgBtn = $("a[data-event='page'"),
+             $inputPage = $(".page-input input"),
 
-            var pageNumber = parseInt($("a[data-event='page'").text())
+             pageNumber = $selectedPgBtn.length ? parseInt($selectedPgBtn.text()) : parseInt($inputPage.val());
             
             this.paginationView.paginationOptions.currentPage = pageNumber
 
@@ -193,6 +199,8 @@
             })
             
         },
+
+
 
         //Handling the view-logic and 
         //collection-logic for adding items to the shopping cart

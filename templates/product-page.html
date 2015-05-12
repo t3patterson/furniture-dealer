@@ -1,10 +1,21 @@
-<main>--
+ <%
+    Array.prototype.forEACH = function(cb){
+        var i,
+            len = this.length
+
+        for(i=0; i < len; i++ ){
+            cb(this[i], i, this)
+        }
+    }
+%>
+
+<main>
  <% if(data){%>
 
     <section class="container-fluid product-display">
         <div class="row">
         <%console.log('inside-product-page view')%>
-        <% data.forEach( function(parseObject){ 
+        <% data.forEACH( function(parseObject){ 
             if (parseObject.get('database_img_LINK_1')) {
                 var imgLink = parseObject.get('database_img_LINK_1')
                 
