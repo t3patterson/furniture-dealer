@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html style="opacity: 0;">
+
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- if using browserify, uncomment the line below -->
+    <!-- <link rel="stylesheet" type="text/css" href="./dist/style.css"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+    .hidden{
+        display :none;
+    }
+    .imgPreview{max-width:100px;max-height:100px}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-fixed-top my-nav-style">
+      <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class=""><i class="fa fa-navicon fa-2x"></i></span>
+            </button>
+            <a class="navbar-brand" href="index.html#/">Metro Retro</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html#/">Home</a></li>    
+                <li><a href="index.html#/products" class="products-btn products-link">Furniture</a></li>
+                <li><a href="index.html#/contact-us">Contact</a></li>
+                <li><a href="index.html#/about-us" class="about-link">About</a></li>
+                <li><a href="index.html#/shopping-cart" class="cart-link"><i class="fa fa-shopping-cart fa-2x   "></i></a></li>
+                <li class="search-furniture">
+                    <a href="index.html#/" class="search-toggle"><i class="fa fa-search fa-2x"></i></a> 
+                  <div class="input-group search-bar">
+                      <input type="text" class="form-control item-search-input" placeholder="Search for...">
+                        <a class="btn btn-default enter-search-terms" type="button"><i class="fa fa-caret-square-o-right"></i></a>
+                     
+                    </div>
+
+                </li>
+                    
+              
+            </ul>
+            </div>
+        </div>
+</nav>
+
+
+    </nav>
+    <div class="container-fluid my-breadcrumb">
+        <button class="btn btn-info return-to-dash hidden">Return to Dashboard</button>
+    </div>
+    </div>
+     <div class="container-fluid listings-pagination pagination-top">
+    </div>
+    <div class="wrapper">
+        <main class="container-fluid administrators-users login">
+            <div class="row">
+                <div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-offset-4 col-md-4">
+                    <span class='block-number'></span>
+                    <h1>Log-In</h1>
+                    <p class="big-card"><i class="fa fa-cogs"></i></p>
+                    <form class="new-item-form">
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">User Name</label>
+                            <input type="text" class="form-control" id="login-name" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">Password</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="Password Here">
+                        </div>
+                        <button class="btn btn-info admin-login-btn">Enter</button>
+                        <p><br><span class="response-msg"></span></p>
+                    </form>
+                    </div>
+                </div>
+        </main>
+        <main class="container-fluid administrators-users dashboard inactive">
+            <div class='flash-overlay'></div>
+            <div class="row">
+                <div class="col-xs-12 col-md-offset-3 col-md-6 finalize-order">
+                    <span class='block-number'><i class="fa fa-plus"></i></span>
+                    <h3>Admin Dashboard</h3>
+                    <p class="big-card"><i class="fa fa-tachometer"></i></p>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">New Employee Username</label>
+                            <input type="text" class="form-control new-employee-username" placeholder="Enter Name" m>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">New Employee Password</label>
+                            <input type="text" class="form-control new-employee-password"placeholder="Enter their password">
+                        </div>
+                       
+                        <p>
+                            <button class='btn btn-primary btn-success btn-large add-new-employee'>Submit New Employee</button>
+                        </p>
+                        <p>
+                            <span class="response-msg"></span>
+                        </p>
+                </div>
+        </main>
+        <main class="container-fluid employee-dashboard inactive">
+            <div class='flash-overlay'></div>
+            <div class="row">
+                <div class="col-xs-12 col-md-offset-3 col-md-6 ">
+                <h1>Dashboard</h1>
+                <a href="" class="btn btn-success btn-lg newItem">Add Item</a>
+
+                <a href="" class="btn btn-default btn-lg editItem">Edit Existing Item</a>
+                
+                <button class="btn btn-success btn-lg newEmployee hidden">Add Employee</button>
+                <!-- <a href="" class="btn btn-default btn-lg">Edit Employee</a> -->
+                
+                </div>
+            </div>
+              
+        </main>
+        <main class="container-fluid enter-new-item inactive">
+            <div class='flash-overlay'></div>
+            <div class="row">
+                <div class="col-xs-12 col-md-offset-3 col-md-6 finalize-order">
+                    <span class='block-number'><i class="fa fa-plus"></i></span>
+                    <h3>Enter-Item-Info</h3>
+                    <p class="big-card"><i class="fa fa-tag"></i></p>
+                    <form class="new-item-form">
+                    <div class="major-section">
+
+                        <h4>Product Information</h4>
+<!--                         <div class="form-group">
+                            <label class="control-label" for="MR_id">Metro Retro ID for this Item:</label>
+                            <p class="form-control MR-ID-display "></p>
+                            <p class="action-button">
+                                <button class="btn btn-primary btn-sm generate-MR">
+                                    Generate New MR-ID
+                                </button>
+                            </p>
+                        </div> -->
+                        <hr>
+                        <div class="form-group">
+                            <label class="control-label" for="itenName">Item Name</label>
+                            <input type="text" class="form-control new-item-name newItemField" title="item" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="itemPrice">Item Price</label>
+                            <input type="text" class="form-control new-item-price newItemField" keyType="number" title="price" id="shipping-AddressLine1" placeholder="Numbers only">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="ItemDescription">Item Description</label>
+                            <textarea class="form-control new-item-desc newItemField" title="description" rows="2" maxlength="400"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">Condition</label>
+                            <input type="text" class="form-control new-item-condition newItemField" title="condition" id="shipping-AddressLine1" placeholder="Optional">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">Dimensions</label>
+                            <input type="text" class="form-control new-item-dimensions newItemField" title="dimensions" id="shipping-AddressLine1" placeholder="Describe dimensions">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">Designer</label>
+                            <input type="text" class="form-control new-item-designer newItemField" title="designer" id="shipping-AddressLine1" placeholder="Optional">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">Original Manufacturer</label>
+                            <input type="text" class="form-control new-item-manufacturer newItemField" title="manufacturer" id="shipping-AddressLine1" placeholder="Optional">
+                        </div>
+                    </div>
+                        <hr>
+                    <div class="major-section categories">
+
+                        <h4>Category Information</h4>
+                        <div class="form-group">
+                            <label class="control-label" for="exampleInputEmail1">Furniture Top-Level Category</label>
+                            <select class="form-control top-level-category sub-category-0" >
+                                <option value="" class="disabled-top-level-option" disabled selected>--Select Category--</option>
+
+                            </select>
+                            <div class="subcategory-group-1 hidden">
+                                <label class="control-label sub-category-1-label" for="exampleInputEmail1">1st Sub-Category</label>
+                                <select class="form-control sub-category-1" data-topLevel="" >
+                                    <option value="" class="disabled-subcat1-option" disabled selected>--Must Select Top-Level Category--</option>
+                                    <!-- Insert subcategories here -->
+                                </select>
+                            </div>
+                            <div class="subcategory-group-2 hidden">
+                                <label class="control-label sub-category-2-label" for="second-subcategory">2nd Sub-Category</label>
+                                <select class="form-control sub-category-2" data-topLevel="" >
+                                    <option value="" class="disabled-subcat2-option" disabled selected>--Must Select Sub-Category--</option>
+                                    <!-- Insert subcategories here -->
+                                </select>
+                            </div>
+                        </div>
+                        <p class="action-button">  
+                            <button class="btn btn-primary btn-sm add-item-category">Add item-category</button>
+                        </p>
+                        <p class="action-button">  
+                            <button class="btn btn-danger btn-xs reset">Reset</button>
+                        </p>
+                        <!-- <table class="table table-condensed"> -->
+                        <h3 class="table-title" colspan="3">Currently-Selected Categories For This Item</h3>
+                        <div class="selectedCategories"></div>        
+                    </div>
+                        <hr>
+                        <div class="major-section image-upload">
+                            <h4>Add Images</h4>
+                            <div class="form-group">
+                                <label for="uploadImage">Upload <em>FULL-SIZED</em> Image files</label>
+                                <div class="upload-image-group">
+                                    <input type="file" class="selected-full-img-files" multiple>
+                                    <p class="help-block">file should be in either <code>.jpg</code> or <code>.png</code> format</p>
+                                    <div class="uploaded-files"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="imageReorder btn btn-danger btn-xs ">click to rearrange image order</div>
+                        </div>
+                        
+                        <hr>
+                    <div class="major-section other-details">
+                        <h4>Other Details</h4>
+                             <div class="form-group">
+                                <label class="control-label">Inventory-Count <small>(for multiple quantities)</small></label>
+                                <input type="number" class="form-control inventory-count newItemField" keyType="number" title="inventoryCount" placeholder="For multiple quantities" min="0" value="1">
+                            </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="MR_id">Third Party Vendor</label>
+                            <div class='vendors'>
+                                <label class="checkbox-inline">
+                                  <input class="thirdPartyVendors"  type="checkbox" value="first-dibs" name="vendor1"> 1stDibs
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input class="thirdPartyVendors" type="checkbox" value="ebay" name="vendor2"> Ebay
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input class="thirdPartyVendors" type="checkbox" value="one-kings-lane" name="vendor3"> One King's Lane
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group consigned-item">
+                            <label class="control-label" for="MR_id">Consignment</label>
+                            <div class='other-options'>
+                                <label class="radio-inline">
+                                  <input type="checkbox" class="isConsigned" name="consignmentRadio" value="true"> Yes
+                                </label>
+                                <!-- <label class="radio-inline">
+                                  <input type="radio" class="consigned-no" name="consignmentRadio" value="false" checked > No
+                                </label> -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                         <p class="action-button send-away">
+                            <button class='btn btn-primary btn-success btn-large newItemSubmit'>Submit to Database</button>&nbsp&nbsp <span class="response-msg"></span>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </main>
+        <main class="container-fluid inactive MR-modal">
+            <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <div class="row" id="MR-data"></div>
+            </div>
+        </main>
+        <main class="container-fluid inactive MR-choose">
+            <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <input type="text" class="row MR-choose-data">
+                <button class="btn btn-primary btn-success MR-choose-select" placeholder="lookup by MR-id">open MR_id</button>
+            </div>
+        </main>
+    </div>
+     <div class="container-fluid listings-pagination pagination-bottom">
+    </div>
+    <footer class="container-fluid">
+    </footer>
+
+    <!-- if using loader, use the line below -->
+    <script type="text/javascript" src="./bower_components/Loader/loader.js" id="loaderjs" data-app="./js/app-admin.js"></script>
+    <!-- otherwise if using browserify, comment out the above line and uncomment the following line -->
+    <!-- <script type="text/javascript" src="./dist/app-browserify.js"></script> -->
+    <!-- <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+  
+</body>
+
+</html>
