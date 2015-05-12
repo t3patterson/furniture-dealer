@@ -44,7 +44,9 @@
                 pagination.currentPage ===  pagination.beginning ? leftArrowStatus = 'disabled' : leftArrowStatus =''
 
                 pagination.currentPage === pagination.ending ? 
-                    rightArrowStatus = 'disabled' : rightArrowStatus = ''
+                    rightArrowStatus = 'disabled' : rightArrowStatus = '';
+
+                    
 
                 %>
 
@@ -56,15 +58,8 @@
                     //-----first-page-----//
                     if( i === pagination.beginning ){ %>
             
-                    <li><a class="select-page <%=current||''%>" href="#"><%=i%></a></li>
+                    <li><a class="select-page end-cap first-page <%=current||''%>" href="#"><%=i%></a></li>
 
-            <% }    //-----prev-5-----//
-                    if( i === pagination.currentPage-5 && pagination.currentPage-5 > pagination.beginning){ %>
-                    <li><a href="#" class="select-page prev5"><%=i%></a></li>
-            
-            <% }    //-----minus4 page-----//
-                    if( i === pagination.currentPage-4 && pagination.currentPage-4 > pagination.beginning ){ %>
-                    <li><a href="#" class="select-page no-mobile" ><%=i%></a></li>
 
             <% }    //-----minus3 page-----//
                     if( i === pagination.currentPage-3 && pagination.currentPage-3 > pagination.beginning ){ %>
@@ -88,27 +83,18 @@
                 
                  <% }    //-----plus2 page-----//
                     if( i === pagination.currentPage +2 && pagination.currentPage +3  + 1 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
+                    <li><a class="select-page no-mobile" href="#"> <%=i%></a></li>
 
                     <% }    //-----plus3 page-----//
                     if( i === pagination.currentPage +3 && pagination.currentPage +3 + 2 !== pagination.ending){ %>
                     <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
 
 
-                    <% }    //-----plus4 page-----//
-                    if( i === pagination.currentPage +4 && pagination.currentPage +3  + 4 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
-
-
-             <% }    //-----plus5 -----//
-                    if( i === pagination.currentPage +5 && pagination.currentPage +5 < pagination.ending){ %>
-
-                    <li><a href="#" class="select-page next5"><%=i%></a></li>
-
+                 
             <% }    //-----last-page-----//
                     if( i === pagination.ending && pagination.ending !== pagination.beginning ){ 
                         if (pagination.currentPage === pagination.ending){var current2 = 'current'}%>
-                    <li ><a class="select-page   end-cap <%= current2 || ''%> " href="#"><%=i%></a></li>
+                    <li ><a class="select-page   end-cap last-page <%= current2 || ''%> " href="#"><%=i%></a></li>
 
             <% } %>
                 

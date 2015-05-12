@@ -9,6 +9,11 @@
             cursor: no-drop;
         }
 
+        & > li > a{
+            font-family: monospace;
+            width: 52px;
+            text-align: center;
+        }
         & > li > a.current {
             border-top: 2px black solid;    
             border-bottom: 2px black solid;
@@ -16,15 +21,18 @@
             color: red;
         }
 
-        .next5,
-        .prev5{
-            background: $beige;
-            color: $black
-        }
 
         .end-cap{
             background: $tan;
-            color: $black
+            color: $black;
+        }
+
+        .first-page{
+            margin-right: 10px;
+        }
+
+        .last-page{
+            margin-left: 10px;  
         }
     }
     
