@@ -60,15 +60,6 @@
             
                     <li><a class="select-page end-cap first-page <%=current||''%>" href="#"><%=i%></a></li>
 
-
-            <% }    //-----minus3 page-----//
-                    if( i === pagination.currentPage-3 && pagination.currentPage-3 > pagination.beginning ){ %>
-                    <li><a href="#" class="select-page no-mobile"><%=i%></a></li>
-
-            <% }    //-----minus2 page-----//
-                    if( i === pagination.currentPage -2 && pagination.currentPage-2 > pagination.beginning ){ %>
-                    <li><a href="#" class="select-page no-mobile"><%=i%></a></li>
-
             <% }    //-----prev page-----//
                     if( i === pagination.prevPage && pagination.prevPage > pagination.beginning ){ %>
                     <li><a href="#" class="select-page"><%=i%></a></li>
@@ -80,17 +71,7 @@
             <% }    //-----next page-----//
                     if( i === pagination.nextPage && pagination.nextPage !== pagination.ending){ %>
                     <li><a class="select-page" href="#"><%=i%></a></li>
-                
-                 <% }    //-----plus2 page-----//
-                    if( i === pagination.currentPage +2 && pagination.currentPage +3  + 1 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"> <%=i%></a></li>
 
-                    <% }    //-----plus3 page-----//
-                    if( i === pagination.currentPage +3 && pagination.currentPage +3 + 2 !== pagination.ending){ %>
-                    <li><a class="select-page no-mobile" href="#"><%=i%></a></li>
-
-
-                 
             <% }    //-----last-page-----//
                     if( i === pagination.ending && pagination.ending !== pagination.beginning ){ 
                         if (pagination.currentPage === pagination.ending){var current2 = 'current'}%>
