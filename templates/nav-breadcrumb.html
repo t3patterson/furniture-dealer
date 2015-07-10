@@ -89,12 +89,59 @@
         </ol>
 </section>
 
-<section class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>' >
+<%
+    console.log('Category')
+    console.log('-----------')
+  
+    var helpme = {
+        'Mid Century' : 'mid-century'  ,   
+        'Art': 'art',
+        'Art Deco': 'art-deco',
+        'Scandinavian' : 'scandinavian' ,
+        'Bedroom' : 'bedroom' ,
+        'Case Goods' : 'case-goods' ,
+        'Clearance' : 'new-furniture' ,
+        'Desks' : 'desk' ,
+        'Industrial' : 'industrial'  ,
+        'Lighting' : 'lighting' ,
+        'Marble' : 'marble' ,
+        'Miscellaneous' : 'miscellaneous' ,
+        'New Furniture' : 'new-furniture' ,
+        'Outdoor': 'outdoor' ,
+        'Recent Arrivals' : 'recent-arrivals' ,
+        'Rugs' : 'rug' ,
+        'Scandinavian' : 'scandinavian' ,
+        'Seating': 'seating',
+        'Tables': 'table',
+        'Textiles' : 'seating' ,
+        'Traditional' : 'traditional' 
+    }
+
+    console.log(data)
+    
+    if(data.currentCategoryTree[1]){
+        console.log('currrent category tree = expliciet')
+      fileName = helpme[data.currentCategoryTree[1]]
+    } else if (data.currentCategory){
+        console.log('currrent category tree = general')
+
+        fileName = helpme[data.currentCategory]
+    } else {
+        console.log('faillled')
+        fileName ='hermanmiller'
+    }
+    
+
+    var filePath = "./images/header-images/"+fileName+".jpg"
+%>
+
+
+
+<section class='multi-description <%=testForSingleListing(currentRoute)? 'inactive' : 'active' %>' style="  background: url(<%=filePath%>) center center no-repeat;">
         
 
     <h1>
 
-        <%console.log(data)%>
         <%if(data.searchQuery){%>
             Search Results for : <em><%= data.searchTerms %></em>
         <%} else if(data.styleQuery){%>

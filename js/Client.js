@@ -2,21 +2,10 @@
     "use strict";
 
     //UNRESOLVED ISSUES: 
-        
-        // * Ensure customer-facing site is not showing sold inventory (pQuery.notEqualTo('inventoryStatus','0'))
-        // 
-        // * Updating Parse database with MR14403 - MR14425 
-        // 
-        // * Editing and modifying inventory data
         // 
         // * finding the cause for 'dead' links for single listings
         //  ex: MR13283 , MR12283
-        // 
-        //  * Employee Search functionality for Editing-Inventory
-        // 
-        // * refactor codebase
-        // 
-        // * Payment system in place - ALEX
+
     
     //Utility Functions
     
@@ -79,8 +68,6 @@
                 cart: this.shoppingCart
             });
     
-            
-
         //-------------------
         //Application Event Listeners/Handlers
         //-------------------
@@ -89,9 +76,7 @@
             //------------------
             // 1) Pagination (PaginationView | BreadcrumbView | Procd)
             // -----------------
-            
-           
-
+   
             this.paginationView.on(('showNext20'),this.events_pagination_showNext20.bind(this))
             this.paginationViewBottom.on(('showNext20'),this.events_pagination_showNext20.bind(this))
             

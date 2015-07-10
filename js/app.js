@@ -50,6 +50,7 @@ function app(){
         ,{url: "./js/app/multiView.js"}
         ,{url: "./js/app/pageLayoutElements.js"}
         ,{url: "./js/app/singleView.js"}
+        ,{url: "./js/app/router.js"}
 
         ,{url: "./js/Client.js"}
         
